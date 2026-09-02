@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="dark" lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OSEAN - Daftar akun baru untuk beli tiket." />
+  <title>OSEAN - Daftar</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: { extend: {
+        colors: {
+          "on-surface-variant": "#ccc4cf", "tertiary": "#efc05e", "surface-variant": "#37352c",
+          "on-primary-container": "#9981b5", "surface-container": "#212017",
+          "surface-container-low": "#1d1c13", "surface-container-high": "#2c2a21",
+          "secondary-container": "#4d5500", "on-background": "#e7e2d5",
+          "inverse-on-surface": "#323127", "on-tertiary": "#402d00",
+          "surface-bright": "#3b3930", "tertiary-container": "#312200",
+          "on-secondary-container": "#c0c96c", "error": "#ffb4ab", "surface": "#15140c",
+          "on-secondary": "#2e3300", "background": "#15140c", "secondary": "#c4cd6f",
+          "on-primary-fixed-variant": "#523d6c", "surface-container-highest": "#37352c",
+          "on-tertiary-fixed": "#261900", "on-surface": "#e7e2d5",
+          "on-tertiary-container": "#ae8529", "error-container": "#93000a",
+          "surface-dim": "#15140c", "on-tertiary-fixed-variant": "#5c4200",
+          "primary-fixed": "#eedbff", "secondary-fixed": "#e0ea88", "on-primary": "#3b2754",
+          "inverse-surface": "#e7e2d5", "outline": "#958e99", "tertiary-fixed-dim": "#efc05e",
+          "on-secondary-fixed-variant": "#444b00", "surface-container-lowest": "#0f0e07",
+          "on-secondary-fixed": "#1a1e00", "tertiary-fixed": "#ffdea2",
+          "inverse-primary": "#6b5585", "on-primary-fixed": "#25113e",
+          "primary-fixed-dim": "#d6bcf4", "primary": "#d6bcf4", "surface-tint": "#d6bcf4",
+          "primary-container": "#2e1a47", "on-error-container": "#ffdad6",
+          "on-error": "#690005", "secondary-fixed-dim": "#c4cd6f", "outline-variant": "#4a454e"
+        },
+        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+        spacing: { "margin-mobile": "20px", "unit": "8px", "asymmetric-offset": "12px",
+                   "margin-desktop": "64px", "gutter": "24px" },
+        fontFamily: {
+          "body-lg": ["Manrope"], "body-md": ["Manrope"],
+          "headline-lg-mobile": ["Syne"], "display-lg": ["Syne"], "display-md": ["Syne"],
+          "label-caps": ["Manrope"], "headline-lg": ["Syne"]
+        },
+        fontSize: {
+          "body-lg":  ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+          "body-md":  ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+          "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+          "display-lg":  ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" }],
+          "display-md":  ["48px", { lineHeight: "1.1", fontWeight: "800" }],
+          "label-caps":  ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "700" }],
+          "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }]
+        }
+      }}
+    }
+  </script>
+
+  <style>
+    /* Sembunyikan scrollbar tapi tetap bisa discroll */
+    html, body {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE dan Edge */
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+      width: 0px;
+      background: transparent;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body class="bg-background text-on-background font-body-md overflow-x-hidden min-h-screen flex items-center justify-center py-16 selection:bg-tertiary selection:text-on-tertiary">
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-6 right-6 z-[99999] hidden" style="opacity:0">
+    <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase">
+      <span id="toast-icon" class="material-symbols-outlined text-[20px]"></span>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- ===================== REGISTER FORM ===================== -->
+  <div class="w-full max-w-md px-margin-mobile">
+
+    <!-- Logo -->
+    <div class="mb-10 text-center flex flex-col items-center">
+      <a href="landing_page.html" class="flex flex-col items-center group">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-16 h-16 object-contain mb-3 drop-shadow-[0_4px_16px_rgba(239,192,94,0.35)] group-hover:scale-105 transition-transform duration-300" />
+        <span class="font-display-lg text-[52px] text-tertiary uppercase tracking-tighter leading-none group-hover:text-secondary transition-colors">
+          OSEAN
+        </span>
+      </a>
+      <p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-2">Daftar Akun Baru</p>
+    </div>
+
+    <!-- Card -->
+    <div class="relative">
+      <div class="absolute inset-0 translate-x-2 translate-y-2 bg-secondary-container -z-10"></div>
+      <div class="bg-surface-container border-2 border-outline-variant p-8">
+
+        <h1 class="font-headline-lg text-headline-lg text-on-surface mb-1">Buat Akun</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-8">
+          Sudah punya akun? <a href="login.html" class="text-tertiary hover:text-secondary underline transition-colors">Masuk disini</a>
+        </p>
+
+        <form id="register-form" class="flex flex-col gap-5" novalidate>
+
+          <!-- Nama -->
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="nama">Nama Lengkap</label>
+            <input id="nama" name="nama" type="text" required autocomplete="name"
+                   placeholder="Nama kamu"
+                   class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-body-md px-4 py-3
+                          focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="email">Email</label>
+            <input id="email" name="email" type="email" required autocomplete="email"
+                   placeholder="kamu@email.com"
+                   class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-body-md px-4 py-3
+                          focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="password">Password <span class="text-on-surface-variant/50">(min 6 karakter)</span></label>
+            <div class="relative">
+              <input id="password" name="password" type="password" required autocomplete="new-password"
+                     placeholder="••••••••"
+                     class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-body-md px-4 py-3 pr-12
+                            focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
+              <button type="button" id="toggle-pass"
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-tertiary transition-colors">
+                <span class="material-symbols-outlined" id="toggle-pass-icon">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Strength indicator -->
+          <div id="strength-bar" class="flex gap-1 h-1">
+            <div class="flex-1 bg-outline-variant rounded-full" id="s1"></div>
+            <div class="flex-1 bg-outline-variant rounded-full" id="s2"></div>
+            <div class="flex-1 bg-outline-variant rounded-full" id="s3"></div>
+          </div>
+          <p id="strength-text" class="font-label-caps text-[10px] text-on-surface-variant -mt-3"></p>
+
+          <!-- Submit -->
+          <button type="submit" id="submit-btn"
+                  class="w-full bg-secondary text-on-secondary font-label-caps text-label-caps uppercase py-4 mt-2
+                         shadow-[6px_6px_0px_0px_#15140c] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#15140c]
+                         active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-200
+                         flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span class="material-symbols-outlined text-[20px]">person_add</span>
+            Buat Akun
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <p class="text-center font-body-md text-body-md text-on-surface-variant mt-6 opacity-60">
+      &copy; 2026 OSEAN. All rights reserved.
+    </p>
+  </div>
+
+  <script>
+    const API = '../osean-backend/api';
+
+    function showToast(msg, type = 'info') {
+      const colors = {
+        success: 'bg-secondary text-on-secondary border-[#15140c]',
+        error:   'bg-error text-on-error border-[#15140c]',
+        info:    'bg-surface-container text-on-surface border-outline-variant'
+      };
+      const icons = { success: 'check_circle', error: 'error', info: 'info' };
+      const t  = document.getElementById('toast');
+      const ti = document.getElementById('toast-inner');
+      ti.className = `flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase ${colors[type]}`;
+      document.getElementById('toast-icon').textContent = icons[type];
+      document.getElementById('toast-msg').textContent  = msg;
+      t.classList.remove('hidden');
+      t.style.opacity = '1';
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 400); }, 3500);
+    }
+
+    // --- Toggle Password ---
+    const toggleBtn  = document.getElementById('toggle-pass');
+    const passInput  = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggle-pass-icon');
+    toggleBtn.addEventListener('click', () => {
+      const v = passInput.type === 'text';
+      passInput.type = v ? 'password' : 'text';
+      toggleIcon.textContent = v ? 'visibility' : 'visibility_off';
+    });
+
+    // --- Password Strength ---
+    passInput.addEventListener('input', () => {
+      const v = passInput.value;
+      const s = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
+      const t = document.getElementById('strength-text');
+      s.forEach(el => el.style.background = '#4a454e');
+      if (v.length >= 6) {
+        s[0].style.background = '#ffb4ab';
+        t.textContent = 'Lemah';
+      }
+      if (v.length >= 8 && /[0-9]/.test(v)) {
+        s[1].style.background = '#efc05e';
+        t.textContent = 'Sedang';
+      }
+      if (v.length >= 10 && /[0-9]/.test(v) && /[A-Z]/.test(v)) {
+        s[2].style.background = '#c4cd6f';
+        t.textContent = 'Kuat ✓';
+      }
+      if (v.length < 6) t.textContent = '';
+    });
+
+    // --- Form Submit ---
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn   = document.getElementById('submit-btn');
+      const nama  = document.getElementById('nama').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const pass  = passInput.value;
+
+      if (!nama || !email || !pass)    { showToast('Semua field wajib diisi.', 'error'); return; }
+      if (pass.length < 6)             { showToast('Password minimal 6 karakter.', 'error'); return; }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">refresh</span> Mendaftar...';
+
+      try {
+        const res  = await fetch(`${API}/register.php`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ nama, email, password: pass })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast('Registrasi berhasil! Cek inbox email Anda untuk verifikasi.', 'success');
+          setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+        } else {
+          showToast(data.message || 'Pendaftaran gagal.', 'error');
+        }
+      } catch (err) {
+        showToast('Tidak dapat terhubung ke server.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">person_add</span> Buat Akun';
+      }
+    });
+  </script>
+</body>
+</html>

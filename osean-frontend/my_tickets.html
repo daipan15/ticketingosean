@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html class="dark" lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.replace('login.html');
+    }
+  </script>
+  <meta name="description" content="OSEAN - Dashboard tiket dan pertanyaan kamu." />
+  <title>OSEAN - Tiket Saya</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: { extend: {
+        colors: {
+          "on-surface-variant": "#ccc4cf", "tertiary": "#efc05e", "surface-variant": "#37352c",
+          "on-primary-container": "#9981b5", "surface-container": "#212017",
+          "surface-container-low": "#1d1c13", "surface-container-high": "#2c2a21",
+          "secondary-container": "#4d5500", "on-background": "#e7e2d5",
+          "inverse-on-surface": "#323127", "on-tertiary": "#402d00",
+          "surface-bright": "#3b3930", "tertiary-container": "#312200",
+          "on-secondary-container": "#c0c96c", "error": "#ffb4ab", "surface": "#15140c",
+          "on-secondary": "#2e3300", "background": "#15140c", "secondary": "#c4cd6f",
+          "on-primary-fixed-variant": "#523d6c", "surface-container-highest": "#37352c",
+          "on-tertiary-fixed": "#261900", "on-surface": "#e7e2d5",
+          "on-tertiary-container": "#ae8529", "error-container": "#93000a",
+          "surface-dim": "#15140c", "on-tertiary-fixed-variant": "#5c4200",
+          "primary-fixed": "#eedbff", "secondary-fixed": "#e0ea88", "on-primary": "#3b2754",
+          "inverse-surface": "#e7e2d5", "outline": "#958e99", "tertiary-fixed-dim": "#efc05e",
+          "on-secondary-fixed-variant": "#444b00", "surface-container-lowest": "#0f0e07",
+          "on-secondary-fixed": "#1a1e00", "tertiary-fixed": "#ffdea2",
+          "inverse-primary": "#6b5585", "on-primary-fixed": "#25113e",
+          "primary-fixed-dim": "#d6bcf4", "primary": "#d6bcf4", "surface-tint": "#d6bcf4",
+          "primary-container": "#2e1a47", "on-error-container": "#ffdad6",
+          "on-error": "#690005", "secondary-fixed-dim": "#c4cd6f", "outline-variant": "#4a454e"
+        },
+        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+        spacing: { "margin-mobile": "20px", "unit": "8px", "asymmetric-offset": "12px",
+                   "margin-desktop": "64px", "gutter": "24px" },
+        fontFamily: {
+          "body-lg": ["Manrope"], "body-md": ["Manrope"],
+          "headline-lg-mobile": ["Syne"], "display-lg": ["Syne"], "display-md": ["Syne"],
+          "label-caps": ["Manrope"], "headline-lg": ["Syne"]
+        },
+        fontSize: {
+          "body-lg":  ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+          "body-md":  ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+          "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+          "display-lg":  ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" }],
+          "display-md":  ["48px", { lineHeight: "1.1", fontWeight: "800" }],
+          "label-caps":  ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "700" }],
+          "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }]
+        }
+      }}
+    }
+  </script>
+
+  <style>
+    /* Sembunyikan scrollbar tapi tetap bisa discroll */
+    html, body {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE dan Edge */
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+      width: 0px;
+      background: transparent;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+  </style>
+</head>
+
+<body class="bg-background text-on-background font-body-md overflow-x-hidden min-h-screen selection:bg-tertiary selection:text-on-tertiary">
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-6 right-6 z-[99999] hidden" style="opacity:0;transition:opacity .4s">
+    <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase">
+      <span id="toast-icon" class="material-symbols-outlined text-[20px]"></span>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
+      <a href="landing_page.html"
+         class="flex items-center gap-3 group">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-10 h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+        <span class="font-display-md text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+      </a>
+
+      <div class="flex items-center gap-3 sm:gap-6">
+        <a href="landing_page.html"
+           class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beranda</a>
+        <a href="venues.html"
+           class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Venue</a>
+        <a href="buy_tickets_payment.html"
+           class="font-label-caps text-xs sm:text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beli Tiket</a>
+        <span class="font-label-caps text-xs sm:text-label-caps text-secondary">Tiket Saya</span>
+        <button id="logout-btn"
+                class="font-label-caps text-xs sm:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>
+          <span class="hidden sm:inline">Keluar</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-16">
+
+    <!-- Page Header -->
+    <div class="mb-12">
+      <p class="font-label-caps text-label-caps text-secondary uppercase mb-2">Halo, <span id="user-nama">—</span></p>
+      <h1 class="font-display-lg text-headline-lg-mobile md:text-display-md text-on-surface uppercase tracking-tighter">
+        Tiket <span class="text-secondary italic">Saya</span>
+      </h1>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+
+      <!-- ===== LEFT: Daftar Tiket ===== -->
+      <section class="lg:col-span-8 flex flex-col gap-6">
+        <div class="flex items-center justify-between">
+          <h2 class="font-headline-lg text-headline-lg text-on-surface uppercase border-b-2 border-outline-variant pb-3">
+            Pesanan Aktif
+          </h2>
+          <a href="buy_tickets_payment.html"
+             class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors">
+            + Beli Tiket Baru
+          </a>
+        </div>
+
+        <!-- Loading state -->
+        <div id="tickets-loading" class="flex items-center gap-3 text-on-surface-variant py-8">
+          <span class="material-symbols-outlined animate-spin">refresh</span>
+          <span class="font-body-md text-body-md">Memuat tiket kamu...</span>
+        </div>
+
+        <!-- Empty state -->
+        <div id="tickets-empty" class="hidden bg-surface-container border-2 border-dashed border-outline-variant p-12 text-center">
+          <span class="material-symbols-outlined text-[48px] text-on-surface-variant mb-4 block">confirmation_number</span>
+          <p class="font-headline-lg text-headline-lg text-on-surface-variant mb-4">Belum ada tiket</p>
+          <a href="buy_tickets_payment.html"
+             class="inline-block bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-6 py-3
+                    shadow-[4px_4px_0px_0px_#15140c] hover:-translate-y-1 transition-all">
+            Beli Sekarang
+          </a>
+        </div>
+
+        <!-- Ticket List (injected by JS) -->
+        <div id="tickets-list" class="flex flex-col gap-6 hidden"></div>
+      </section>
+
+      <!-- ===== RIGHT: Sidebar ===== -->
+      <aside class="lg:col-span-4 flex flex-col gap-8">
+
+        <!-- Payment Ledger -->
+        <div class="bg-surface-container-high border-t-4 border-tertiary p-6 shadow-[8px_8px_0px_0px_rgba(15,14,7,1)] relative rotate-1 hover:rotate-0 transition-transform">
+          <div class="absolute -top-3 -right-3 text-tertiary opacity-20 rotate-12 pointer-events-none">
+            <span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'FILL' 1">receipt_long</span>
+          </div>
+          <h3 class="font-headline-lg text-headline-lg text-tertiary mb-6 uppercase">Ledger</h3>
+          <ul id="ledger-list" class="space-y-4 mb-8">
+            <li class="text-on-surface-variant font-body-md text-body-md flex items-center gap-2">
+              <span class="material-symbols-outlined animate-spin text-[18px]">refresh</span> Memuat...
+            </li>
+          </ul>
+          <a href="buy_tickets_payment.html"
+             class="w-full bg-tertiary text-on-tertiary font-label-caps text-label-caps font-bold uppercase py-4
+                    shadow-[4px_4px_0px_0px_rgba(21,20,12,1)] hover:translate-x-1 hover:translate-y-1
+                    hover:shadow-none transition-all flex justify-center items-center gap-2">
+            <span class="material-symbols-outlined">add_shopping_cart</span>
+            Beli Tiket Baru
+          </a>
+        </div>
+
+        <!-- QnA / Pertanyaan -->
+        <div class="bg-primary-container p-6 shadow-[8px_8px_0px_0px_rgba(15,14,7,1)] -rotate-1 hover:rotate-0 transition-transform">
+          <h3 class="font-headline-lg text-headline-lg text-on-surface mb-6 uppercase border-b-2 border-outline-variant pb-3">
+            Pertanyaan
+          </h3>
+
+          <!-- List pertanyaan -->
+          <div id="qna-list" class="space-y-4 mb-6 max-h-64 overflow-y-auto pr-1">
+            <p class="font-body-md text-body-md text-on-surface-variant opacity-60 flex items-center gap-2">
+              <span class="material-symbols-outlined animate-spin text-[18px]">refresh</span> Memuat...
+            </p>
+          </div>
+
+          <!-- Form kirim pertanyaan -->
+          <div class="border-t border-outline-variant pt-4">
+            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="new-question">
+              Tanya Sesuatu
+            </label>
+            <div class="flex gap-2">
+              <input id="new-question" type="text" placeholder="Ketik pertanyaanmu..."
+                     class="flex-1 bg-surface-container border-0 border-b-2 border-outline-variant text-on-surface font-body-md text-body-md
+                            px-0 py-2 focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
+              <button id="send-question"
+                      class="bg-tertiary text-on-tertiary font-label-caps text-label-caps px-3 py-2
+                             hover:translate-y-[-2px] transition-transform active:scale-95">
+                <span class="material-symbols-outlined text-[20px]">send</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-12 w-full relative overflow-hidden flex flex-col items-center justify-center px-margin-desktop space-y-unit mt-16">
+    <div class="font-display-lg text-display-lg text-on-primary-container opacity-20 absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden whitespace-nowrap">
+      CLOSING CEREMONY
+    </div>
+    <nav class="flex flex-wrap justify-center gap-6 relative z-10 mb-8">
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform" href="#">Privacy Policy</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform" href="#">Terms of Service</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform" href="#">Help Center</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform" href="#">Contact Us</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform" href="#">Partner Program</a>
+    </nav>
+    <p class="font-body-md text-body-md text-on-primary-container relative z-10">
+      © 2026 OSEAN TICKETING. ALL RIGHTS RESERVED.
+    </p>
+  </footer>
+
+  <script>
+    const API = '../osean-backend/api';
+
+    /* -------- Toast -------- */
+    function showToast(msg, type = 'info') {
+      const map = {
+        success: 'bg-secondary text-on-secondary border-[#15140c]',
+        error:   'bg-error text-on-error border-[#15140c]',
+        info:    'bg-surface-container text-on-surface border-outline-variant'
+      };
+      const icons = { success: 'check_circle', error: 'error', info: 'info' };
+      const t  = document.getElementById('toast');
+      const ti = document.getElementById('toast-inner');
+      ti.className = `flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase ${map[type]}`;
+      document.getElementById('toast-icon').textContent = icons[type];
+      document.getElementById('toast-msg').textContent  = msg;
+      t.classList.remove('hidden');
+      t.style.opacity = '1';
+      clearTimeout(t._t);
+      t._t = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 400); }, 3500);
+    }
+
+    /* -------- Session Check -------- */
+    async function checkSession() {
+      try {
+        const res  = await fetch(`${API}/session_check.php`);
+        const data = await res.json();
+        if (!data.logged_in) { window.location.href = 'login.html'; return null; }
+        if (data.user.role === 'admin') { window.location.href = 'admin_panel.html'; return null; }
+        document.getElementById('user-nama').textContent = data.user.nama;
+        return data.user;
+      } catch {
+        window.location.href = 'login.html';
+        return null;
+      }
+    }
+
+    /* -------- Badge status -------- */
+    function statusBadge(status) {
+      const map = {
+        verified: 'bg-secondary text-on-secondary',
+        pending:  'bg-[#402d00] text-tertiary',
+        rejected: 'bg-error-container text-error'
+      };
+      const label = { verified: '✓ Terverifikasi', pending: '⏳ Menunggu', rejected: '✕ Ditolak' };
+      const cls   = map[status] || 'bg-outline-variant text-on-surface';
+      return `<span class="inline-flex items-center gap-1 font-label-caps text-label-caps px-3 py-1 shadow-[2px_2px_0px_0px_#15140c] ${cls}">${label[status] || status}</span>`;
+    }
+
+    /* -------- Load Tiket -------- */
+    async function loadTickets() {
+      try {
+        const res  = await fetch(`${API}/my_tickets.php`);
+        const data = await res.json();
+        document.getElementById('tickets-loading').classList.add('hidden');
+
+        if (!data.success || data.tikets.length === 0) {
+          document.getElementById('tickets-empty').classList.remove('hidden');
+          renderLedger([]);
+          return;
+        }
+
+        document.getElementById('tickets-list').classList.remove('hidden');
+        renderTickets(data.tikets);
+        renderLedger(data.tikets);
+      } catch {
+        document.getElementById('tickets-loading').innerHTML =
+          '<p class="text-error font-body-md">Gagal memuat tiket. Pastikan server aktif.</p>';
+      }
+    }
+
+    function renderTickets(tikets) {
+      const el = document.getElementById('tickets-list');
+      el.innerHTML = tikets.map(t => `
+        <div class="flex flex-col md:flex-row bg-surface-container border border-outline-variant
+                    shadow-[8px_8px_0px_0px_rgba(15,14,7,1)] hover:-translate-y-1 transition-transform duration-300 relative">
+
+          <!-- Sisi kiri warna sesuai status -->
+          <div class="w-full md:w-2 min-h-[4px] ${t.status === 'verified' ? 'bg-secondary' : t.status === 'pending' ? 'bg-tertiary' : 'bg-error'}"></div>
+
+          <!-- Detail tiket -->
+          <div class="flex-1 p-6 flex flex-col gap-4">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">
+                  ${t.metode_pembayaran} • ${new Date(t.tanggal_order).toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'})}
+                </p>
+                <h3 class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+              </div>
+              ${statusBadge(t.status)}
+            </div>
+
+            <div class="flex items-end justify-between border-t border-dashed border-outline-variant pt-4">
+              <div>
+                <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Jumlah × Harga</p>
+                <p class="font-headline-lg text-headline-lg text-tertiary mt-1">
+                  ${t.jumlah_tiket} × ${t.harga_format} = <span class="text-secondary">${t.total_format}</span>
+                </p>
+              </div>
+              ${t.status === 'verified' ?
+                `<button onclick="window.open('${t.bukti_transfer}','_blank')"
+                         class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors">
+                   Lihat Bukti
+                 </button>` : ''
+              }
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderLedger(tikets) {
+      const el = document.getElementById('ledger-list');
+      if (!tikets.length) {
+        el.innerHTML = '<li class="font-body-md text-body-md text-on-surface-variant opacity-60">Belum ada pesanan.</li>';
+        return;
+      }
+      el.innerHTML = tikets.map(t => `
+        <li class="flex justify-between items-center border-b border-outline-variant pb-2 gap-3">
+          <div>
+            <p class="font-body-md text-on-surface font-bold text-sm">${t.nama_tiket}</p>
+            <p class="font-label-caps text-[10px] ${t.status==='verified'?'text-secondary':t.status==='pending'?'text-tertiary':'text-error'} mt-0.5 uppercase">
+              ${t.status==='verified'?'Confirmed':t.status==='pending'?'Menunggu':'Ditolak'}
+            </p>
+          </div>
+          <span class="font-body-md text-on-surface text-sm whitespace-nowrap">${t.total_format}</span>
+        </li>
+      `).join('');
+    }
+
+    /* -------- Load QnA -------- */
+    async function loadQnA() {
+      try {
+        const res  = await fetch(`${API}/questions_list.php`);
+        const data = await res.json();
+        const el   = document.getElementById('qna-list');
+
+        if (!data.success || data.pertanyaan.length === 0) {
+          el.innerHTML = '<p class="font-body-md text-body-md text-on-surface-variant opacity-60">Belum ada pertanyaan terjawab.</p>';
+          return;
+        }
+
+        el.innerHTML = data.pertanyaan.map(q => `
+          <div class="group">
+            <p class="font-body-md text-body-md text-on-surface font-bold mb-1 pr-4">${q.pertanyaan}</p>
+            <p class="font-body-md text-sm text-on-primary-container italic border-l-2 border-secondary pl-3">${q.jawaban}</p>
+          </div>
+        `).join('');
+      } catch {
+        document.getElementById('qna-list').innerHTML =
+          '<p class="text-error font-body-md text-sm">Gagal memuat pertanyaan.</p>';
+      }
+    }
+
+    /* -------- Kirim Pertanyaan -------- */
+    document.getElementById('send-question').addEventListener('click', async () => {
+      const input     = document.getElementById('new-question');
+      const pertanyaan = input.value.trim();
+      if (!pertanyaan) { showToast('Pertanyaan tidak boleh kosong.', 'error'); return; }
+
+      try {
+        const res  = await fetch(`${API}/questions_submit.php`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ pertanyaan })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          input.value = '';
+        } else {
+          showToast(data.message, 'error');
+        }
+      } catch {
+        showToast('Gagal mengirim pertanyaan.', 'error');
+      }
+    });
+
+    /* -------- Logout -------- */
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      try {
+        await fetch(`${API}/logout.php`);
+      } finally {
+        window.location.href = 'login.html';
+      }
+    });
+
+    /* -------- Init -------- */
+    (async () => {
+      const user = await checkSession();
+      if (user) {
+        await Promise.all([loadTickets(), loadQnA()]);
+      }
+    })();
+  </script>
+</body>
+</html>

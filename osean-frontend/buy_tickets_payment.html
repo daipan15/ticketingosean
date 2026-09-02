@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html class="dark" lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.replace('login.html');
+    }
+  </script>
+  <meta name="description" content="OSEAN - Beli tiket dan upload bukti pembayaran." />
+  <title>OSEAN - Beli Tiket</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-surface-variant": "#ccc4cf", "tertiary": "#efc05e", "surface-variant": "#37352c",
+            "on-primary-container": "#9981b5", "surface-container": "#212017",
+            "surface-container-low": "#1d1c13", "surface-container-high": "#2c2a21",
+            "secondary-container": "#4d5500", "on-background": "#e7e2d5",
+            "inverse-on-surface": "#323127", "on-tertiary": "#402d00",
+            "surface-bright": "#3b3930", "tertiary-container": "#312200",
+            "on-secondary-container": "#c0c96c", "error": "#ffb4ab", "surface": "#15140c",
+            "on-secondary": "#2e3300", "background": "#15140c", "secondary": "#c4cd6f",
+            "on-primary-fixed-variant": "#523d6c", "surface-container-highest": "#37352c",
+            "on-tertiary-fixed": "#261900", "on-surface": "#e7e2d5",
+            "on-tertiary-container": "#ae8529", "error-container": "#93000a",
+            "surface-dim": "#15140c", "on-tertiary-fixed-variant": "#5c4200",
+            "primary-fixed": "#eedbff", "secondary-fixed": "#e0ea88", "on-primary": "#3b2754",
+            "inverse-surface": "#e7e2d5", "outline": "#958e99", "tertiary-fixed-dim": "#efc05e",
+            "on-secondary-fixed-variant": "#444b00", "surface-container-lowest": "#0f0e07",
+            "on-secondary-fixed": "#1a1e00", "tertiary-fixed": "#ffdea2",
+            "inverse-primary": "#6b5585", "on-primary-fixed": "#25113e",
+            "primary-fixed-dim": "#d6bcf4", "primary": "#d6bcf4", "surface-tint": "#d6bcf4",
+            "primary-container": "#2e1a47", "on-error-container": "#ffdad6",
+            "on-error": "#690005", "secondary-fixed-dim": "#c4cd6f", "outline-variant": "#4a454e"
+          },
+          borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          spacing: {
+            "margin-mobile": "20px", "unit": "8px", "asymmetric-offset": "12px",
+            "margin-desktop": "64px", "gutter": "24px"
+          },
+          fontFamily: {
+            "body-lg": ["Manrope"], "body-md": ["Manrope"],
+            "headline-lg-mobile": ["Syne"], "display-lg": ["Syne"], "display-md": ["Syne"],
+            "label-caps": ["Manrope"], "headline-lg": ["Syne"]
+          },
+          fontSize: {
+            "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+            "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+            "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+            "display-lg": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" }],
+            "display-md": ["48px", { lineHeight: "1.1", fontWeight: "800" }],
+            "label-caps": ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "700" }],
+            "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Sembunyikan scrollbar tapi tetap bisa discroll */
+    html,
+    body {
+      scrollbar-width: none;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE dan Edge */
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+      width: 0px;
+      background: transparent;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Drop zone upload */
+    #drop-zone.drag-over {
+      border-color: #efc05e;
+      background: rgba(239, 192, 94, 0.05);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background text-on-background font-body-md overflow-x-hidden min-h-screen selection:bg-tertiary selection:text-on-tertiary">
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-6 right-6 z-[99999] hidden" style="opacity:0;transition:opacity .4s">
+    <div id="toast-inner"
+      class="flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase">
+      <span id="toast-icon" class="material-symbols-outlined text-[20px]"></span>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav
+    class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
+      <a href="landing_page.html" class="flex items-center gap-3 group">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo"
+          class="w-10 h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+        <span
+          class="font-display-md text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+      </a>
+
+      <div class="flex items-center gap-3 sm:gap-6">
+        <a href="landing_page.html"
+          class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beranda</a>
+        <a href="venues.html"
+          class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Venue</a>
+        <span class="font-label-caps text-xs sm:text-label-caps text-secondary">Beli Tiket</span>
+        <a href="my_tickets.html"
+          class="font-label-caps text-xs sm:text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Tiket Saya</a>
+        <button id="logout-btn"
+          class="font-label-caps text-xs sm:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>
+          <span class="hidden sm:inline">Keluar</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-16">
+
+    <div class="mb-10">
+      <p class="font-label-caps text-label-caps text-secondary uppercase mb-2">✦ Checkout</p>
+      <h1
+        class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface uppercase">
+        Pilih & Beli Tiket
+      </h1>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+
+      <!-- ===== LEFT: Pilih Tiket ===== -->
+      <section class="lg:col-span-7 flex flex-col gap-6">
+        <h2
+          class="font-label-caps text-label-caps text-on-surface-variant uppercase border-b border-outline-variant pb-3">
+          Kategori Tiket Tersedia
+        </h2>
+
+        <!-- Loading -->
+        <div id="tickets-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
+          <span class="material-symbols-outlined animate-spin">refresh</span>
+          <span class="font-body-md text-body-md">Memuat tiket...</span>
+        </div>
+
+        <!-- Ticket options (injected by JS) -->
+        <div id="ticket-options" class="flex flex-col gap-4 hidden"></div>
+      </section>
+
+      <!-- ===== RIGHT: Form Checkout ===== -->
+      <aside class="lg:col-span-5">
+        <div class="relative">
+          <div class="absolute inset-0 translate-x-2 translate-y-2 bg-tertiary-container -z-10"></div>
+          <div class="bg-surface-container border-2 border-outline-variant p-6">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6 uppercase">Order Summary</h2>
+
+            <!-- Selected ticket info -->
+            <div id="order-summary" class="hidden mb-6 bg-surface-container-high p-4 border border-outline-variant">
+              <p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Tiket dipilih</p>
+              <p id="summary-nama" class="font-body-lg text-body-lg text-on-surface font-bold"></p>
+              <p id="summary-harga" class="font-label-caps text-label-caps text-tertiary mt-1"></p>
+            </div>
+            <p id="no-ticket-msg" class="font-body-md text-body-md text-on-surface-variant mb-6 opacity-60">
+              Pilih kategori tiket di sebelah kiri.
+            </p>
+
+            <form id="checkout-form" class="flex flex-col gap-5" novalidate>
+              <!-- Hidden ticket_id -->
+              <input type="hidden" id="ticket_id" name="ticket_id" value="" />
+
+              <!-- Jumlah tiket -->
+              <div>
+                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2"
+                  for="jumlah_tiket">
+                  Jumlah Tiket
+                </label>
+                <div class="flex items-center gap-3">
+                  <button type="button" id="qty-minus"
+                    class="w-10 h-10 bg-surface-container-high border-2 border-outline-variant text-on-surface font-bold text-lg
+                                 hover:border-tertiary hover:text-tertiary transition-colors flex items-center justify-center">−</button>
+                  <span id="qty-display"
+                    class="font-headline-lg text-headline-lg text-on-surface min-w-[2rem] text-center">1</span>
+                  <button type="button" id="qty-plus"
+                    class="w-10 h-10 bg-surface-container-high border-2 border-outline-variant text-on-surface font-bold text-lg
+                                 hover:border-tertiary hover:text-tertiary transition-colors flex items-center justify-center">+</button>
+                  <span id="qty-total" class="ml-2 font-body-md text-body-md text-secondary font-bold"></span>
+                </div>
+              </div>
+
+              <!-- Metode Pembayaran -->
+              <div>
+                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2"
+                  for="metode_pembayaran">
+                  Metode Pembayaran
+                </label>
+                <select id="metode_pembayaran" name="metode_pembayaran" class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-body-md px-4 py-3
+                               focus:border-tertiary focus:outline-none transition-colors">
+                  <option value="transfer">Transfer Bank</option>
+                  <option value="qris">QRIS</option>
+                  <option value="tunai">Tunai (On-site)</option>
+                </select>
+              </div>
+
+              <!-- Upload Bukti Transfer -->
+              <div>
+                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2">
+                  Bukti Transfer / Pembayaran
+                </label>
+                <div id="drop-zone"
+                  class="border-2 border-dashed border-outline-variant p-6 text-center cursor-pointer hover:border-tertiary transition-colors relative">
+                  <input type="file" id="bukti_transfer" name="bukti_transfer" accept="image/*"
+                    class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+                  <span
+                    class="material-symbols-outlined text-[36px] text-on-surface-variant block mb-2">cloud_upload</span>
+                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Klik atau drag file</p>
+                  <p class="font-body-md text-body-md text-on-surface-variant opacity-60 text-sm mt-1">JPG / PNG / WebP
+                    — maks 5 MB</p>
+                  <p id="file-name" class="font-label-caps text-label-caps text-tertiary mt-2 hidden"></p>
+                </div>
+              </div>
+
+              <!-- Total -->
+              <div class="border-t border-dashed border-outline-variant pt-4">
+                <div class="flex justify-between items-center">
+                  <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Bayar</span>
+                  <span id="total-display" class="font-headline-lg text-headline-lg text-secondary">—</span>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <button type="submit" id="submit-btn" disabled class="w-full bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase py-4
+                             shadow-[6px_6px_0px_0px_#15140c] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#15140c]
+                             active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-200
+                             flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                <span class="material-symbols-outlined">payments</span>
+                Bayar Sekarang
+              </button>
+            </form>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer
+    class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-12 w-full relative overflow-hidden flex flex-col items-center justify-center px-margin-desktop space-y-unit mt-16">
+    <div
+      class="font-display-lg text-display-lg text-on-primary-container opacity-20 absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden whitespace-nowrap">
+      CLOSING CEREMONY
+    </div>
+    <nav class="flex flex-wrap justify-center gap-6 relative z-10 mb-8">
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform"
+        href="#">Privacy Policy</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform"
+        href="#">Terms of Service</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform"
+        href="#">Help Center</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform"
+        href="#">Contact Us</a>
+      <a class="font-label-caps text-label-caps text-on-primary-container hover:text-secondary transition-colors hover:translate-y-[-2px] transition-transform"
+        href="#">Partner Program</a>
+    </nav>
+    <p class="font-body-md text-body-md text-on-primary-container relative z-10">
+      © 2026 OSEAN TICKETING. ALL RIGHTS RESERVED.
+    </p>
+  </footer>
+
+  <script>
+    const API = '../osean-backend/api';
+    let selectedTicket = null;
+    let qty = 1;
+
+    /* -------- Toast -------- */
+    function showToast(msg, type = 'info') {
+      const map = {
+        success: 'bg-secondary text-on-secondary border-[#15140c]',
+        error: 'bg-error text-on-error border-[#15140c]',
+        info: 'bg-surface-container text-on-surface border-outline-variant'
+      };
+      const icons = { success: 'check_circle', error: 'error', info: 'info' };
+      const t = document.getElementById('toast');
+      const ti = document.getElementById('toast-inner');
+      ti.className = `flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase ${map[type]}`;
+      document.getElementById('toast-icon').textContent = icons[type];
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.remove('hidden');
+      t.style.opacity = '1';
+      clearTimeout(t._t);
+      t._t = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 400); }, 3500);
+    }
+
+    /* -------- Session -------- */
+    (async () => {
+      try {
+        const res = await fetch(`${API}/session_check.php`);
+        const data = await res.json();
+        if (!data.logged_in) { window.location.href = 'login.html'; return; }
+        if (data.user.role === 'admin') { window.location.href = 'admin_panel.html'; return; }
+        loadTickets();
+      } catch { window.location.href = 'login.html'; }
+    })();
+
+    /* -------- Load Tiket -------- */
+    async function loadTickets() {
+      try {
+        const res = await fetch(`${API}/tickets_list.php`);
+        const data = await res.json();
+        document.getElementById('tickets-loading').classList.add('hidden');
+
+        if (!data.success || data.tickets.length === 0) {
+          document.getElementById('ticket-options').innerHTML =
+            '<p class="text-on-surface-variant font-body-md">Tidak ada tiket tersedia saat ini.</p>';
+          document.getElementById('ticket-options').classList.remove('hidden');
+          return;
+        }
+
+        const el = document.getElementById('ticket-options');
+        el.classList.remove('hidden');
+
+        // Jadwal rilis dan kedaluwarsa tiket (real-time)
+        const SCHEDULE_MAP = {
+          'early bird': {
+            startDate: new Date('2026-09-04T00:00:00+07:00'),
+            endDate: new Date('2026-09-08T23:59:59+07:00'),
+            rangeLabel: '4 - 8 September 2026'
+          },
+          'pre sale 1': {
+            startDate: new Date('2026-09-09T00:00:00+07:00'),
+            endDate: new Date('2026-09-16T23:59:59+07:00'),
+            rangeLabel: '9 - 16 September 2026'
+          },
+          'pre sale 2': {
+            startDate: new Date('2026-09-17T00:00:00+07:00'),
+            endDate: new Date('2026-09-24T23:59:59+07:00'),
+            rangeLabel: '17 - 24 September 2026'
+          },
+          'on the spot': {
+            startDate: new Date('2026-09-25T00:00:00+07:00'),
+            endDate: new Date('2026-09-27T23:59:59+07:00'),
+            rangeLabel: '25 - 27 September 2026'
+          }
+        };
+
+        const now = new Date();
+
+        el.innerHTML = data.tickets.map(t => {
+          const key = t.nama_tiket.toLowerCase().trim();
+          const sched = SCHEDULE_MAP[key];
+
+          let status = 'active'; // 'upcoming', 'active', 'passed'
+          let dateLabel = sched ? sched.rangeLabel : '';
+
+          if (sched) {
+            if (now < sched.startDate) {
+              status = 'upcoming';
+            } else if (now > sched.endDate) {
+              status = 'passed';
+            }
+          }
+
+          if (status === 'upcoming') {
+            // TIKET BELUM BUKA (HARGA DITUTUP Rp XXX & TIDAK BISA DIPILIH)
+            return `
+              <div class="relative border-2 border-outline-variant p-5 opacity-60 bg-surface-container-low cursor-not-allowed select-none">
+                <div class="flex items-start justify-between pr-8">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <p class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</p>
+                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[10px] uppercase px-2 py-0.5">
+                        📅 ${dateLabel}
+                      </span>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+                  </div>
+                  <span class="border border-outline-variant text-on-surface-variant font-label-caps text-[11px] uppercase px-2.5 py-1 flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-[14px]">lock</span> Segera
+                  </span>
+                </div>
+                <div class="flex items-end justify-between mt-4 border-t border-dashed border-outline-variant pt-3">
+                  <p class="font-display-md text-outline-variant font-mono tracking-widest" style="font-size:22px;font-weight:700">Rp XXX</p>
+                  <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Belum Tersedia</span>
+                </div>
+              </div>
+            `;
+          }
+
+          if (status === 'passed') {
+            // TIKET SUDAH LEWAT TANGGALNYA (PASSED & TIDAK BISA DIPILIH)
+            return `
+              <div class="relative border-2 border-outline-variant p-5 opacity-50 bg-surface-container-low grayscale-[40%] cursor-not-allowed select-none">
+                <div class="flex items-start justify-between pr-8">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <p class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</p>
+                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[10px] uppercase px-2 py-0.5">
+                        📅 ${dateLabel}
+                      </span>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+                  </div>
+                  <span class="bg-error-container/40 border border-error/50 text-error font-label-caps text-[11px] uppercase px-2.5 py-1 flex items-center gap-1 font-bold">
+                    <span class="material-symbols-outlined text-[14px]">event_busy</span> PASSED
+                  </span>
+                </div>
+                <div class="flex items-end justify-between mt-4 border-t border-dashed border-outline-variant pt-3">
+                  <p class="font-display-md text-outline-variant line-through" style="font-size:22px;font-weight:700">${t.harga_format}</p>
+                  <span class="font-label-caps text-label-caps text-error uppercase font-bold">Periode Berakhir</span>
+                </div>
+              </div>
+            `;
+          }
+
+          // TIKET AKTIF (BISA DIPILIH)
+          return `
+            <label class="ticket-option cursor-pointer group" data-id="${t.id}" data-nama="${t.nama_tiket}" data-harga="${t.harga}" data-harga-fmt="${t.harga_format}" data-sisa="${t.sisa_kuota}">
+              <div class="relative border-2 border-outline-variant p-5 hover:border-tertiary transition-all
+                          group-[.selected]:border-tertiary group-[.selected]:bg-surface-container-high shadow-[4px_4px_0px_0px_transparent]
+                          group-[.selected]:shadow-[4px_4px_0px_0px_#efc05e]">
+
+                <!-- Selection indicator -->
+                <div class="absolute top-4 right-4 w-5 h-5 border-2 border-outline-variant group-[.selected]:border-tertiary
+                            group-[.selected]:bg-tertiary flex items-center justify-center transition-all">
+                  <span class="material-symbols-outlined text-[14px] text-on-tertiary hidden group-[.selected]:block">check</span>
+                </div>
+
+                <div class="flex items-start justify-between pr-8">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <p class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</p>
+                      ${dateLabel ? `<span class="border border-secondary text-secondary font-label-caps text-[10px] uppercase px-2 py-0.5">📅 ${dateLabel}</span>` : ''}
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+                  </div>
+                </div>
+
+                <div class="flex items-end justify-between mt-4 border-t border-dashed border-outline-variant pt-3">
+                  <p class="font-display-md text-tertiary" style="font-size:24px;font-weight:700">${t.harga_format}</p>
+                  <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">${t.sisa_kuota} sisa</span>
+                </div>
+              </div>
+            </label>
+          `;
+        }).join('');
+
+        // Ticket select listener
+        document.querySelectorAll('.ticket-option').forEach(el => {
+          el.addEventListener('click', () => {
+            document.querySelectorAll('.ticket-option').forEach(e => e.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedTicket = {
+              id: el.dataset.id,
+              nama: el.dataset.nama,
+              harga: parseInt(el.dataset.harga),
+              hargaFmt: el.dataset.hargaFmt,
+              sisa: parseInt(el.dataset.sisa)
+            };
+            document.getElementById('ticket_id').value = selectedTicket.id;
+            document.getElementById('summary-nama').textContent = selectedTicket.nama;
+            document.getElementById('summary-harga').textContent = el.dataset.hargaFmt + ' / tiket';
+            document.getElementById('order-summary').classList.remove('hidden');
+            document.getElementById('no-ticket-msg').classList.add('hidden');
+            updateTotal();
+            document.getElementById('submit-btn').disabled = false;
+          });
+        });
+
+      } catch {
+        document.getElementById('tickets-loading').innerHTML =
+          '<p class="text-error font-body-md">Gagal memuat tiket. Pastikan server aktif.</p>';
+      }
+    }
+
+    /* -------- Qty Control -------- */
+    function updateTotal() {
+      if (!selectedTicket) return;
+      const total = selectedTicket.harga * qty;
+      document.getElementById('qty-display').textContent = qty;
+      document.getElementById('qty-total').textContent = '×' + qty;
+      document.getElementById('total-display').textContent =
+        'Rp ' + total.toLocaleString('id-ID');
+    }
+
+    document.getElementById('qty-minus').addEventListener('click', () => {
+      if (qty > 1) { qty--; updateTotal(); }
+    });
+    document.getElementById('qty-plus').addEventListener('click', () => {
+      const max = selectedTicket ? selectedTicket.sisa : 10;
+      if (qty < max) { qty++; updateTotal(); }
+      else showToast(`Maksimal ${max} tiket tersedia.`, 'info');
+    });
+
+    /* -------- File Upload Preview -------- */
+    document.getElementById('bukti_transfer').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const nameEl = document.getElementById('file-name');
+      if (file) {
+        nameEl.textContent = '📎 ' + file.name;
+        nameEl.classList.remove('hidden');
+      }
+    });
+
+    /* -------- Drag & Drop -------- */
+    const dropZone = document.getElementById('drop-zone');
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        document.getElementById('bukti_transfer').files = dt.files;
+        document.getElementById('file-name').textContent = '📎 ' + file.name;
+        document.getElementById('file-name').classList.remove('hidden');
+      }
+    });
+
+    /* -------- Form Submit -------- */
+    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+
+      if (!selectedTicket) { showToast('Pilih kategori tiket terlebih dahulu.', 'error'); return; }
+      const file = document.getElementById('bukti_transfer').files[0];
+      if (!file) { showToast('Upload bukti transfer terlebih dahulu.', 'error'); return; }
+      if (file.size > 5 * 1024 * 1024) { showToast('File terlalu besar (maks 5MB).', 'error'); return; }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Memproses...';
+
+      const formData = new FormData();
+      formData.append('ticket_id', selectedTicket.id);
+      formData.append('jumlah_tiket', qty);
+      formData.append('metode_pembayaran', document.getElementById('metode_pembayaran').value);
+      formData.append('bukti_transfer', file);
+
+      try {
+        const res = await fetch(`${API}/payment_create.php`, { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message, 'success');
+          setTimeout(() => { window.location.href = 'my_tickets.html'; }, 1500);
+        } else {
+          showToast(data.message || 'Pembayaran gagal.', 'error');
+        }
+      } catch {
+        showToast('Tidak dapat terhubung ke server.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+      }
+    });
+
+    /* -------- Logout -------- */
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      try { await fetch(`${API}/logout.php`); } finally { window.location.href = 'login.html'; }
+    });
+  </script>
+</body>
+
+</html>

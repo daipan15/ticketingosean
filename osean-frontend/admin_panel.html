@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html class="dark" lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OSEAN Admin — Verifikasi pembayaran dan kelola pertanyaan." />
+  <title>OSEAN - Admin Panel</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-surface-variant": "#ccc4cf", "tertiary": "#efc05e", "surface-variant": "#37352c",
+            "on-primary-container": "#9981b5", "surface-container": "#212017",
+            "surface-container-low": "#1d1c13", "surface-container-high": "#2c2a21",
+            "secondary-container": "#4d5500", "on-background": "#e7e2d5",
+            "inverse-on-surface": "#323127", "on-tertiary": "#402d00",
+            "surface-bright": "#3b3930", "tertiary-container": "#312200",
+            "on-secondary-container": "#c0c96c", "error": "#ffb4ab", "surface": "#15140c",
+            "on-secondary": "#2e3300", "background": "#15140c", "secondary": "#c4cd6f",
+            "on-primary-fixed-variant": "#523d6c", "surface-container-highest": "#37352c",
+            "on-tertiary-fixed": "#261900", "on-surface": "#e7e2d5",
+            "on-tertiary-container": "#ae8529", "error-container": "#93000a",
+            "surface-dim": "#15140c", "on-tertiary-fixed-variant": "#5c4200",
+            "primary-fixed": "#eedbff", "secondary-fixed": "#e0ea88", "on-primary": "#3b2754",
+            "inverse-surface": "#e7e2d5", "outline": "#958e99", "tertiary-fixed-dim": "#efc05e",
+            "on-secondary-fixed-variant": "#444b00", "surface-container-lowest": "#0f0e07",
+            "on-secondary-fixed": "#1a1e00", "tertiary-fixed": "#ffdea2",
+            "inverse-primary": "#6b5585", "on-primary-fixed": "#25113e",
+            "primary-fixed-dim": "#d6bcf4", "primary": "#d6bcf4", "surface-tint": "#d6bcf4",
+            "primary-container": "#2e1a47", "on-error-container": "#ffdad6",
+            "on-error": "#690005", "secondary-fixed-dim": "#c4cd6f", "outline-variant": "#4a454e"
+          },
+          borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          spacing: {
+            "margin-mobile": "20px", "unit": "8px", "asymmetric-offset": "12px",
+            "margin-desktop": "64px", "gutter": "24px"
+          },
+          fontFamily: {
+            "body-lg": ["Manrope"], "body-md": ["Manrope"],
+            "headline-lg-mobile": ["Syne"], "display-lg": ["Syne"], "display-md": ["Syne"],
+            "label-caps": ["Manrope"], "headline-lg": ["Syne"]
+          },
+          fontSize: {
+            "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+            "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+            "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+            "display-lg": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" }],
+            "display-md": ["48px", { lineHeight: "1.1", fontWeight: "800" }],
+            "label-caps": ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "700" }],
+            "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Sembunyikan scrollbar tapi tetap bisa discroll */
+    html, body {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE dan Edge */
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+      width: 0px;
+      background: transparent;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background text-on-background font-body-md overflow-x-hidden min-h-screen flex selection:bg-tertiary selection:text-on-tertiary">
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-6 right-6 z-[99999] hidden" style="opacity:0;transition:opacity .4s">
+    <div id="toast-inner"
+      class="flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase">
+      <span id="toast-icon" class="material-symbols-outlined text-[20px]"></span>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside
+    class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant shadow-[4px_0px_0px_0px_rgba(21,20,12,0.5)] py-8 z-50">
+
+    <!-- Logo -->
+    <div class="px-6 mb-12">
+      <div class="flex items-center gap-3">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-10 h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] -rotate-2" />
+        <h1 class="font-headline-lg text-headline-lg text-tertiary italic -rotate-2 tracking-tighter leading-none">OSEAN</h1>
+      </div>
+      <div class="mt-4 flex items-center gap-3">
+        <div class="w-9 h-9 bg-primary-container border-2 border-tertiary flex items-center justify-center">
+          <span class="material-symbols-outlined text-tertiary text-[18px]">admin_panel_settings</span>
+        </div>
+        <div>
+          <p class="font-label-caps text-label-caps text-on-surface">Admin Panel</p>
+          <p class="font-label-caps text-[10px] text-on-surface-variant mt-0.5" id="admin-nama">—</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 flex flex-col gap-1">
+      <a href="#payments" onclick="showTab('payments')" id="nav-payments"
+        class="nav-link text-tertiary bg-tertiary-container border-r-4 border-tertiary flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high transition-all">
+        <span class="material-symbols-outlined">fact_check</span>
+        <span class="font-label-caps text-label-caps">Verifikasi Bayar</span>
+        <span id="badge-pending"
+          class="ml-auto bg-error text-on-error font-label-caps text-[10px] px-2 py-0.5 rounded-sm hidden">0</span>
+      </a>
+      <a href="#qna" onclick="showTab('qna')" id="nav-qna"
+        class="nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all">
+        <span class="material-symbols-outlined">forum</span>
+        <span class="font-label-caps text-label-caps">Pertanyaan</span>
+        <span id="badge-qna"
+          class="ml-auto bg-error text-on-error font-label-caps text-[10px] px-2 py-0.5 rounded-sm hidden">0</span>
+      </a>
+    </nav>
+
+    <!-- Logout -->
+    <div class="px-6 mt-auto">
+      <button id="logout-btn"
+        class="w-full bg-error-container text-error font-label-caps text-label-caps py-3
+                     border border-error hover:bg-error hover:text-on-error transition-colors flex justify-center items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">logout</span>
+        Keluar
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="flex-1 md:ml-64 bg-background relative min-w-0">
+
+    <!-- Mobile Top Navigation Bar (Tampil di HP & Tablet kecil) -->
+    <div class="md:hidden sticky top-0 z-50 bg-surface-container-low border-b border-outline-variant px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <img src="assets/osean_logo.png" alt="OSEAN" class="w-8 h-8 object-contain drop-shadow-[0_2px_6px_rgba(239,192,94,0.3)]" />
+        <span class="font-headline-lg text-xl text-tertiary italic">OSEAN</span>
+        <span class="font-label-caps text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 border border-outline-variant">Admin</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="#payments" onclick="showTab('payments')" class="nav-link text-tertiary font-label-caps text-xs px-2.5 py-1.5 border border-tertiary bg-tertiary/10">Bayar</a>
+        <a href="#qna" onclick="showTab('qna')" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Tanya</a>
+        <button id="mobile-logout-btn" onclick="document.getElementById('logout-btn').click()" class="text-error border border-error/50 p-1 flex items-center justify-center">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Header Desktop/Tablet -->
+    <header
+      class="bg-surface-container-low/90 backdrop-blur border-b border-outline-variant px-4 sm:px-6 py-4 flex justify-between items-center">
+      <div>
+        <h2 class="font-display-md text-2xl sm:text-display-md text-on-surface leading-none">Overview</h2>
+        <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">
+          Monitor pembayaran & jawab pertanyaan user secara real-time.
+        </p>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 text-secondary font-label-caps text-label-caps">
+        <span class="w-2 h-2 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_#c4cd6f]"></span>
+        LIVE
+      </div>
+    </header>
+
+    <!-- Stats Bar (1 kolom di HP, 3 kolom di iPad & Laptop) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 p-4 sm:p-6 border-b border-outline-variant" id="stats-bar">
+      <div class="bg-primary-container border border-outline-variant p-4 shadow-[4px_4px_0px_0px_#15140c]">
+        <p class="font-label-caps text-label-caps text-on-primary-container mb-1">Total Revenue</p>
+        <p class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary" id="stat-revenue">—</p>
+      </div>
+      <div class="bg-surface-container border border-outline-variant p-4 shadow-[4px_4px_0px_0px_#15140c]">
+        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Transaksi Verified</p>
+        <p class="font-headline-lg text-2xl sm:text-headline-lg text-on-surface" id="stat-verified">—</p>
+      </div>
+      <div class="bg-[#2E1A47] border border-tertiary p-4 shadow-[4px_4px_0px_0px_#efc05e]">
+        <p class="font-label-caps text-label-caps text-tertiary mb-1">Menunggu Verifikasi</p>
+        <p class="font-headline-lg text-2xl sm:text-headline-lg text-on-surface" id="stat-pending">—</p>
+      </div>
+    </div>
+
+    <!-- ===== TAB: Payments ===== -->
+    <section id="tab-payments" class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">fact_check</span>
+          Verifikasi Pembayaran
+        </h3>
+        <button onclick="loadPayments()"
+          class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div id="pay-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
+        <span class="material-symbols-outlined animate-spin">refresh</span>
+        <span class="font-body-md text-body-md">Memuat pembayaran...</span>
+      </div>
+
+      <!-- Table -->
+      <div class="hidden overflow-hidden border border-outline-variant shadow-[8px_8px_0px_0px_rgba(21,20,12,1)]"
+        id="pay-table-wrap">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b-2 border-dashed border-outline-variant bg-surface-container-highest">
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">User</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Tiket</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Jumlah</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Total Bayar</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Bukti</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Status</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pay-tbody" class="divide-y divide-outline-variant/30"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <p id="pay-empty" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Belum ada pembayaran.</p>
+    </section>
+
+    <!-- ===== TAB: QnA ===== -->
+    <section id="tab-qna" class="p-6 hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">forum</span>
+          Kelola Pertanyaan
+        </h3>
+        <button onclick="loadQnA()"
+          class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div id="qna-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
+        <span class="material-symbols-outlined animate-spin">refresh</span>
+        <span class="font-body-md text-body-md">Memuat pertanyaan...</span>
+      </div>
+
+      <!-- List (injected) -->
+      <div id="qna-list" class="flex flex-col gap-4 hidden max-w-3xl"></div>
+      <p id="qna-empty" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Tidak ada pertanyaan
+        menunggu jawaban.</p>
+    </section>
+
+  </main>
+
+  <script>
+    const API = '../osean-backend/api';
+
+    /* -------- Toast -------- */
+    function showToast(msg, type = 'info') {
+      const map = {
+        success: 'bg-secondary text-on-secondary border-[#15140c]',
+        error: 'bg-error text-on-error border-[#15140c]',
+        info: 'bg-surface-container text-on-surface border-outline-variant'
+      };
+      const icons = { success: 'check_circle', error: 'error', info: 'info' };
+      const t = document.getElementById('toast');
+      const ti = document.getElementById('toast-inner');
+      ti.className = `flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase ${map[type]}`;
+      document.getElementById('toast-icon').textContent = icons[type];
+      document.getElementById('toast-msg').textContent = msg;
+      t.classList.remove('hidden');
+      t.style.opacity = '1';
+      clearTimeout(t._t);
+      t._t = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 400); }, 3500);
+    }
+
+    /* -------- Tab System -------- */
+    function showTab(tab) {
+      ['payments', 'qna'].forEach(id => {
+        document.getElementById(`tab-${id}`).classList.toggle('hidden', id !== tab);
+        const nav = document.getElementById(`nav-${id}`);
+        if (id === tab) {
+          nav.className = 'nav-link text-tertiary bg-tertiary-container border-r-4 border-tertiary flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high transition-all';
+        } else {
+          nav.className = 'nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all';
+        }
+      });
+    }
+
+    /* -------- Session -------- */
+    (async () => {
+      try {
+        const res = await fetch(`${API}/session_check.php`);
+        const data = await res.json();
+        if (!data.logged_in || data.user.role !== 'admin') {
+          window.location.href = 'login.html'; return;
+        }
+        document.getElementById('admin-nama').textContent = data.user.nama;
+        await Promise.all([loadPayments(), loadQnA()]);
+      } catch { window.location.href = 'login.html'; }
+    })();
+
+    /* -------- Load Payments -------- */
+    async function loadPayments() {
+      document.getElementById('pay-loading').classList.remove('hidden');
+      document.getElementById('pay-table-wrap').classList.add('hidden');
+      document.getElementById('pay-empty').classList.add('hidden');
+
+      try {
+        const res = await fetch(`${API}/admin_payments_list.php`);
+        const data = await res.json();
+        document.getElementById('pay-loading').classList.add('hidden');
+
+        // Update stats
+        const s = data.stats || {};
+        document.getElementById('stat-revenue').textContent = s.revenue_format || 'Rp 0';
+        document.getElementById('stat-verified').textContent = s.verified || 0;
+        document.getElementById('stat-pending').textContent = s.pending || 0;
+
+        // Badge
+        const badge = document.getElementById('badge-pending');
+        if (s.pending > 0) { badge.textContent = s.pending; badge.classList.remove('hidden'); }
+        else badge.classList.add('hidden');
+
+        if (!data.success || data.payments.length === 0) {
+          document.getElementById('pay-empty').classList.remove('hidden'); return;
+        }
+
+        document.getElementById('pay-table-wrap').classList.remove('hidden');
+        const tbody = document.getElementById('pay-tbody');
+        tbody.innerHTML = data.payments.map(p => {
+          const isPending = p.status === 'pending';
+          const statusCls = p.status === 'verified' ? 'text-secondary' : p.status === 'rejected' ? 'text-error' : 'text-tertiary';
+          const statusLbl = p.status === 'verified' ? '✓ Verified' : p.status === 'rejected' ? '✕ Ditolak' : '⏳ Pending';
+
+          return `
+            <tr class="hover:bg-surface-container transition-colors group">
+              <td class="p-4">
+                <p class="font-body-md text-on-surface font-bold">${p.nama}</p>
+                <p class="text-sm text-on-surface-variant">${p.email}</p>
+              </td>
+              <td class="p-4 font-body-md text-on-surface">${p.nama_tiket}</td>
+              <td class="p-4 font-body-md text-on-surface-variant">${p.jumlah_tiket}x</td>
+              <td class="p-4 font-body-md text-secondary font-bold">${p.total_format}</td>
+              <td class="p-4">
+                <a href="${p.bukti_transfer}" target="_blank"
+                   class="w-16 h-12 border border-outline-variant group-hover:border-tertiary transition-colors block overflow-hidden flex items-center justify-center hover:opacity-100 opacity-80">
+                  <img src="${p.bukti_transfer}" alt="Bukti" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\'material-symbols-outlined text-on-surface-variant\'>receipt</span>'" />
+                </a>
+              </td>
+              <td class="p-4 font-label-caps text-label-caps uppercase ${statusCls}">${statusLbl}</td>
+              <td class="p-4">
+                ${isPending ? `
+                  <div class="flex items-center justify-end gap-2">
+                    <button onclick="verifyPayment(${p.payment_id}, 'reject')"
+                            class="p-2 border border-outline-variant text-error hover:bg-error/10 hover:border-error transition-colors" title="Tolak">
+                      <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                    <button onclick="verifyPayment(${p.payment_id}, 'verify')"
+                            class="bg-tertiary text-on-tertiary px-4 py-2 font-label-caps text-label-caps shadow-[2px_2px_0px_0px_#15140c]
+                                   hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_#15140c] transition-all">
+                      Approve
+                    </button>
+                  </div>
+                ` : `<span class="font-label-caps text-[10px] text-on-surface-variant opacity-60">—</span>`}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+      } catch {
+        document.getElementById('pay-loading').innerHTML =
+          '<p class="text-error font-body-md">Gagal memuat data. Pastikan server aktif.</p>';
+      }
+    }
+
+    /* -------- Verify / Reject Payment -------- */
+    async function verifyPayment(paymentId, action) {
+      const label = action === 'verify' ? 'setujui' : 'tolak';
+      if (!confirm(`Yakin ingin ${label} pembayaran ini?`)) return;
+
+      try {
+        const res = await fetch(`${API}/admin_payment_verify.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payment_id: paymentId, action })
+        });
+        const data = await res.json();
+
+        if (data.success) { showToast(data.message, 'success'); loadPayments(); }
+        else { showToast(data.message, 'error'); }
+      } catch {
+        showToast('Gagal memproses. Coba lagi.', 'error');
+      }
+    }
+
+    /* -------- Load QnA -------- */
+    async function loadQnA() {
+      document.getElementById('qna-loading').classList.remove('hidden');
+      document.getElementById('qna-list').classList.add('hidden');
+      document.getElementById('qna-empty').classList.add('hidden');
+
+      try {
+        const res = await fetch(`${API}/admin_questions_list.php`);
+        const data = await res.json();
+        document.getElementById('qna-loading').classList.add('hidden');
+
+        // Badge
+        const badge = document.getElementById('badge-qna');
+        if (data.total_menunggu > 0) { badge.textContent = data.total_menunggu; badge.classList.remove('hidden'); }
+        else badge.classList.add('hidden');
+
+        if (!data.success || data.pertanyaan.length === 0) {
+          document.getElementById('qna-empty').classList.remove('hidden'); return;
+        }
+
+        const el = document.getElementById('qna-list');
+        el.classList.remove('hidden');
+        el.innerHTML = data.pertanyaan.map(q => `
+          <div id="qna-${q.id}" class="bg-surface-container border-l-4 ${q.status === 'menunggu' ? 'border-l-tertiary' : 'border-l-outline-variant'} p-5 relative">
+            <div class="flex items-start justify-between mb-2 gap-4">
+              <div>
+                <span class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">
+                  ${q.nama} · ${new Date(q.created_at).toLocaleDateString('id-ID')}
+                </span>
+                <p class="font-body-lg text-body-lg text-on-surface mt-1 font-bold">"${q.pertanyaan}"</p>
+              </div>
+              <span class="font-label-caps text-[10px] px-2 py-1 shrink-0 ${q.status === 'menunggu' ? 'bg-tertiary-container text-tertiary' : 'bg-secondary-container text-secondary'}">
+                ${q.status === 'menunggu' ? 'Menunggu' : '✓ Dijawab'}
+              </span>
+            </div>
+
+            ${q.status === 'dijawab' && q.jawaban ? `
+              <p class="font-body-md text-body-md text-on-surface-variant italic border-l-2 border-secondary pl-3 mt-3 mb-4">${q.jawaban}</p>
+            ` : ''}
+
+            ${q.status === 'menunggu' ? `
+              <div class="mt-4 flex flex-col gap-2">
+                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]" for="reply-${q.id}">Tulis Jawaban</label>
+                <div class="flex gap-2">
+                  <textarea id="reply-${q.id}" rows="2" placeholder="Jawaban kamu..."
+                            class="flex-1 bg-surface-container-high border border-outline-variant text-on-surface font-body-md text-body-md px-3 py-2
+                                   focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40 resize-none"></textarea>
+                  <button onclick="sendAnswer(${q.id})"
+                          class="bg-tertiary text-on-tertiary px-4 py-2 font-label-caps text-label-caps shadow-[2px_2px_0px_0px_#15140c]
+                                 hover:translate-y-[1px] hover:translate-x-[1px] transition-all self-end flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[18px]">send</span> Kirim
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+
+      } catch {
+        document.getElementById('qna-loading').innerHTML =
+          '<p class="text-error font-body-md">Gagal memuat pertanyaan.</p>';
+      }
+    }
+
+    /* -------- Send Answer -------- */
+    async function sendAnswer(questionId) {
+      const textarea = document.getElementById(`reply-${questionId}`);
+      const jawaban = textarea.value.trim();
+      if (!jawaban) { showToast('Jawaban tidak boleh kosong.', 'error'); return; }
+
+      try {
+        const res = await fetch(`${API}/admin_questions_answer.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question_id: questionId, jawaban })
+        });
+        const data = await res.json();
+
+        if (data.success) { showToast(data.message, 'success'); loadQnA(); }
+        else { showToast(data.message, 'error'); }
+      } catch {
+        showToast('Gagal mengirim jawaban.', 'error');
+      }
+    }
+
+    /* -------- Logout -------- */
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      try { await fetch(`${API}/logout.php`); } finally { window.location.href = 'login.html'; }
+    });
+  </script>
+</body>
+
+</html>

@@ -79,16 +79,16 @@ CREATE TABLE `tickets` (
 --
 
 INSERT INTO `tickets` (`id`, `kategori`, `nama_tiket`, `deskripsi`, `harga`, `kuota`, `kuota_terjual`, `created_at`) VALUES
-(1, 'Early Bird', 'Early Bird - Spectrum Single', 'Akses masuk festival zone regular', 38000, 200, 0, '2026-09-02 18:11:42'),
-(2, 'Early Bird', 'Early Bird - Spectrum Duo', 'Akses baris depan panggung & free official souvenir', 55000, 100, 0, '2026-09-02 18:11:42'),
-(3, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Single', 'Akses masuk area festival regular', 48000, 150, 0, '2026-09-02 18:11:42'),
-(4, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Duo', 'Akses baris depan panggung, fast track lane, merchandise', 65000, 100, 0, '2026-09-02 18:11:42'),
-(5, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Trio', 'Paket hemat masuk untuk 2 orang sekaligus', 90000, 50, 0, '2026-09-02 18:11:42'),
-(6, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Single', 'Akses masuk area festival regular', 58000, 150, 0, '2026-09-02 18:11:42'),
-(7, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Duo', 'Akses baris depan panggung, fast track lane, merchandise', 75000, 100, 0, '2026-09-02 18:11:42'),
-(8, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Trio', 'Paket bertiga lebih hemat masuk festival', 165000, 50, 0, '2026-09-02 18:11:42'),
-(9, 'On The Spot', 'On The Spot - Spectrum Single', 'Akses tiket masuk langsung di venue hari H', 68000, 200, 0, '2026-09-02 18:11:42'),
-(10, 'On The Spot', 'On The Spot - Spectrum Duo', 'Akses VIP masuk langsung di venue hari H', 85000, 100, 0, '2026-09-02 18:11:42');
+(1, 'Early Bird', 'Early Bird - Spectrum Single', 'Akses tiket masuk area festival untuk 1 orang', 38000, 100, 0, '2026-09-02 18:11:42'),
+(2, 'Early Bird', 'Early Bird - Spectrum Duo', 'Paket hemat tiket masuk festival untuk 2 orang (Duo)', 68000, 50, 0, '2026-09-02 18:11:42'),
+(3, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Single', 'Akses tiket masuk area festival untuk 1 orang', 48000, 200, 0, '2026-09-02 18:11:42'),
+(4, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Duo', 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', 88000, 100, 0, '2026-09-02 18:11:42'),
+(5, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Trio', 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', 123000, 50, 0, '2026-09-02 18:11:42'),
+(6, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Single', 'Akses tiket masuk area festival untuk 1 orang', 58000, 200, 0, '2026-09-02 18:11:42'),
+(7, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Duo', 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', 108000, 100, 0, '2026-09-02 18:11:42'),
+(8, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Trio', 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', 153000, 50, 0, '2026-09-02 18:11:42'),
+(9, 'On The Spot', 'On The Spot - Spectrum Single', 'Akses tiket masuk langsung di venue hari H untuk 1 orang', 68000, 100, 0, '2026-09-02 18:11:42'),
+(10, 'On The Spot', 'On The Spot - Spectrum Duo', 'Akses tiket masuk langsung di venue hari H untuk 2 orang (Duo)', 128000, 50, 0, '2026-09-02 18:11:42');
 
 -- --------------------------------------------------------
 

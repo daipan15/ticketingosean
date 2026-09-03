@@ -555,7 +555,16 @@
                     Approve
                   </button>
                 </div>
-              ` : `<span class="font-label-caps text-[10px] text-on-surface-variant opacity-60">—</span>`}
+              ` : `
+                <div class="flex items-center justify-end gap-2">
+                  <button onclick="deletePayment(${p.payment_id}, '${p.kode_unik}', '${p.nama ? p.nama.replace(/'/g, "\\'") : ''}', '${p.status}')"
+                          class="px-3 py-1.5 ${p.status === 'verified' ? 'bg-error/15 border border-error/60 text-error hover:bg-error hover:text-on-error' : 'bg-surface-container border border-outline-variant text-on-surface-variant hover:text-error hover:border-error'} font-label-caps text-[11px] uppercase font-bold flex items-center gap-1 transition-all shadow-[2px_2px_0px_0px_#15140c] active:scale-95"
+                          title="${p.status === 'verified' ? 'Hapus Tiket Terverifikasi & Kembalikan Kuota' : 'Hapus Riwayat Transaksi'}">
+                    <span class="material-symbols-outlined text-[15px]">delete_forever</span>
+                    Hapus Tiket
+                  </button>
+                </div>
+              `}
             </td>
           </tr>
         `;
@@ -611,6 +620,35 @@
         else { showToast(data.message, 'error'); }
       } catch {
         showToast('Gagal memproses. Coba lagi.', 'error');
+      }
+    }
+
+    /* -------- Hapus Tiket / Pembayaran (Termasuk yang Verified) -------- */
+    async function deletePayment(paymentId, kodeUnik, namaUser, status) {
+      const isVerified = (status === 'verified');
+      const confirmMsg = isVerified
+        ? `⚠️ KONFIRMASI PENGHAPUSAN TIKET TERVERIFIKASI:\n\nTiket dengan kode "${kodeUnik}" atas nama "${namaUser}" sudah berstatus VERIFIED (Sah).\n\nJika dihapus:\n1. Tiket akan dicabut dari akun user ("Tiket Saya").\n2. Kuota tiket akan otomatis dikembalikan ke stok tiket.\n3. Data transaksi akan dihapus permanen.\n\nApakah Anda yakin ingin menghapus tiket ini?`
+        : `Apakah Anda yakin ingin menghapus data pembayaran "${kodeUnik}" milik "${namaUser}"?`;
+
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch(`${API}/admin_payment_delete.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payment_id: paymentId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message || 'Tiket berhasil dihapus!', 'success');
+          loadPayments();
+        } else {
+          showToast(data.message || 'Gagal menghapus tiket.', 'error');
+        }
+      } catch (err) {
+        console.error('Error deletePayment:', err);
+        showToast('Terjadi kesalahan koneksi saat menghapus tiket.', 'error');
       }
     }
 

@@ -35,6 +35,7 @@ CREATE TABLE `payments` (
   `jumlah_tiket` int(11) NOT NULL DEFAULT 1,
   `total_bayar` int(11) NOT NULL,
   `metode_pembayaran` varchar(50) DEFAULT NULL,
+  `referral_code` varchar(20) DEFAULT NULL,
   `bukti_transfer` varchar(255) DEFAULT NULL,
   `status` enum('pending','verified','rejected') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),

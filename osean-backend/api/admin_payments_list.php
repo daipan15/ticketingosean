@@ -38,7 +38,7 @@ $where_sql = count($where_clauses) > 0 ? "WHERE " . implode(" AND ", $where_clau
 
 $sql = "
     SELECT p.id AS payment_id, p.kode_unik, p.jumlah_tiket, p.total_bayar, p.metode_pembayaran,
-           p.bukti_transfer, p.status, p.created_at AS tanggal_order, p.verified_at,
+           p.referral_code, p.bukti_transfer, p.status, p.created_at AS tanggal_order, p.verified_at,
            t.id AS ticket_id, t.nama_tiket, t.harga,
            u.id AS user_id, u.nama, u.email
     FROM payments p
@@ -73,6 +73,7 @@ while ($row = $result->fetch_assoc()) {
         'total_bayar'       => (int)$row['total_bayar'],
         'total_format'      => format_rupiah($row['total_bayar']),
         'metode_pembayaran' => $row['metode_pembayaran'],
+        'referral_code'     => $row['referral_code'] ?? null,
         'bukti_transfer'    => UPLOAD_URL . $row['bukti_transfer'],
         'status'            => $row['status'],
         'tanggal_order'     => $row['tanggal_order'],

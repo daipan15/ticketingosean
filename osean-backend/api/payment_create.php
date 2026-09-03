@@ -14,6 +14,11 @@ $user_id       = $_SESSION['user_id'];
 $ticket_id     = isset($_POST['ticket_id'])          ? (int)$_POST['ticket_id']             : 0;
 $jumlah_tiket  = isset($_POST['jumlah_tiket'])       ? (int)$_POST['jumlah_tiket']          : 1;
 $metode        = isset($_POST['metode_pembayaran'])   ? sanitize($_POST['metode_pembayaran']) : 'transfer';
+$raw_referral  = isset($_POST['referral_code'])       ? strtoupper(trim(sanitize($_POST['referral_code']))) : '';
+
+// Daftar resmi 9 Himpunan FMIPA UNPAD
+$valid_hima = ['HIFI', 'HIMAKA', 'HIMBIO', 'HIMATIKA', 'HIMASTA', 'PEDRA', 'HIMATIF', 'HMTE', 'HIMAKTU'];
+$referral_code = in_array($raw_referral, $valid_hima) ? $raw_referral : null;
 
 if ($ticket_id <= 0 || $jumlah_tiket <= 0) send_error('ticket_id dan jumlah_tiket wajib diisi.');
 
@@ -79,12 +84,12 @@ $kode_unik   = generate_unique_ticket_code($conn);
 $total_bayar = $tiket['harga'] * $jumlah_tiket;
 $status      = 'pending';
 
-// Insert payment
+// Insert payment dengan referral_code
 $stmt = $conn->prepare("
-    INSERT INTO payments (user_id, ticket_id, kode_unik, jumlah_tiket, total_bayar, metode_pembayaran, bukti_transfer, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO payments (user_id, ticket_id, kode_unik, jumlah_tiket, total_bayar, metode_pembayaran, referral_code, bukti_transfer, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
-$stmt->bind_param("iisidsss", $user_id, $ticket_id, $kode_unik, $jumlah_tiket, $total_bayar, $metode, $filename, $status);
+$stmt->bind_param("iisidssss", $user_id, $ticket_id, $kode_unik, $jumlah_tiket, $total_bayar, $metode, $referral_code, $filename, $status);
 
 if (!$stmt->execute()) {
     @unlink($filepath);

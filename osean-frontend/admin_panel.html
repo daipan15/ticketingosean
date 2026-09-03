@@ -610,13 +610,13 @@
         // Badge Status Pembayaran
         let statusBadge = '';
         if (isSuccess) {
-          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-secondary bg-secondary/10 border border-secondary/40 whitespace-nowrap">✓ ${p.status === 'verified' ? 'Verified' : 'Settled'}</span>`;
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-secondary bg-secondary/10 border border-secondary/40 whitespace-nowrap">${p.status === 'verified' ? 'Verified' : 'Settled'}</span>`;
         } else if (isPending) {
-          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-tertiary bg-tertiary/10 border border-tertiary/40 whitespace-nowrap">⏳ Pending</span>`;
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-tertiary bg-tertiary/10 border border-tertiary/40 whitespace-nowrap">Pending</span>`;
         } else if (isFailed) {
-          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-error bg-error/10 border border-error/40 whitespace-nowrap">✕ Ditolak</span>`;
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-error bg-error/10 border border-error/40 whitespace-nowrap">Ditolak</span>`;
         } else if (isExpired) {
-          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-on-surface-variant bg-surface-container border border-outline-variant whitespace-nowrap">✕ Batal</span>`;
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-on-surface-variant bg-surface-container border border-outline-variant whitespace-nowrap">Batal</span>`;
         } else {
           statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-on-surface-variant bg-surface-container border border-outline-variant whitespace-nowrap">${p.status}</span>`;
         }
@@ -840,7 +840,7 @@
                 <p class="font-body-lg text-body-lg text-on-surface mt-1 font-bold">"${q.pertanyaan}"</p>
               </div>
               <span class="font-label-caps text-[10px] px-2 py-1 shrink-0 ${q.status === 'menunggu' ? 'bg-tertiary-container text-tertiary' : 'bg-secondary-container text-secondary'}">
-                ${q.status === 'menunggu' ? 'Menunggu' : '✓ Dijawab'}
+                ${q.status === 'menunggu' ? 'Menunggu' : 'Dijawab'}
               </span>
             </div>
 
@@ -941,7 +941,7 @@
         resultEl.classList.remove('hidden');
 
         if (data.success && data.scan_result === 'valid') {
-          // ✅ Tiket valid & baru saja diverifikasi
+          // Tiket valid & baru saja diverifikasi
           const t = data.tiket;
           resultEl.innerHTML = `
             <div class="bg-secondary-container border-2 border-secondary shadow-[6px_6px_0px_0px_#15140c] p-6">
@@ -976,12 +976,12 @@
               </div>
             </div>
           `;
-          showToast('Tiket berhasil diverifikasi! ✓', 'success');
+          showToast('Tiket berhasil diverifikasi!', 'success');
           input.value = '';
           loadPayments();
 
         } else if (!data.success && data.scan_result === 'already_used') {
-          // ❌ Tiket sudah diambil
+          // Tiket sudah diambil
           const t = data.tiket;
           resultEl.innerHTML = `
             <div class="bg-error-container border-2 border-error shadow-[6px_6px_0px_0px_#15140c] p-6">
@@ -1011,7 +1011,7 @@
           showToast('Tiket sudah diambil! Verifikasi ditolak.', 'error');
 
         } else if (!data.success && data.scan_result === 'not_found') {
-          // ❌ Kode tidak ditemukan
+          // Kode tidak ditemukan
           resultEl.innerHTML = `
             <div class="bg-surface-container border-2 border-outline-variant shadow-[6px_6px_0px_0px_#15140c] p-6">
               <div class="flex items-center gap-3">
@@ -1027,7 +1027,7 @@
           showToast('Kode tiket tidak ditemukan.', 'error');
 
         } else {
-          // ❌ Status tiket tidak valid (belum bayar, kedaluwarsa, dll)
+          // Status tiket tidak valid (belum bayar, kedaluwarsa, dll)
           const t = data.tiket || {};
           resultEl.innerHTML = `
             <div class="bg-surface-container border-2 border-error/40 shadow-[6px_6px_0px_0px_#15140c] p-6">

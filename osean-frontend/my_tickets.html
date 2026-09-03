@@ -593,15 +593,15 @@
         refund: 'bg-surface-variant text-on-surface-variant'
       };
       const label = {
-        settlement: '✓ Terbayar',
-        capture: '✓ Terbayar',
-        verified: '✓ Terverifikasi',
-        pending: '⏳ Menunggu',
-        expire: '⏰ Kedaluwarsa',
-        cancel: '✕ Dibatalkan',
-        deny: '✕ Ditolak',
-        rejected: '✕ Ditolak',
-        refund: '↩ Refund'
+        settlement: 'Terbayar',
+        capture: 'Terbayar',
+        verified: 'Terverifikasi',
+        pending: 'Menunggu',
+        expire: 'Kedaluwarsa',
+        cancel: 'Dibatalkan',
+        deny: 'Ditolak',
+        rejected: 'Ditolak',
+        refund: 'Refund'
       };
       const cls = map[status] || 'bg-outline-variant text-on-surface';
       return `<span class="inline-flex items-center gap-1 font-label-caps text-label-caps px-3 py-1 shadow-[2px_2px_0px_0px_#15140c] ${cls}">${label[status] || status}</span>`;
@@ -789,7 +789,7 @@
     function payNow(snapToken) {
       window.snap.pay(snapToken, {
         onSuccess: function (result) {
-          showToast('Pembayaran berhasil! 🎉', 'success');
+          showToast('Pembayaran berhasil!', 'success');
           setTimeout(() => location.reload(), 1500);
         },
         onPending: function (result) {

@@ -61,17 +61,17 @@ define('DB_NAME',    'osean_db');
 Buka browser dan akses halaman-halaman berikut:
 
 - **Beranda / Landing Page**:  
-  👉 [http://localhost/ticketingosean/osean-frontend/landing_page.html](http://localhost/ticketingosean/osean-frontend/landing_page.html)
+  [http://localhost/ticketingosean/osean-frontend/landing_page.html](http://localhost/ticketingosean/osean-frontend/landing_page.html)
 - **Beli Tiket & Pembayaran**:  
-  👉 [http://localhost/ticketingosean/osean-frontend/buy_tickets_payment.html](http://localhost/ticketingosean/osean-frontend/buy_tickets_payment.html)
+  [http://localhost/ticketingosean/osean-frontend/buy_tickets_payment.html](http://localhost/ticketingosean/osean-frontend/buy_tickets_payment.html)
 - **Tiket Saya**:  
-  👉 [http://localhost/ticketingosean/osean-frontend/my_tickets.html](http://localhost/ticketingosean/osean-frontend/my_tickets.html)
+  [http://localhost/ticketingosean/osean-frontend/my_tickets.html](http://localhost/ticketingosean/osean-frontend/my_tickets.html)
 - **Login**:  
-  👉 [http://localhost/ticketingosean/osean-frontend/login.html](http://localhost/ticketingosean/osean-frontend/login.html)
+  [http://localhost/ticketingosean/osean-frontend/login.html](http://localhost/ticketingosean/osean-frontend/login.html)
 - **Register (Daftar Akun)**:  
-  👉 [http://localhost/ticketingosean/osean-frontend/register.html](http://localhost/ticketingosean/osean-frontend/register.html)
+  [http://localhost/ticketingosean/osean-frontend/register.html](http://localhost/ticketingosean/osean-frontend/register.html)
 - **Admin Panel**:  
-  👉 [http://localhost/ticketingosean/osean-frontend/admin_panel.html](http://localhost/ticketingosean/osean-frontend/admin_panel.html)
+  [http://localhost/ticketingosean/osean-frontend/admin_panel.html](http://localhost/ticketingosean/osean-frontend/admin_panel.html)
 
 ---
 

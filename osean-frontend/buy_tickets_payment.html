@@ -1084,7 +1084,7 @@
                       <h3 class="font-headline-lg text-base sm:text-headline-lg text-on-surface uppercase font-bold leading-tight">${cat.title}</h3>
                     </div>
                     <span class="bg-surface-container-highest border border-outline-variant text-on-surface-variant font-label-caps text-[9px] uppercase px-1.5 py-0.5">
-                      📅 ${cat.rangeLabel}
+                      ${cat.rangeLabel}
                     </span>
                     ${statusBadge}
                   </div>
@@ -1351,7 +1351,7 @@
 
         window.snap.pay(data.snap_token, {
           onSuccess: function(result) {
-            showToast('Pembayaran berhasil! 🎉', 'success');
+            showToast('Pembayaran berhasil!', 'success');
             setTimeout(() => { window.location.href = 'my_tickets.html'; }, 1500);
           },
           onPending: function(result) {

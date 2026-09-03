@@ -225,6 +225,10 @@
     .animate-float-gentle-slow {
       animation: float-gentle 8s ease-in-out infinite;
     }
+
+    .rotate-chevron-180 {
+      transform: rotate(180deg);
+    }
   </style>
 </head>
 
@@ -244,23 +248,25 @@
       </a>
 
       <!-- Desktop Nav (lg:flex) -->
-      <div class="hidden lg:flex items-center gap-6">
-        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Beranda</span>
+      <div class="hidden lg:flex items-center gap-7">
+        <span class="font-label-caps text-sm lg:text-[15px] font-bold text-secondary uppercase tracking-wider">Beranda</span>
         <a href="venues.html"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
         <a href="buy_tickets_payment.html"
           onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli
           Tiket</a>
+        <a href="#faq"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">FAQ</a>
 
         <!-- Tampil jika BELUM login (Desktop) -->
         <div id="nav-guest" class="hidden flex items-center gap-3">
           <a href="login.html"
-            class="border-2 border-tertiary text-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+            class="border-2 border-tertiary text-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
                     hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]">
             Masuk
           </a>
-          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
                     hover:-translate-y-1 transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]
                     active:translate-y-0 active:shadow-none">
             Daftar
@@ -268,13 +274,13 @@
         </div>
 
         <!-- Tampil jika SUDAH login (Desktop) -->
-        <div id="nav-auth" class="hidden flex items-center gap-6">
+        <div id="nav-auth" class="hidden flex items-center gap-7">
           <a href="my_tickets.html"
-            class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
             Saya</a>
           <button id="logout-btn"
-            class="font-label-caps text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
-            <span class="material-symbols-outlined text-[18px]">logout</span>
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-error hover:text-on-surface transition-colors flex items-center gap-1.5 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
             <span>Keluar</span>
           </button>
         </div>
@@ -314,6 +320,11 @@
           class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
           <span class="material-symbols-outlined text-lg">confirmation_number</span>
           Beli Tiket
+        </a>
+        <a href="#faq"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">help_outline</span>
+          FAQ
         </a>
 
         <!-- Mobile & Tablet Guest State -->
@@ -945,6 +956,78 @@
     </div>
   </section>
 
+  
+  <!-- ===================== FAQ (FREQUENTLY ASKED QUESTIONS) ===================== -->
+  <section id="faq" class="relative z-10 py-14 md:py-24 bg-surface-container-low border-t-2 border-outline-variant overflow-hidden">
+    
+    <!-- Ambient & Decorative Festival Accents -->
+    <div class="absolute -top-24 -right-24 w-96 h-96 bg-tertiary/5 rounded-full blur-3xl pointer-events-none -z-0"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl pointer-events-none -z-0"></div>
+    <img src="assets/starburst.png" alt=""
+    class="hidden lg:block absolute top-12 right-12 w-28 h-auto opacity-30 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_20px_rgba(239,192,94,0.3)]" />
+
+    <div class="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-2xl mx-auto mb-8 md:mb-12">
+        <span class="font-label-caps text-label-caps text-tertiary uppercase tracking-widest border border-tertiary/40 px-3 py-1 inline-block mb-3 bg-tertiary/10">
+          ✦ Tanya Jawab Seputar Festival
+        </span>
+        <h2 class="font-headline-lg-mobile md:font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface uppercase tracking-tight">
+          Frequently Asked <span class="text-secondary italic">Questions</span>
+        </h2>
+        <p class="font-body-md text-xs sm:text-sm text-on-surface-variant mt-2">
+          Punya pertanyaan seputar tiket, jadwal, atau penukaran gelang? Cari jawaban cepatmu di sini.
+        </p>
+      </div>
+      
+      <!-- FAQ Search Bar & Quick Topic Filters -->
+      <div class="mb-8 max-w-2xl mx-auto">
+        <!-- Live Search Box with Realtime Filter -->
+        <div class="relative mb-3.5">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-tertiary text-[22px] pointer-events-none">search</span>
+          <input type="text" id="faq-search-input" placeholder="Ketik kata kunci pertanyaan (misal: kode unik, refund, duo, venue, bukti)..."
+            class="w-full bg-surface-container border-2 border-outline-variant pl-12 pr-12 py-3.5 text-on-surface font-body-md text-xs sm:text-sm placeholder:text-on-surface-variant/50 focus:border-tertiary focus:outline-none transition-all shadow-[4px_4px_0px_0px_#15140c]" />
+          <button type="button" id="faq-search-clear" onclick="clearFaqSearch()" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error transition-colors p-1" title="Hapus pencarian">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+
+        <!-- Quick Filter Topic Chips -->
+        <div class="flex items-center justify-center gap-2 flex-wrap" id="faq-filter-chips">
+          <button type="button" onclick="filterFaqTopic('all')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-tertiary bg-tertiary text-on-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="all">
+            Semua
+          </button>
+          <button type="button" onclick="filterFaqTopic('tiket')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="tiket">
+            Pembelian Tiket
+          </button>
+          <button type="button" onclick="filterFaqTopic('kode')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="kode">
+            Kode Unik
+          </button>
+          <button type="button" onclick="filterFaqTopic('kebijakan')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="kebijakan">
+            Refund & T&C
+          </button>
+          <button type="button" onclick="filterFaqTopic('venue')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="venue">
+            Venue & Wristband
+          </button>
+        </div>
+      </div>
+
+      <!-- FAQ Accordion List (Rendered dynamically) -->
+      <div class="space-y-3 max-w-3xl mx-auto" id="faq-list">
+        <!-- Rendered via JavaScript -->
+      </div>
+      
+      <!-- Empty Result State -->
+      <div id="faq-empty-search" class="hidden text-center py-12 max-w-md mx-auto bg-surface-container border border-outline-variant p-6 shadow-[4px_4px_0px_0px_#15140c]">
+        <span class="material-symbols-outlined text-tertiary text-4xl mb-2">search_off</span>
+        <p class="font-headline-lg text-base sm:text-lg text-on-surface mb-1">Pertanyaan Tidak Ditemukan</p>
+        <p class="font-body-md text-xs text-on-surface-variant">Tidak ada FAQ yang cocok dengan kata kunci tersebut. Coba gunakan kata kunci lain seperti <span class="text-tertiary font-bold">tiket, refund, venue,</span> atau <span class="text-tertiary font-bold">kode unik</span>.</p>
+      </div>
+
+    </div>
+  </section>
+  
   <!-- ===================== INFO STRIP ===================== -->
   <section class="relative bg-background py-12 border-t border-outline-variant overflow-hidden">
     <!-- Ambient Glow & Starburst Background -->
@@ -984,7 +1067,7 @@
 
     </div>
   </section>
-
+  
   <!-- ===================== FOOTER ===================== -->
   <footer
     class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-8 w-full flex items-center justify-center">
@@ -1012,6 +1095,92 @@
       </a>
     </div>
   </footer>
+
+  <!-- ===================== POP-UP TIKET AKTIF (AUTO POPUP) ===================== -->
+  <div id="active-tickets-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-md transition-all duration-300 opacity-0 select-none">
+    <div class="relative w-full max-w-lg bg-surface-container border-2 border-tertiary shadow-[10px_10px_0px_0px_#15140c] overflow-hidden transform scale-95 transition-all duration-300" id="active-tickets-modal-card">
+      
+      <!-- Ambient Glow Decor inside modal -->
+      <div class="absolute -top-16 -right-16 w-40 h-40 bg-tertiary/20 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -left-16 w-40 h-40 bg-secondary/15 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Modal Header -->
+      <div class="bg-surface-container-high border-b-2 border-outline-variant p-4 sm:p-5 flex items-center justify-between relative z-10">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-tertiary-container border-2 border-tertiary flex items-center justify-center text-tertiary shadow-[2px_2px_0px_0px_#15140c]">
+            <span class="material-symbols-outlined text-[22px] animate-pulse">confirmation_number</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="bg-secondary text-on-secondary font-label-caps text-[9px] uppercase px-2 py-0.5 font-bold tracking-widest shadow-[1px_1px_0px_0px_#15140c] flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-on-secondary animate-ping"></span>
+                LIVE RIGHT NOW
+              </span>
+            </div>
+            <h3 class="font-headline-lg text-lg sm:text-xl text-on-surface leading-snug uppercase mt-0.5" id="popup-cat-title">
+              Tiket Tersedia Sekarang!
+            </h3>
+          </div>
+        </div>
+        <button type="button" onclick="closeActiveTicketsModal()" class="w-8 h-8 border-2 border-outline-variant text-on-surface-variant hover:text-error hover:border-error flex items-center justify-center transition-colors shadow-[2px_2px_0px_0px_#15140c]" title="Tutup">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- Banner Info Periode -->
+      <div class="bg-surface-container-lowest px-4 sm:px-5 py-3 border-b border-dashed border-outline-variant flex items-center justify-between gap-2 relative z-10">
+        <div class="flex items-center gap-2 text-xs">
+          <span class="material-symbols-outlined text-tertiary text-base">timer</span>
+          <span class="font-body-md text-on-surface-variant">Periode Aktif: <strong id="popup-period" class="text-tertiary font-bold">4 - 8 September 2026</strong></span>
+        </div>
+        <span class="font-label-caps text-[9px] text-secondary border border-secondary px-2 py-0.5 uppercase tracking-wider font-bold">
+          LIMITED QUOTA
+        </span>
+      </div>
+
+      <!-- Ticket Variants List Container -->
+      <div class="p-4 sm:p-5 space-y-3 relative z-10 max-h-[46vh] overflow-y-auto no-scrollbar" id="popup-ticket-list">
+        <div class="flex items-center justify-center py-6 text-on-surface-variant text-xs gap-2">
+          <span class="material-symbols-outlined animate-spin text-tertiary text-lg">refresh</span>
+          <span>Memuat tiket yang sedang aktif...</span>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 sm:p-5 pt-3 bg-surface-container-high border-t-2 border-outline-variant flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 relative z-10">
+        <label class="flex items-center gap-2 cursor-pointer select-none text-on-surface-variant hover:text-on-surface text-xs font-body-md">
+          <input type="checkbox" id="popup-dont-show" class="w-4 h-4 bg-surface-container border-2 border-outline-variant rounded-none text-tertiary focus:ring-0 cursor-pointer checked:bg-tertiary checked:border-tertiary" />
+          <span>Jangan tampilkan lagi sesi ini</span>
+        </label>
+        <div class="flex items-center justify-end gap-2.5">
+          <button type="button" onclick="closeActiveTicketsModal()" class="px-3.5 py-2 border-2 border-outline-variant text-on-surface-variant font-label-caps text-xs uppercase hover:text-on-surface transition-all">
+            Nanti Saja
+          </button>
+          <a href="buy_tickets_payment.html" onclick="handlePopupBuy(event)"
+            class="px-5 py-2.5 bg-tertiary text-on-tertiary font-label-caps text-xs uppercase font-bold
+                   shadow-[3px_3px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_#15140c]
+                   active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-200 flex items-center justify-center gap-1.5">
+            <span>Beli Sekarang</span>
+            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Floating Ticket Trigger Button (Akses Cepat di Pojok Kanan Bawah) -->
+  <button id="floating-ticket-btn" onclick="openActiveTicketsModal(true)" type="button"
+    class="fixed bottom-6 right-6 z-40 bg-surface-container border-2 border-tertiary p-3 sm:px-4 sm:py-2.5
+           shadow-[4px_4px_0px_0px_#15140c] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#15140c]
+           transition-all duration-200 flex items-center gap-2.5 group cursor-pointer" title="Lihat Tiket yang Tersedia">
+    <div class="relative flex h-3 w-3">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
+    </div>
+    <span class="font-headline-lg text-xs sm:text-sm text-tertiary uppercase font-bold tracking-wider">Tiket Tersedia</span>
+    <span class="material-symbols-outlined text-tertiary text-[18px] group-hover:rotate-12 transition-transform">confirmation_number</span>
+  </button>
 
   <script>
     const API = '../osean-backend/api';
@@ -1338,6 +1507,338 @@
     // Jalankan setiap detik bersamaan dengan live clock agar terus berjalan real-time
     setInterval(updateJourneyProgress, 1000);
     updateJourneyProgress();
+
+    // =================================================================
+    // FREQUENTLY ASKED QUESTIONS (FAQ) REALTIME KEYWORD SEARCH & ACCORDION
+    // =================================================================
+    const FAQ_DATA = [
+      {
+        id: 1,
+        topic: 'tiket',
+        topicLabel: 'Pemesanan',
+        question: 'Apa perbedaan tiket Spectrum Single, Spectrum Duo, dan Spectrum Trio?',
+        answer: '<strong>Spectrum Single</strong> berlaku untuk 1 orang pengunjung. <strong>Spectrum Duo</strong> adalah paket hemat bundling untuk 2 orang pengunjung dalam 1 transaksi dan 1 kode booking. <strong>Spectrum Trio</strong> adalah paket bundling festival untuk 3 orang sekaligus dalam 1 rombongan.',
+        keywords: 'single duo trio spectrum jenis varian orang paket hemat bundling tiket beda'
+      },
+      {
+        id: 2,
+        topic: 'tiket',
+        topicLabel: 'Pemesanan',
+        question: 'Bagaimana alur dan langkah pembelian tiket festival OSEAN?',
+        answer: '1. Daftar akun atau login di website OSEAN.<br>2. Buka menu <strong>Beli Tiket</strong> lalu pilih kategori tiket yang sedang aktif (Early Bird/Pre Sale/OTS).<br>3. Tentukan jumlah tiket dan metode pembayaran (Transfer Bank / QRIS / Tunai).<br>4. Upload bukti transfer pembayaran yang jelas dan sah.<br>5. Klik <strong>Bayar Sekarang</strong>, baca & centang persetujuan Syarat & Ketentuan (T&C), lalu konfirmasi.<br>6. Anda akan langsung mendapatkan <strong>Kode Unik</strong> resmi dan status dapat dipantau di menu <strong>Tiket Saya</strong>.',
+        keywords: 'cara beli alur langkah proses pesan bayar transfer qris checkout beli tiket'
+      },
+      {
+        id: 3,
+        topic: 'kode',
+        topicLabel: 'Kode Unik',
+        question: 'Apa itu Kode Unik (Booking Code) dan di mana saya bisa melihatnya?',
+        answer: '<strong>Kode Unik</strong> adalah tanda pengenal resmi tiket Anda (format: <code>OSN-XXXX-YYYY</code>) yang di-generate otomatis oleh sistem dan dijamin berbeda untuk setiap user/transaksi. Anda dapat melihat dan menyalin Kode Unik kapan saja melalui menu <strong>Tiket Saya</strong> setelah login.',
+        keywords: 'kode unik booking code primary key tiket saya cek letak simpan salin verifikasi'
+      },
+      {
+        id: 4,
+        topic: 'kode',
+        topicLabel: 'Verifikasi',
+        question: 'Berapa lama waktu verifikasi pembayaran oleh admin OSEAN?',
+        answer: 'Admin OSEAN akan memeriksa dan memverifikasi bukti pembayaran Anda dalam kurun waktu <strong>maksimal 1x24 jam</strong>. Begitu diverifikasi, status pesanan di menu <strong>Tiket Saya</strong> akan berubah menjadi <strong>Verified</strong> dengan tanda centang hijau.',
+        keywords: 'verifikasi admin berapa lama konfirmasi pending verified waktu status'
+      },
+      {
+        id: 5,
+        topic: 'kebijakan',
+        topicLabel: 'Kebijakan',
+        question: 'Apakah tiket yang sudah dibeli bisa dibatalkan atau direfund uangnya?',
+        answer: 'Sesuai dengan <strong>Syarat & Ketentuan (T&C)</strong> resmi OSEAN yang disetujui saat checkout, seluruh tiket yang telah berhasil dibeli bersifat final dan <strong>Non-Refundable</strong> (tidak dapat dibatalkan, diuangkan kembali, atau ditukar jadwalnya dengan alasan apapun).',
+        keywords: 'refund batal kembali uang tukar cancel non refundable uang kembali tnc'
+      },
+      {
+        id: 6,
+        topic: 'venue',
+        topicLabel: 'Venue',
+        question: 'Kapan dan di mana OSEAN Closing Ceremony diselenggarakan?',
+        answer: 'Puncak acara <strong>OSEAN Closing Ceremony 2026</strong> diselenggarakan pada hari <strong>Minggu, 27 September 2026</strong> bertempat di <strong>Lapangan Merah Unpad, Jatinangor</strong> mulai pukul <strong>15.00 WIB</strong> hingga selesai.',
+        keywords: 'kapan tanggal hari jam lokasi tempat venue jatinangor unpad lapangan merah puncak acara'
+      },
+      {
+        id: 7,
+        topic: 'venue',
+        topicLabel: 'Penukaran',
+        question: 'Apa saja dokumen yang wajib dibawa saat penukaran gelang (wristband)?',
+        answer: 'Pengunjung wajib membawa dan menunjukkan: (1) E-ticket digital yang memuat <strong>Kode Unik</strong> dari menu Tiket Saya di smartphone, dan (2) Kartu identitas asli pemesan/rombongan (KTP, SIM, Paspor, atau Kartu Pelajar).',
+        keywords: 'gelang wristband penukaran tiket fisik bawa ktp syarat identitas pintu masuk gate'
+      },
+      {
+        id: 8,
+        topic: 'tiket',
+        topicLabel: 'On The Spot',
+        question: 'Apakah tiket On The Spot (OTS) dijamin pasti ada di hari H?',
+        answer: 'Tiket On The Spot (OTS) hanya tersedia jika kuota tiket belum habis terjual pada periode online sebelumnya. Mengingat kapasitas venue yang terbatas, kami sangat menyarankan untuk membeli tiket lebih awal pada periode Early Bird atau Pre Sale.',
+        keywords: 'ots on the spot hari h venue langsung beli di tempat offline kuota sisa'
+      },
+      {
+        id: 9,
+        topic: 'kebijakan',
+        topicLabel: 'Kebijakan',
+        question: 'Bagaimana jika pembayaran saya ditolak atau salah upload bukti?',
+        answer: 'Jika pembayaran Anda ditolak oleh admin (misal bukti transfer buram atau nominal tidak cocok), status tiket di menu <strong>Tiket Saya</strong> akan bertuliskan <strong>Ditolak</strong>. Anda dapat melakukan pemesanan ulang dengan mengunggah bukti pembayaran yang valid dan sah.',
+        keywords: 'salah bukti tolak rejected gagal upload buram transfer ulang rejected'
+      }
+    ];
+
+    let currentFaqTopic = 'all';
+    let currentFaqKeyword = '';
+    let openFaqIds = new Set();
+
+    function renderFaqList() {
+      const container = document.getElementById('faq-list');
+      const emptyState = document.getElementById('faq-empty-search');
+      if (!container) return;
+
+      const filtered = FAQ_DATA.filter(item => {
+        // Filter topic
+        if (currentFaqTopic !== 'all' && item.topic !== currentFaqTopic) {
+          return false;
+        }
+        // Filter search keyword
+        if (currentFaqKeyword) {
+          const q = currentFaqKeyword.toLowerCase();
+          const matchQ = item.question.toLowerCase().includes(q);
+          const matchA = item.answer.toLowerCase().includes(q);
+          const matchK = (item.keywords || '').toLowerCase().includes(q);
+          if (!matchQ && !matchA && !matchK) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+
+      // Saat user sedang mencari dengan kata kunci, otomatis buka item yang cocok agar jawaban langsung terbaca!
+      const isSearching = currentFaqKeyword.length > 0;
+
+      container.innerHTML = filtered.map(item => {
+        const isOpen = isSearching || openFaqIds.has(item.id);
+        const chevronClass = isOpen ? 'rotate-chevron-180' : '';
+        const bodyClass = isOpen ? 'block' : 'hidden';
+
+        return `
+          <div class="faq-item bg-surface-container border-2 border-outline-variant shadow-[4px_4px_0px_0px_#15140c] transition-all overflow-hidden" data-faq-id="${item.id}">
+            <button type="button" onclick="toggleFaq(${item.id})"
+              class="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 hover:bg-surface-container-high transition-colors select-none">
+              <div class="flex items-center gap-3">
+                <span class="font-label-caps text-[9px] uppercase font-bold px-2 py-0.5 border border-outline-variant bg-surface-container-lowest text-tertiary flex-shrink-0">
+                  ${item.topicLabel}
+                </span>
+                <h3 class="font-headline-lg text-sm sm:text-base text-on-surface leading-snug">
+                  ${item.question}
+                </h3>
+              </div>
+              <div class="w-7 h-7 flex-shrink-0 border border-outline-variant bg-surface-container-lowest flex items-center justify-center text-on-surface-variant group-hover:border-tertiary transition-transform duration-300 ${chevronClass}">
+                <span class="material-symbols-outlined text-[18px]">expand_more</span>
+              </div>
+            </button>
+            <div class="faq-answer ${bodyClass} px-4 sm:px-5 pb-5 pt-1 text-xs sm:text-sm text-on-surface-variant font-body-md border-t border-dashed border-outline-variant/60 leading-relaxed bg-surface-container/50">
+              ${item.answer}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleFaq(id) {
+      if (openFaqIds.has(id)) {
+        openFaqIds.delete(id);
+      } else {
+        openFaqIds.add(id);
+      }
+      renderFaqList();
+    }
+
+    function filterFaqTopic(topic) {
+      currentFaqTopic = topic;
+      document.querySelectorAll('.faq-chip-btn').forEach(btn => {
+        const isActive = btn.dataset.topic === topic;
+        if (isActive) {
+          btn.className = 'faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-tertiary bg-tertiary text-on-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]';
+        } else {
+          btn.className = 'faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]';
+        }
+      });
+      renderFaqList();
+    }
+
+    function clearFaqSearch() {
+      const input = document.getElementById('faq-search-input');
+      if (input) input.value = '';
+      currentFaqKeyword = '';
+      document.getElementById('faq-search-clear')?.classList.add('hidden');
+      renderFaqList();
+    }
+
+    document.getElementById('faq-search-input')?.addEventListener('input', (e) => {
+      currentFaqKeyword = e.target.value.trim();
+      const clearBtn = document.getElementById('faq-search-clear');
+      if (clearBtn) {
+        if (currentFaqKeyword.length > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+      renderFaqList();
+    });
+
+    // Inisialisasi render FAQ pertama kali (default buka item 1)
+    openFaqIds.add(1);
+    renderFaqList();
+
+    // =================================================================
+    // ACTIVE TICKETS AUTO-POPUP & QUICK PREVIEW
+    // =================================================================
+    let activeTicketsData = [];
+    let currentActiveCategory = null;
+
+    async function initActiveTicketsPopup() {
+      try {
+        const res = await fetch(`${API}/tickets_list.php`);
+        const data = await res.json();
+        if (!data.success || !data.tickets || data.tickets.length === 0) return;
+
+        const now = new Date();
+        // Cek kategori yang sedang aktif berdasarkan rentang jadwal
+        currentActiveCategory = TICKET_SCHEDULE.find(item => now >= item.startDate && now <= item.endDate);
+
+        // Fallback: Jika di luar tanggal jadwal, default gunakan kategori Early Bird
+        if (!currentActiveCategory) {
+          currentActiveCategory = TICKET_SCHEDULE[0];
+        }
+
+        const catTitleLower = currentActiveCategory.title.toLowerCase();
+        activeTicketsData = data.tickets.filter(t => 
+          (t.kategori || '').toLowerCase().includes(catTitleLower) || 
+          t.nama_tiket.toLowerCase().includes(catTitleLower)
+        );
+
+        // Jika tidak ada tiket untuk kategori aktif, tampilkan 3 tiket teratas
+        if (activeTicketsData.length === 0) {
+          activeTicketsData = data.tickets.slice(0, 3);
+        }
+
+        renderActiveTicketsPopupContent();
+
+        // Tampilkan pop-up otomatis setelah delay 850ms jika user belum mencentang "jangan tampilkan lagi"
+        const isDismissed = sessionStorage.getItem('hideActiveTicketsPopup') === 'true';
+        if (!isDismissed) {
+          setTimeout(() => {
+            openActiveTicketsModal(false);
+          }, 850);
+        }
+      } catch (err) {
+        console.warn('Gagal memuat info tiket pop-up:', err);
+      }
+    }
+
+    function renderActiveTicketsPopupContent() {
+      const titleEl = document.getElementById('popup-cat-title');
+      const periodEl = document.getElementById('popup-period');
+      const listEl = document.getElementById('popup-ticket-list');
+
+      if (currentActiveCategory) {
+        if (titleEl) titleEl.textContent = `Tiket ${currentActiveCategory.title} Siap Dipesan!`;
+        if (periodEl) {
+          const d1 = currentActiveCategory.startDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+          const d2 = currentActiveCategory.endDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+          periodEl.textContent = `${d1} - ${d2}`;
+        }
+      }
+
+      if (!listEl) return;
+
+      if (activeTicketsData.length === 0) {
+        listEl.innerHTML = '<p class="text-on-surface-variant text-center py-4 text-xs font-body-md">Tidak ada varian tiket aktif saat ini.</p>';
+        return;
+      }
+
+      listEl.innerHTML = activeTicketsData.map(t => {
+        const cleanName = t.nama_tiket.replace(/^(early bird|pre sale \d|on the spot)\s*-\s*/i, '');
+        const isDuo = cleanName.toLowerCase().includes('duo');
+        const isTrio = cleanName.toLowerCase().includes('trio');
+        const isSingle = cleanName.toLowerCase().includes('single');
+
+        let badgeHtml = '';
+        if (isSingle) {
+          badgeHtml = '<span class="bg-primary/20 text-primary border border-primary/40 text-[9px] font-label-caps px-1.5 py-0.5 uppercase font-bold">1 Orang</span>';
+        } else if (isDuo) {
+          badgeHtml = '<span class="bg-secondary/20 text-secondary border border-secondary/40 text-[9px] font-label-caps px-1.5 py-0.5 uppercase font-bold">2 Tiket (Duo)</span>';
+        } else if (isTrio) {
+          badgeHtml = '<span class="bg-tertiary/20 text-tertiary border border-tertiary/40 text-[9px] font-label-caps px-1.5 py-0.5 uppercase font-bold">3 Tiket (Trio)</span>';
+        }
+
+        return `
+          <div class="border-2 border-outline-variant p-3.5 bg-surface-container-high hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c] flex items-center justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <p class="font-headline-lg text-sm sm:text-base text-on-surface leading-snug">${cleanName}</p>
+                ${badgeHtml}
+              </div>
+              <p class="font-body-md text-xs text-on-surface-variant mt-0.5 line-clamp-1">${t.deskripsi || 'Akses masuk festival OSEAN'}</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="font-label-caps text-[9px] text-tertiary uppercase font-bold">Sisa Kuota: ${t.sisa_kuota ?? t.kuota}</span>
+              </div>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <p class="font-display-md text-tertiary text-sm sm:text-base font-bold">${t.harga_format || ('Rp ' + Number(t.harga).toLocaleString('id-ID'))}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openActiveTicketsModal(manualClick = false) {
+      const modal = document.getElementById('active-tickets-modal');
+      const card = document.getElementById('active-tickets-modal-card');
+      if (!modal || !card) return;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(() => {
+        modal.classList.remove('opacity-0');
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      });
+    }
+
+    function closeActiveTicketsModal() {
+      const modal = document.getElementById('active-tickets-modal');
+      const card = document.getElementById('active-tickets-modal-card');
+      const dontShowCb = document.getElementById('popup-dont-show');
+
+      if (dontShowCb && dontShowCb.checked) {
+        sessionStorage.setItem('hideActiveTicketsPopup', 'true');
+      }
+
+      if (!modal || !card) return;
+      modal.classList.add('opacity-0');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 300);
+    }
+
+    function handlePopupBuy(e) {
+      if (localStorage.getItem('isLoggedIn') !== 'true') {
+        e.preventDefault();
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Jalankan auto-popup saat window selesai memuat halaman
+    initActiveTicketsPopup();
   </script>
 </body>
 

@@ -130,22 +130,24 @@
       </a>
 
       <!-- Desktop Nav (lg:flex) -->
-      <div class="hidden lg:flex items-center gap-6">
+      <div class="hidden lg:flex items-center gap-7">
         <a href="landing_page.html"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
         <a href="venues.html"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
         <a href="buy_tickets_payment.html"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli Tiket</a>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli Tiket</a>
+        <a href="landing_page.html#faq"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">FAQ</a>
 
         <!-- Tampil jika BELUM login (Desktop) -->
         <div id="nav-guest" class="hidden flex items-center gap-3">
           <a href="login.html"
-            class="border-2 border-tertiary text-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+            class="border-2 border-tertiary text-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
                     hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]">
             Masuk
           </a>
-          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
                     hover:-translate-y-1 transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]
                     active:translate-y-0 active:shadow-none">
             Daftar
@@ -153,11 +155,11 @@
         </div>
 
         <!-- Tampil jika SUDAH login (Desktop) -->
-        <div id="nav-auth" class="hidden flex items-center gap-6">
-          <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Tiket Saya</span>
+        <div id="nav-auth" class="hidden flex items-center gap-7">
+          <span class="font-label-caps text-sm lg:text-[15px] font-bold text-secondary uppercase tracking-wider">Tiket Saya</span>
           <button id="logout-btn"
-            class="font-label-caps text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
-            <span class="material-symbols-outlined text-[18px]">logout</span>
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-error hover:text-on-surface transition-colors flex items-center gap-1.5 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
             <span>Keluar</span>
           </button>
         </div>

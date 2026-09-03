@@ -73,7 +73,8 @@
   <style>
     /* Sembunyikan scrollbar tapi tetap bisa discroll */
     html,
-    body {
+    body,
+    .no-scrollbar {
       scrollbar-width: none;
       /* Firefox */
       -ms-overflow-style: none;
@@ -81,10 +82,12 @@
     }
 
     html::-webkit-scrollbar,
-    body::-webkit-scrollbar {
+    body::-webkit-scrollbar,
+    .no-scrollbar::-webkit-scrollbar {
       display: none;
       /* Chrome, Safari, Opera */
       width: 0px;
+      height: 0px;
       background: transparent;
     }
 
@@ -213,21 +216,23 @@
       </a>
 
       <!-- Desktop Nav (lg:flex) -->
-      <div class="hidden lg:flex items-center gap-6">
+      <div class="hidden lg:flex items-center gap-7">
         <a href="landing_page.html"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
         <a href="venues.html"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
-        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Beli Tiket</span>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
+        <span class="font-label-caps text-sm lg:text-[15px] font-bold text-secondary uppercase tracking-wider">Beli Tiket</span>
+        <a href="landing_page.html#faq"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">FAQ</a>
 
         <!-- Tampil jika BELUM login (Desktop) -->
         <div id="nav-guest" class="hidden flex items-center gap-3">
           <a href="login.html"
-            class="border-2 border-tertiary text-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+            class="border-2 border-tertiary text-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
                     hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]">
             Masuk
           </a>
-          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
                     hover:-translate-y-1 transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]
                     active:translate-y-0 active:shadow-none">
             Daftar
@@ -235,13 +240,13 @@
         </div>
 
         <!-- Tampil jika SUDAH login (Desktop) -->
-        <div id="nav-auth" class="hidden flex items-center gap-6">
+        <div id="nav-auth" class="hidden flex items-center gap-7">
           <a href="my_tickets.html"
-            class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
             Saya</a>
           <button id="logout-btn"
-            class="font-label-caps text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
-            <span class="material-symbols-outlined text-[18px]">logout</span>
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-error hover:text-on-surface transition-colors flex items-center gap-1.5 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
             <span>Keluar</span>
           </button>
         </div>
@@ -474,6 +479,96 @@
       </a>
     </div>
   </footer>
+
+  <!-- ===================== T&C MODAL POPUP ===================== -->
+  <div id="tnc-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+    <div class="relative w-full max-w-lg bg-surface-container border-2 border-outline-variant shadow-[8px_8px_0px_0px_#15140c] overflow-hidden transform scale-95 transition-all duration-300" id="tnc-modal-card">
+      
+      <!-- Modal Header -->
+      <div class="bg-surface-container-high border-b-2 border-outline-variant p-4 sm:p-5 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 bg-tertiary-container border border-tertiary flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-[18px]">gavel</span>
+          </div>
+          <div>
+            <h3 class="font-headline-lg text-base sm:text-lg text-on-surface leading-snug uppercase">Syarat & Ketentuan</h3>
+            <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Terms & Conditions OSEAN</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeTncModal()" class="w-8 h-8 border border-outline-variant text-on-surface-variant hover:text-error hover:border-error flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- Ringkasan Singkat Pesanan -->
+      <div class="bg-surface-container-lowest px-4 sm:px-5 py-3 border-b border-dashed border-outline-variant flex items-center justify-between gap-3 text-xs">
+        <div>
+          <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Pesanan Anda</span>
+          <span id="tnc-ticket-name" class="font-body-md font-bold text-on-surface">—</span>
+        </div>
+        <div class="text-right">
+          <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Total Bayar</span>
+          <span id="tnc-ticket-total" class="font-display-md text-sm sm:text-base font-bold text-secondary">—</span>
+        </div>
+      </div>
+
+      <!-- T&C Scrollable Content Body -->
+      <div class="p-4 sm:p-5 max-h-[45vh] overflow-y-auto no-scrollbar space-y-3.5 text-xs text-on-surface-variant font-body-md select-none">
+        <div class="flex items-start gap-2.5">
+          <span class="font-mono font-bold text-tertiary text-xs bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0">01</span>
+          <p><strong class="text-on-surface">Kepemilikan & Kode Unik:</strong> Setiap transaksi tiket yang berhasil akan mendapatkan Kode Unik (Booking Code) resmi yang wajib disimpan dan tidak boleh disebarluaskan kepada pihak lain.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="font-mono font-bold text-tertiary text-xs bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0">02</span>
+          <p><strong class="text-on-surface">Non-Refundable:</strong> Tiket yang telah dibeli bersifat final dan tidak dapat dibatalkan, diuangkan kembali (*no refund*), maupun ditukar jadwalnya dengan alasan apapun.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="font-mono font-bold text-tertiary text-xs bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0">03</span>
+          <p><strong class="text-on-surface">Kapasitas Sesuai Varian:</strong> Varian Single berlaku untuk 1 orang, Duo berlaku untuk 2 orang, dan Trio berlaku untuk 3 orang sekaligus saat memasuki pintu masuk venue festival.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="font-mono font-bold text-tertiary text-xs bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0">04</span>
+          <p><strong class="text-on-surface">Validasi Bukti Pembayaran:</strong> Pastikan bukti transfer yang diunggah asli, jelas, dan nominal persis sesuai total tagihan. Bukti palsu atau tidak terbaca akan otomatis ditolak sistem.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="font-mono font-bold text-tertiary text-xs bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0">05</span>
+          <p><strong class="text-on-surface">Penukaran Wristband:</strong> E-ticket dan Kode Unik wajib ditunjukkan bersama kartu identitas (KTP/SIM/Kartu Pelajar) saat penukaran tiket fisik/gelang di venue festival OSEAN.</p>
+        </div>
+        <div class="flex items-start gap-2.5">
+          <span class="font-mono font-bold text-tertiary text-xs bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0">06</span>
+          <p><strong class="text-on-surface">Tata Tertib Festival:</strong> Pengunjung wajib mematuhi seluruh protokol keamanan dan tata tertib venue yang ditetapkan oleh panitia OSEAN.</p>
+        </div>
+      </div>
+
+      <!-- Checkbox Persetujuan -->
+      <div class="p-4 sm:p-5 pt-3 border-t border-outline-variant bg-surface-container-high/60">
+        <label for="tnc-checkbox" class="flex items-start gap-3 cursor-pointer group select-none">
+          <div class="relative flex items-center justify-center mt-0.5">
+            <input type="checkbox" id="tnc-checkbox" class="w-5 h-5 bg-surface-container border-2 border-outline-variant rounded-none text-tertiary focus:ring-0 focus:ring-offset-0 cursor-pointer transition-all checked:bg-tertiary checked:border-tertiary" />
+          </div>
+          <span class="font-body-md text-xs sm:text-xs text-on-surface group-hover:text-tertiary transition-colors leading-snug">
+            Saya telah membaca, memahami, dan menyetujui seluruh <strong class="text-tertiary underline underline-offset-2">Syarat & Ketentuan (T&C)</strong> yang berlaku untuk pembelian tiket OSEAN ini.
+          </span>
+        </label>
+      </div>
+
+      <!-- Modal Footer Action Buttons -->
+      <div class="p-4 sm:p-5 pt-3 bg-surface-container-high border-t border-outline-variant flex items-center justify-end gap-3">
+        <button type="button" onclick="closeTncModal()" class="px-4 py-2.5 border-2 border-outline-variant text-on-surface-variant font-label-caps text-xs uppercase hover:text-on-surface hover:border-on-surface transition-all">
+          Batal
+        </button>
+        <button type="button" id="tnc-confirm-btn" disabled onclick="confirmAndPay()"
+          class="px-5 py-2.5 bg-tertiary text-on-tertiary font-label-caps text-xs uppercase font-bold
+                 shadow-[4px_4px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_#15140c]
+                 active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-200
+                 flex items-center gap-2 disabled:opacity-35 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_#15140c]">
+          <span class="material-symbols-outlined text-[16px]">check_circle</span>
+          Setuju & Bayar
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <script>
     const API = '../osean-backend/api';
@@ -1017,8 +1112,57 @@
       }
     });
 
-    /* -------- Form Submit -------- */
-    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+    /* -------- T&C Modal & Form Submit Flow -------- */
+    const tncCheckbox = document.getElementById('tnc-checkbox');
+    const tncConfirmBtn = document.getElementById('tnc-confirm-btn');
+
+    if (tncCheckbox && tncConfirmBtn) {
+      tncCheckbox.addEventListener('change', (e) => {
+        tncConfirmBtn.disabled = !e.target.checked;
+      });
+    }
+
+    function openTncModal() {
+      const modal = document.getElementById('tnc-modal');
+      const card = document.getElementById('tnc-modal-card');
+      const cb = document.getElementById('tnc-checkbox');
+      const btn = document.getElementById('tnc-confirm-btn');
+
+      if (cb) cb.checked = false;
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check_circle</span> Setuju & Bayar';
+      }
+
+      if (selectedTicket) {
+        document.getElementById('tnc-ticket-name').textContent = `${selectedTicket.nama} (${qty}x)`;
+        const total = selectedTicket.harga * qty;
+        document.getElementById('tnc-ticket-total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(() => {
+        modal.classList.remove('opacity-0');
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      });
+    }
+
+    function closeTncModal() {
+      const modal = document.getElementById('tnc-modal');
+      const card = document.getElementById('tnc-modal-card');
+      modal.classList.add('opacity-0');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 300);
+    }
+
+    // Trigger popup T&C saat klik Bayar Sekarang
+    document.getElementById('checkout-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
 
@@ -1027,8 +1171,25 @@
       if (!file) { showToast('Upload bukti transfer terlebih dahulu.', 'error'); return; }
       if (file.size > 5 * 1024 * 1024) { showToast('File terlalu besar (maks 5MB).', 'error'); return; }
 
-      btn.disabled = true;
-      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Memproses...';
+      openTncModal();
+    });
+
+    // Eksekusi pembayaran setelah user mencentang checkbox T&C
+    async function confirmAndPay() {
+      const cb = document.getElementById('tnc-checkbox');
+      if (!cb || !cb.checked) {
+        showToast('Harap centang persetujuan Syarat & Ketentuan.', 'error');
+        return;
+      }
+
+      const confirmBtn = document.getElementById('tnc-confirm-btn');
+      const submitBtn = document.getElementById('submit-btn');
+      const file = document.getElementById('bukti_transfer').files[0];
+
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[16px]">refresh</span> Memproses...';
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Memproses...';
 
       const formData = new FormData();
       formData.append('ticket_id', selectedTicket.id);
@@ -1041,19 +1202,25 @@
         const data = await res.json();
 
         if (data.success) {
+          closeTncModal();
           const msg = data.kode_unik ? `Berhasil! Kode Unik: ${data.kode_unik}` : data.message;
           showToast(msg, 'success');
           setTimeout(() => { window.location.href = 'my_tickets.html'; }, 2000);
         } else {
           showToast(data.message || 'Pembayaran gagal.', 'error');
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check_circle</span> Setuju & Bayar';
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
         }
       } catch {
         showToast('Tidak dapat terhubung ke server.', 'error');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check_circle</span> Setuju & Bayar';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
       }
-    });
+    }
   </script>
 </body>
 

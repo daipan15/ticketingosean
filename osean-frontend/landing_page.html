@@ -232,25 +232,26 @@
   class="bg-background text-on-background font-body-md overflow-x-hidden selection:bg-tertiary selection:text-on-tertiary">
 
   <!-- ===================== NAVBAR ===================== -->
+  <!-- ===================== NAVBAR ===================== -->
   <nav
     class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)] z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-margin-mobile md:px-margin-desktop flex items-center justify-between py-3 sm:py-4">
       <!-- Logo -->
       <a href="landing_page.html" class="flex items-center gap-2.5 sm:gap-3 group">
         <img src="assets/osean_logo.png" alt="OSEAN Logo"
-          class="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+          class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
         <span
           class="font-display-md text-2xl sm:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
       </a>
 
       <!-- Desktop Nav (lg:flex) -->
       <div class="hidden lg:flex items-center gap-6">
-        <span class="font-label-caps text-label-caps text-secondary">Beranda</span>
+        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Beranda</span>
         <a href="venues.html"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Venue</a>
+          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
         <a href="buy_tickets_payment.html"
           onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
-          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beli
+          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli
           Tiket</a>
 
         <!-- Tampil jika BELUM login (Desktop) -->
@@ -270,10 +271,10 @@
         <!-- Tampil jika SUDAH login (Desktop) -->
         <div id="nav-auth" class="hidden flex items-center gap-6">
           <a href="my_tickets.html"
-            class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Tiket
+            class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
             Saya</a>
           <button id="logout-btn"
-            class="font-label-caps text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1">
+            class="font-label-caps text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
             <span class="material-symbols-outlined text-[18px]">logout</span>
             <span>Keluar</span>
           </button>
@@ -346,19 +347,23 @@
   </nav>
 
   <!-- ===================== HERO SECTION ===================== -->
-  <section class="relative min-h-[calc(100vh-62px)] lg:h-[calc(100vh-62px)] flex items-center overflow-hidden bg-background">
+  <section class="relative min-h-[calc(100vh-62px)] flex items-center overflow-hidden bg-background">
 
     <!-- Background Layers -->
     <div class="absolute inset-0 bg-splatter opacity-80 z-0"></div>
     <div class="texture-noise"></div>
 
-    <!-- Decorative Background Starburst -->
-    <img src="assets/starburst.png" alt="Star Burst"
-      class="absolute top-6 right-6 md:top-8 md:right-16 w-24 md:w-44 h-auto opacity-35 md:opacity-50 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_35px_rgba(239,192,94,0.35)] z-0" />
+    <!-- Ambient Glowing Aura in Background -->
+    <img src="assets/ambient_glow.png" alt=""
+      class="absolute -top-16 left-1/4 w-[600px] md:w-[950px] opacity-75 pointer-events-none select-none filter blur-xl -z-10 animate-float-gentle-slow" />
+
+    <!-- Decorative Background Prism Starburst -->
+    <img src="assets/prism_starburst.png" alt="Prism Starburst"
+      class="absolute top-6 right-4 sm:right-10 md:right-20 w-36 sm:w-48 md:w-60 h-auto opacity-80 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_40px_rgba(239,192,94,0.45)] z-0" />
 
     <!-- Hero Content Grid -->
     <div
-      class="relative z-10 w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-10 items-center py-6 sm:py-8 lg:py-2">
+      class="relative z-10 w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-8 pb-8 md:pt-10 md:pb-12">
 
       <!-- Left: Text -->
       <div class="lg:col-span-7 relative">
@@ -371,35 +376,37 @@
 
         <!-- Main Heading with Starburst Accent -->
         <h1
-          class="font-headline-lg-mobile md:font-display-lg text-3xl sm:text-5xl lg:text-[40px] xl:text-[54px] 2xl:text-[68px] text-on-surface uppercase tracking-tighter mb-2.5 sm:mb-3.5 leading-[0.98] relative">
+          class="font-headline-lg-mobile md:font-display-lg text-3xl sm:text-5xl lg:text-[40px] xl:text-[54px] 2xl:text-[68px] text-on-surface uppercase tracking-tighter mb-4 leading-[1.05] relative">
           WHERE<br />
           <span class="relative inline-block text-tertiary italic">
             PASSION
-            <img src="assets/starburst.png" alt=""
-              class="absolute -top-4 -right-6 sm:-right-12 w-12 sm:w-18 lg:w-22 h-auto opacity-80 pointer-events-none select-none animate-pulse-glow -z-10 filter drop-shadow-[0_0_25px_rgba(239,192,94,0.6)]" />
+            <img src="assets/prism_starburst.png" alt=""
+              class="absolute -top-6 -right-10 sm:-right-16 w-16 sm:w-24 h-auto opacity-90 pointer-events-none select-none animate-pulse-glow -z-10 filter drop-shadow-[0_0_25px_rgba(239,192,94,0.7)]" />
           </span><br />
           SPARKS EVERY TALENT.
         </h1>
 
         <!-- Description -->
-        <p class="font-body-md sm:font-body-lg text-xs sm:text-sm lg:text-sm xl:text-base text-on-surface-variant max-w-lg opacity-85 mb-4 sm:mb-5 leading-relaxed">
+        <p
+          class="font-body-md sm:font-body-lg text-xs sm:text-sm lg:text-sm xl:text-base text-on-surface-variant max-w-lg opacity-85 mb-4 sm:mb-6 leading-relaxed">
           Malam puncak selebrasi energi, seni, dan karya. Saatnya ribuan cahaya bersatu menutup lembaran perjalanan
           dengan dentuman melodi yang abadi. Jadilah saksi momentum terbesar tahun ini.
         </p>
 
         <!-- CTA Buttons with Floating Camera Sticker -->
-        <div class="flex flex-wrap items-center gap-3 sm:gap-5 mt-2 sm:mt-3 relative">
+        <div class="flex flex-wrap items-center gap-3 sm:gap-5 mt-3 relative">
           <a href="#tickets" class="bg-tertiary text-on-tertiary font-label-caps text-xs sm:text-label-caps uppercase px-5 sm:px-7 py-2.5 sm:py-3
                     shadow-[5px_5px_0px_0px_rgba(21,20,12,1)] hover:-translate-x-0.5 hover:-translate-y-0.5
                     hover:shadow-[8px_8px_0px_0px_#15140c] active:translate-x-0.5 active:translate-y-0.5
                     active:shadow-[2px_2px_0px_0px_#15140c] transition-all duration-200 flex items-center gap-2 group">
             Beli Tiket
-            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <span
+              class="material-symbols-outlined text-[18px] sm:text-[24px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </a>
           <a href="venues.html" class="border-2 border-on-surface-variant text-on-surface-variant font-label-caps text-xs sm:text-label-caps uppercase px-5 sm:px-7 py-2.5 sm:py-3
                     hover:border-tertiary hover:text-secondary transition-colors duration-200 flex items-center gap-2">
             Lihat Venue
-            <span class="material-symbols-outlined">location_on</span>
+            <span class="material-symbols-outlined text-[18px] sm:text-[24px]">location_on</span>
           </a>
 
           <!-- Floating Camera Sticker -->
@@ -421,7 +428,7 @@
 
           <!-- Floating Drum on Card Corner -->
           <img src="assets/drum.png" alt="Drum Sticker"
-            class="absolute -bottom-6 -left-12 xl:-left-18 w-20 xl:w-28 h-auto z-30 pointer-events-none select-none animate-float-2 drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]"
+            class="absolute -bottom-8 -left-16 xl:-left-20 w-24 xl:w-32 h-auto z-30 pointer-events-none select-none animate-float-2 drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]"
             style="--rot: -12deg;" />
 
           <!-- Shadow / background block (brutalist offset) -->
@@ -493,27 +500,37 @@
   </section>
 
   <!-- ===================== TICKET SECTION ===================== -->
-  <section id="tickets" class="relative z-10 py-20 md:py-32 bg-surface-container overflow-hidden">
+  <section id="tickets"
+    class="relative z-10 py-10 md:py-16 lg:py-20 min-h-[85vh] flex flex-col justify-center bg-surface-container overflow-hidden">
 
-    <!-- Floating Background Decorative Stickers -->
+    <!-- Ambient Glowing Aura in Background -->
+    <img src="assets/ambient_glow.png" alt=""
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[700px] md:w-[1100px] opacity-50 pointer-events-none select-none filter blur-2xl -z-0" />
+
+    <!-- Floating Background Decorative Stickers & Prism Starbursts -->
+    <img src="assets/prism_starburst.png" alt=""
+      class="hidden lg:block absolute -top-8 -left-10 w-32 md:w-44 h-auto opacity-70 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_30px_rgba(239,192,94,0.4)] z-0" />
     <img src="assets/drum.png" alt=""
-      class="hidden lg:block absolute top-20 -left-8 w-36 h-auto opacity-30 pointer-events-none select-none -rotate-12 animate-float-2 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)]" />
+      class="hidden lg:block absolute top-24 -left-6 w-36 h-auto opacity-30 pointer-events-none select-none -rotate-12 animate-float-2 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)]" />
     <img src="assets/clapboard.png" alt=""
       class="hidden lg:block absolute top-1/3 -right-8 w-36 h-auto opacity-30 pointer-events-none select-none rotate-12 animate-float-1 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)]" />
     <img src="assets/camera.png" alt=""
       class="hidden lg:block absolute bottom-8 left-12 w-28 h-auto opacity-25 pointer-events-none select-none -rotate-6 animate-float-3 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)]" />
 
-    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+    <div class="max-w-7xl mx-auto w-full px-margin-mobile md:px-margin-desktop relative z-10">
 
-      <!-- Section Header with Starburst Accent -->
-      <div class="mb-16 relative inline-block">
-        <p class="font-label-caps text-label-caps text-secondary uppercase mb-2">✦ Pilih Tiketmu</p>
-        <h2
-          class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface uppercase">
-          Kategori Tiket
-        </h2>
-        <img src="assets/starburst.png" alt=""
-          class="absolute -top-8 -right-20 sm:-right-24 w-20 sm:w-28 h-auto opacity-60 pointer-events-none select-none animate-pulse-glow -z-10 filter drop-shadow-[0_0_20px_rgba(239,192,94,0.5)]" />
+      <!-- Section Header with Starburst Accent at Far Right -->
+      <div class="mb-8 md:mb-12 flex items-end justify-between relative">
+        <div>
+          <p class="font-label-caps text-label-caps text-secondary uppercase mb-2">✦ Pilih Tiketmu</p>
+          <h2
+            class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface uppercase">
+            Kategori Tiket
+          </h2>
+        </div>
+        <!-- Bintang di Ujung Kanan -->
+        <img src="assets/prism_starburst.png" alt=""
+          class="w-20 sm:w-28 md:w-36 h-auto opacity-85 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_30px_rgba(239,192,94,0.5)]" />
       </div>
 
       <!-- Ticket Cards Grid -->
@@ -542,7 +559,8 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-early-bird" class="font-headline-lg text-headline-lg text-tertiary">Rp 38.000</p>
+                <p id="price-early-bird" class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary">Rp 38.000
+                </p>
               </div>
               <div id="btn-container-early-bird">
                 <a href="buy_tickets_payment.html"
@@ -566,7 +584,8 @@
             <div id="badge-right-now"
               class="hidden absolute -top-3.5 right-4 bg-secondary text-on-secondary font-label-caps text-[11px] uppercase px-3 py-1 flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#15140c] tracking-wider font-bold z-20">
               <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-secondary opacity-75"></span>
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-secondary opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2 w-2 bg-on-secondary"></span>
               </span>
               <span>RIGHT NOW</span>
@@ -587,7 +606,8 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-presale-1" class="font-headline-lg text-headline-lg text-tertiary">Rp 48.000</p>
+                <p id="price-presale-1" class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary">Rp 48.000
+                </p>
               </div>
               <div id="btn-container-presale-1">
                 <a href="buy_tickets_payment.html"
@@ -622,7 +642,7 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-presale-2" class="font-headline-lg text-headline-lg text-primary">Rp 58.000</p>
+                <p id="price-presale-2" class="font-headline-lg text-2xl sm:text-headline-lg text-primary">Rp 58.000</p>
               </div>
               <div id="btn-container-presale-2">
                 <a href="buy_tickets_payment.html"
@@ -659,7 +679,7 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-ots" class="font-headline-lg text-headline-lg text-secondary">Rp 68.000</p>
+                <p id="price-ots" class="font-headline-lg text-2xl sm:text-headline-lg text-secondary">Rp 68.000</p>
               </div>
               <div id="btn-container-ots">
                 <a href="buy_tickets_payment.html"
@@ -676,9 +696,266 @@
     </div>
   </section>
 
+  <!-- ===================== ROAD TO CLOSING JOURNEY (TIMELINE CONNECTED BOXES) ===================== -->
+  <section id="journey-section"
+    class="relative py-20 bg-surface-container-lowest border-t-2 border-outline-variant overflow-hidden">
+    <!-- Ambient Background Glow & Decorative Elements -->
+    <img src="assets/ambient_glow.png" alt=""
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[700px] md:w-[1100px] opacity-65 pointer-events-none select-none filter blur-2xl -z-0" />
+    <img src="assets/prism_starburst.png" alt=""
+      class="absolute top-6 right-6 sm:right-16 w-28 sm:w-40 opacity-70 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_30px_rgba(239,192,94,0.45)] -z-0" />
+    <img src="assets/prism_starburst.png" alt=""
+      class="hidden md:block absolute -bottom-12 -left-10 w-28 sm:w-36 opacity-55 pointer-events-none select-none animate-float-3 filter drop-shadow-[0_0_25px_rgba(196,205,111,0.4)] -z-0" />
+
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+
+      <!-- Section Header -->
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <p
+          class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mb-2 flex items-center justify-center gap-2">
+          <span>✦</span> ROAD TO OSEAN 2026 <span>✦</span>
+        </p>
+        <h2
+          class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface uppercase tracking-tight">
+          Garis Waktu Menuju <span class="text-tertiary italic">Malam Puncak</span>
+        </h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-3">
+          Perjalanan waktu nyata dari 19 Juni menuju perayaan akbar 27 September 2026 di Lapangan Merah. Posisi garis
+          dan persentase ter-update otomatis secara real-time!
+        </p>
+      </div>
+
+      <!-- 2 Boxes Connected by Line Container -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-0 relative">
+
+        <!-- ================= BOX 1: REAL-TIME WAKTU SAAT INI ================= -->
+        <div class="w-full md:w-[41%] relative z-10 group">
+          <!-- Brutalist Offset Shadow -->
+          <div
+            class="absolute inset-0 translate-x-2 translate-y-2 bg-secondary-container -z-10 transition-transform duration-300 group-hover:translate-x-3 group-hover:translate-y-3">
+          </div>
+
+          <div
+            class="bg-surface-container border-2 border-outline-variant p-6 sm:p-7 flex flex-col justify-between relative">
+            <!-- Corner Dot Accent -->
+            <div class="flex items-center justify-between mb-4 border-b border-outline-variant pb-3">
+              <div class="flex items-center gap-2">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary"></span>
+                </span>
+                <span class="font-label-caps text-xs text-secondary uppercase font-bold tracking-wider">Titik Awal •
+                  Real Time</span>
+              </div>
+              <span
+                class="font-label-caps text-[10px] text-on-surface-variant uppercase bg-surface-container-high px-2 py-0.5 border border-outline-variant">
+                LIVE CLOCK
+              </span>
+            </div>
+
+            <!-- Date Display -->
+            <p id="live-date-display"
+              class="font-label-caps text-xs sm:text-label-caps text-tertiary uppercase tracking-wider mb-1">
+              Memuat Waktu...
+            </p>
+
+            <!-- Digital Clock Display -->
+            <div class="flex items-baseline gap-2 mb-5">
+              <h3 id="live-time-display"
+                class="font-mono text-3xl sm:text-4xl lg:text-5xl font-extrabold text-on-surface tracking-wider leading-none">
+                00:00:00
+              </h3>
+              <span class="font-mono text-xs text-on-surface-variant font-bold uppercase tracking-wider">WIB</span>
+            </div>
+
+            <!-- Countdown Progress Counter to Closing -->
+            <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-2 tracking-wider">
+              Sisa Waktu Menuju 27 September:
+            </p>
+            <div class="grid grid-cols-4 gap-2 mb-4">
+              <div class="bg-surface-container-high border border-outline-variant p-2 text-center">
+                <p id="cd-days" class="font-mono font-bold text-lg sm:text-xl text-tertiary leading-none">0</p>
+                <p class="font-label-caps text-[9px] text-on-surface-variant uppercase mt-1">Hari</p>
+              </div>
+              <div class="bg-surface-container-high border border-outline-variant p-2 text-center">
+                <p id="cd-hours" class="font-mono font-bold text-lg sm:text-xl text-on-surface leading-none">00</p>
+                <p class="font-label-caps text-[9px] text-on-surface-variant uppercase mt-1">Jam</p>
+              </div>
+              <div class="bg-surface-container-high border border-outline-variant p-2 text-center">
+                <p id="cd-mins" class="font-mono font-bold text-lg sm:text-xl text-on-surface leading-none">00</p>
+                <p class="font-label-caps text-[9px] text-on-surface-variant uppercase mt-1">Menit</p>
+              </div>
+              <div class="bg-surface-container-high border border-outline-variant p-2 text-center">
+                <p id="cd-secs" class="font-mono font-bold text-lg sm:text-xl text-secondary leading-none">00</p>
+                <p class="font-label-caps text-[9px] text-on-surface-variant uppercase mt-1">Detik</p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-center gap-2 text-on-surface-variant text-xs pt-2 border-t border-dashed border-outline-variant">
+              <span class="material-symbols-outlined text-[16px] text-secondary">explore</span>
+              <span>Waktu terus berjalan, jangan lewatkan momentum!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= CONNECTING LINE & SCROLL TRAVELER ================= -->
+        <div class="w-full md:w-[18%] flex flex-col items-center justify-center relative py-8 md:py-0 select-none">
+
+          <!-- Connector Track Container (Horizontal on Desktop, Vertical on Mobile) -->
+          <div id="journey-track-wrapper" class="relative flex items-center justify-center w-full">
+
+            <!-- DESKTOP TRACK: Horizontal Line -->
+            <div
+              class="hidden md:block w-full h-3 bg-surface-container-high border-2 border-outline-variant rounded-full relative overflow-visible">
+              <!-- Active Progress Fill -->
+              <div id="journey-progress-bar-desktop"
+                class="absolute left-0 top-0 h-full bg-gradient-to-r from-secondary via-tertiary to-secondary rounded-full shadow-[0_0_12px_rgba(239,192,94,0.7)] transition-all duration-700 ease-out"
+                style="width: 0%;"></div>
+
+              <!-- Moving Traveler Object on Desktop -->
+              <div id="journey-runner-desktop"
+                class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 transition-all duration-700 ease-out"
+                style="left: 0%;">
+                <div class="relative flex items-center justify-center">
+                  <!-- Floating Badge above Runner -->
+                  <div
+                    class="absolute -top-9 whitespace-nowrap bg-secondary text-on-secondary font-label-caps text-[9px] uppercase px-2 py-0.5 font-bold shadow-[2px_2px_0px_0px_#15140c] flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[12px]">schedule</span>
+                    <span id="journey-runner-badge-desktop">24 HARI LAGI</span>
+                  </div>
+                  <!-- Runner Icon Orb -->
+                  <div
+                    class="w-11 h-11 bg-tertiary text-on-tertiary rounded-full border-2 border-[#15140c] shadow-[3px_3px_0px_0px_#15140c] flex items-center justify-center filter drop-shadow-[0_0_10px_rgba(239,192,94,0.8)] animate-pulse">
+                    <span class="material-symbols-outlined text-[20px] font-bold">bolt</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MOBILE TRACK: Vertical Line -->
+            <div
+              class="block md:hidden w-3 h-32 bg-surface-container-high border-2 border-outline-variant rounded-full relative overflow-visible my-2">
+              <!-- Active Progress Fill -->
+              <div id="journey-progress-bar-mobile"
+                class="absolute left-0 top-0 w-full bg-gradient-to-b from-secondary via-tertiary to-secondary rounded-full shadow-[0_0_12px_rgba(239,192,94,0.7)] transition-all duration-700 ease-out"
+                style="height: 0%;"></div>
+
+              <!-- Moving Traveler Object on Mobile -->
+              <div id="journey-runner-mobile"
+                class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-all duration-700 ease-out"
+                style="top: 0%;">
+                <div class="relative flex items-center justify-center">
+                  <!-- Floating Badge right of Runner on mobile -->
+                  <div
+                    class="absolute left-12 whitespace-nowrap bg-secondary text-on-secondary font-label-caps text-[9px] uppercase px-2 py-0.5 font-bold shadow-[2px_2px_0px_0px_#15140c] flex items-center gap-1">
+                    <span id="journey-runner-badge-mobile">24 HARI LAGI</span>
+                  </div>
+                  <!-- Runner Icon Orb -->
+                  <div
+                    class="w-10 h-10 bg-tertiary text-on-tertiary rounded-full border-2 border-[#15140c] shadow-[3px_3px_0px_0px_#15140c] flex items-center justify-center filter drop-shadow-[0_0_10px_rgba(239,192,94,0.8)] animate-pulse">
+                    <span class="material-symbols-outlined text-[18px] font-bold">bolt</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Progress Percentage & Days Remaining Label -->
+          <div class="mt-3 text-center">
+            <div class="flex items-center justify-center gap-1.5 flex-wrap">
+              <span id="journey-percent-text"
+                class="font-mono text-base sm:text-xl text-tertiary font-extrabold tracking-wider">
+                0%
+              </span>
+              <span class="text-on-surface-variant/40">•</span>
+              <span id="journey-days-badge"
+                class="font-mono text-xs sm:text-sm text-secondary font-bold uppercase tracking-wider">
+                -- Hari Lagi
+              </span>
+            </div>
+            <p id="journey-label-sub"
+              class="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-widest mt-0.5">
+              19 Juni ➔ 27 September 2026
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ================= BOX 2: CLOSING CEREMONY 27 SEPTEMBER 2026 ================= -->
+        <div id="box-closing-ceremony" class="w-full md:w-[41%] relative z-10 group">
+          <!-- Brutalist Offset Shadow -->
+          <div
+            class="absolute inset-0 translate-x-2 translate-y-2 bg-tertiary-container -z-10 transition-transform duration-300 group-hover:translate-x-3 group-hover:translate-y-3">
+          </div>
+
+          <div
+            class="bg-surface-container border-2 border-tertiary p-6 sm:p-7 flex flex-col justify-between relative shadow-[6px_6px_0px_0px_#15140c]">
+            <!-- Header with Badge -->
+            <div class="flex items-center justify-between mb-4 border-b border-outline-variant pb-3">
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">flag</span>
+                <span class="font-label-caps text-xs text-tertiary uppercase font-bold tracking-wider">Titik Tujuan •
+                  Puncak</span>
+              </div>
+              <span
+                class="bg-secondary text-on-secondary font-label-caps text-[10px] uppercase px-2 py-0.5 font-bold shadow-[2px_2px_0px_0px_#15140c] flex items-center gap-1">
+                <span class="material-symbols-outlined text-[12px]">celebration</span> CLOSING CEREMONY
+              </span>
+            </div>
+
+            <!-- Big Date Highlight -->
+            <p class="font-label-caps text-xs text-secondary uppercase font-bold tracking-wider mb-1">
+              Save The Date
+            </p>
+            <h3 class="font-display-md text-2xl sm:text-3xl lg:text-4xl text-on-surface uppercase tracking-tight mb-3">
+              27 SEPTEMBER <span class="text-tertiary italic">2026</span>
+            </h3>
+
+            <!-- Details & Highlights -->
+            <div class="space-y-2 mb-4 bg-surface-container-high border border-outline-variant p-3.5">
+              <div class="flex items-center gap-2.5 text-on-surface">
+                <span class="material-symbols-outlined text-secondary text-[18px]">location_on</span>
+                <span class="font-body-md text-xs sm:text-sm font-semibold">Lapangan Merah Unpad Jatinangor</span>
+              </div>
+              <div class="flex items-center gap-2.5 text-on-surface-variant">
+                <span class="material-symbols-outlined text-tertiary text-[18px]">schedule</span>
+                <span class="font-body-md text-xs">Open Gate: 15.00 WIB — Selesai</span>
+              </div>
+              <div class="flex items-center gap-2.5 text-on-surface-variant">
+                <span class="material-symbols-outlined text-secondary text-[18px]">stadium</span>
+                <span class="font-body-md text-xs">Konser Akbar, Artis Nasional & Spectacular Lightshow</span>
+              </div>
+            </div>
+
+            <!-- Action Button to Tickets -->
+            <div class="flex items-center justify-between pt-2 border-t border-dashed border-outline-variant">
+              <span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Kuota Terbatas!</span>
+              <a href="#tickets"
+                class="bg-tertiary text-on-tertiary font-label-caps text-[11px] uppercase px-4 py-2 font-bold hover:-translate-y-0.5 active:translate-y-0 transition-transform shadow-[3px_3px_0px_0px_#15140c] flex items-center gap-1.5">
+                <span>Pilih Tiket</span>
+                <span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /flex -->
+
+    </div>
+  </section>
+
   <!-- ===================== INFO STRIP ===================== -->
-  <section class="bg-background py-12 border-t border-outline-variant overflow-hidden">
-    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-8">
+  <section class="relative bg-background py-12 border-t border-outline-variant overflow-hidden">
+    <!-- Ambient Glow & Starburst Background -->
+    <img src="assets/ambient_glow.png" alt=""
+      class="absolute top-1/2 -translate-y-1/2 right-1/4 w-[500px] md:w-[750px] opacity-40 pointer-events-none select-none filter blur-2xl -z-0" />
+    <img src="assets/prism_starburst.png" alt=""
+      class="hidden lg:block absolute -top-6 right-12 w-20 h-auto opacity-45 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_20px_rgba(239,192,94,0.4)]" />
+    <div
+      class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
 
       <div class="flex items-start gap-4 border-l-4 border-tertiary pl-4">
         <span class="material-symbols-outlined text-tertiary">security</span>
@@ -717,19 +994,22 @@
       <a href="https://www.instagram.com/oseanfmipa/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
         class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
         <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          <path
+            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
         </svg>
       </a>
       <a href="https://www.youtube.com/@OSEANFMIPAUNPAD" target="_blank" rel="noopener noreferrer" aria-label="YouTube"
         class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
         <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          <path
+            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
         </svg>
       </a>
       <a href="https://www.tiktok.com/@oseanmipa" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
         class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
         <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+          <path
+            d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
         </svg>
       </a>
     </div>
@@ -926,6 +1206,140 @@
 
     // Jalankan pengecekan tanggal saat halaman dimuat
     applyTicketSchedule();
+
+    // =================================================================
+    // REAL-TIME CLOCK & COUNTDOWN (BOX 1)
+    // =================================================================
+    function updateLiveClockAndCountdown() {
+      const now = new Date();
+
+      // Nama Hari & Bulan Bahasa Indonesia
+      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const months = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      ];
+
+      const dayName = days[now.getDay()];
+      const dateNum = now.getDate();
+      const monthName = months[now.getMonth()];
+      const yearNum = now.getFullYear();
+
+      const dateEl = document.getElementById('live-date-display');
+      if (dateEl) {
+        dateEl.textContent = `${dayName}, ${dateNum} ${monthName} ${yearNum}`;
+      }
+
+      // Jam, Menit, Detik Digital Real-Time
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const timeEl = document.getElementById('live-time-display');
+      if (timeEl) {
+        timeEl.textContent = `${h}:${m}:${s}`;
+      }
+
+      // Countdown ke Closing Ceremony (27 September 2026, 15:00 WIB)
+      const target = new Date('2026-09-27T15:00:00+07:00');
+      const diff = target - now;
+
+      const cdDays = document.getElementById('cd-days');
+      const cdHours = document.getElementById('cd-hours');
+      const cdMins = document.getElementById('cd-mins');
+      const cdSecs = document.getElementById('cd-secs');
+
+      if (diff > 0) {
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hr = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mn = Math.floor((diff / (1000 * 60)) % 60);
+        const sc = Math.floor((diff / 1000) % 60);
+
+        if (cdDays) cdDays.textContent = d;
+        if (cdHours) cdHours.textContent = String(hr).padStart(2, '0');
+        if (cdMins) cdMins.textContent = String(mn).padStart(2, '0');
+        if (cdSecs) cdSecs.textContent = String(sc).padStart(2, '0');
+      } else {
+        if (cdDays) cdDays.textContent = '0';
+        if (cdHours) cdHours.textContent = '00';
+        if (cdMins) cdMins.textContent = '00';
+        if (cdSecs) cdSecs.textContent = '00';
+      }
+    }
+
+    setInterval(updateLiveClockAndCountdown, 1000);
+    updateLiveClockAndCountdown();
+
+    // =================================================================
+    // TIME-BASED JOURNEY TIMELINE (19 JUNI -> 27 SEPTEMBER)
+    // =================================================================
+    function updateJourneyProgress() {
+      const section = document.getElementById('journey-section');
+      const runnerDesktop = document.getElementById('journey-runner-desktop');
+      const progressDesktop = document.getElementById('journey-progress-bar-desktop');
+      const runnerMobile = document.getElementById('journey-runner-mobile');
+      const progressMobile = document.getElementById('journey-progress-bar-mobile');
+      const percentText = document.getElementById('journey-percent-text');
+      const daysBadge = document.getElementById('journey-days-badge');
+      const badgeDesktop = document.getElementById('journey-runner-badge-desktop');
+      const badgeMobile = document.getElementById('journey-runner-badge-mobile');
+      const boxClosing = document.getElementById('box-closing-ceremony');
+
+      if (!section) return;
+
+      // Milestone Tanggal: 19 Juni 2026 s/d 27 September 2026
+      const startDate = new Date('2026-06-19T00:00:00+07:00');
+      const endDate = new Date('2026-09-27T15:00:00+07:00');
+      const now = new Date();
+
+      const totalDuration = endDate - startDate;
+      const elapsed = Math.max(0, now - startDate);
+      const remainingMs = Math.max(0, endDate - now);
+
+      // Hitung sisa hari dan persentase perjalanan waktu nyata
+      const actualDaysLeft = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+      const currentPercent = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+
+      const displayPct = currentPercent.toFixed(1) + '%';
+      const displayDaysText = actualDaysLeft <= 0 ? 'Hari H Puncak!' : `${actualDaysLeft} Hari Lagi`;
+
+      // Posisi tetap (fixed) pada garis & terus berjalan dinamis mengikuti real-time clock
+      if (runnerDesktop && progressDesktop) {
+        runnerDesktop.style.left = `${currentPercent}%`;
+        progressDesktop.style.width = `${currentPercent}%`;
+      }
+
+      if (runnerMobile && progressMobile) {
+        runnerMobile.style.top = `${currentPercent}%`;
+        progressMobile.style.height = `${currentPercent}%`;
+      }
+
+      // Update Teks Persentase & Berapa Hari Lagi
+      if (percentText) {
+        percentText.textContent = displayPct;
+      }
+      if (daysBadge) {
+        daysBadge.textContent = displayDaysText;
+      }
+      if (badgeDesktop) {
+        badgeDesktop.textContent = displayDaysText.toUpperCase();
+      }
+      if (badgeMobile) {
+        badgeMobile.textContent = displayDaysText.toUpperCase();
+      }
+
+      // Highlight jika sudah mendekati atau mencapai hari H
+      if (boxClosing) {
+        if (currentPercent >= 99) {
+          boxClosing.classList.add('scale-[1.02]', 'transition-transform');
+        } else {
+          boxClosing.classList.remove('scale-[1.02]');
+        }
+      }
+    }
+
+    // Jalankan setiap detik bersamaan dengan live clock agar terus berjalan real-time
+    setInterval(updateJourneyProgress, 1000);
+    updateJourneyProgress();
   </script>
 </body>
 

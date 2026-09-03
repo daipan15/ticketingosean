@@ -121,22 +121,22 @@
   <nav class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
     <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
       <a href="landing_page.html"
-         class="flex items-center gap-3 group">
-        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-10 h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
-        <span class="font-display-md text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+         class="flex items-center gap-2 group">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-8 h-8 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+        <span class="font-display-md text-lg sm:text-2xl md:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
       </a>
 
-      <div class="flex items-center gap-3 sm:gap-6">
+      <div class="flex items-center gap-2 sm:gap-3 lg:gap-6">
         <a href="landing_page.html"
-           class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beranda</a>
+           class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
         <a href="venues.html"
-           class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Venue</a>
+           class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
         <a href="buy_tickets_payment.html"
-           class="font-label-caps text-xs sm:text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beli Tiket</a>
-        <span class="font-label-caps text-xs sm:text-label-caps text-secondary">Tiket Saya</span>
+           class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli Tiket</a>
+        <span class="hidden lg:inline font-label-caps text-label-caps text-secondary uppercase tracking-wider">Tiket Saya</span>
         <button id="logout-btn"
-                class="font-label-caps text-xs sm:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>
+                class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[14px] sm:text-[16px] lg:text-[18px]">logout</span>
           <span class="hidden sm:inline">Keluar</span>
         </button>
       </div>
@@ -144,7 +144,7 @@
   </nav>
 
   <!-- ===================== MAIN ===================== -->
-  <main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-16 relative">
+  <main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-10 md:py-16 relative">
 
     <!-- Decorative Floating Festival Stickers -->
     <img src="assets/clapboard.png" alt=""
@@ -160,7 +160,7 @@
     <!-- Page Header with Starburst Accent -->
     <div class="mb-12 relative inline-block">
       <p class="font-label-caps text-label-caps text-secondary uppercase mb-2">Halo, <span id="user-nama">—</span></p>
-      <h1 class="font-display-lg text-headline-lg-mobile md:text-display-md text-on-surface uppercase tracking-tighter">
+      <h1 class="font-display-lg text-xl sm:text-2xl md:text-display-md text-on-surface uppercase tracking-tighter">
         Tiket <span class="text-secondary italic">Saya</span>
       </h1>
       <img src="assets/starburst.png" alt=""
@@ -172,7 +172,7 @@
       <!-- ===== LEFT: Daftar Tiket ===== -->
       <section class="lg:col-span-8 flex flex-col gap-6">
         <div class="flex items-center justify-between">
-          <h2 class="font-headline-lg text-headline-lg text-on-surface uppercase border-b-2 border-outline-variant pb-3">
+          <h2 class="font-headline-lg text-xl sm:text-headline-lg text-on-surface uppercase border-b-2 border-outline-variant pb-3">
             Pesanan Aktif
           </h2>
           <a href="buy_tickets_payment.html"
@@ -203,14 +203,14 @@
       </section>
 
       <!-- ===== RIGHT: Sidebar ===== -->
-      <aside class="lg:col-span-4 flex flex-col gap-8">
+      <aside class="lg:col-span-4 flex flex-col gap-8 mt-6 lg:mt-0">
 
         <!-- Payment Ledger -->
         <div class="bg-surface-container-high border-t-4 border-tertiary p-6 shadow-[8px_8px_0px_0px_rgba(15,14,7,1)] relative rotate-1 hover:rotate-0 transition-transform">
           <div class="absolute -top-3 -right-3 text-tertiary opacity-20 rotate-12 pointer-events-none">
             <span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'FILL' 1">receipt_long</span>
           </div>
-          <h3 class="font-headline-lg text-headline-lg text-tertiary mb-6 uppercase">Ledger</h3>
+          <h3 class="font-headline-lg text-lg sm:text-headline-lg text-tertiary mb-6 uppercase">Ledger</h3>
           <ul id="ledger-list" class="space-y-4 mb-8">
             <li class="text-on-surface-variant font-body-md text-body-md flex items-center gap-2">
               <span class="material-symbols-outlined animate-spin text-[18px]">refresh</span> Memuat...
@@ -227,7 +227,7 @@
 
         <!-- QnA / Pertanyaan -->
         <div class="bg-primary-container p-6 shadow-[8px_8px_0px_0px_rgba(15,14,7,1)] -rotate-1 hover:rotate-0 transition-transform">
-          <h3 class="font-headline-lg text-headline-lg text-on-surface mb-6 uppercase border-b-2 border-outline-variant pb-3">
+          <h3 class="font-headline-lg text-lg sm:text-headline-lg text-on-surface mb-6 uppercase border-b-2 border-outline-variant pb-3">
             Pertanyaan
           </h3>
 
@@ -381,7 +381,7 @@
             <div class="flex items-end justify-between border-t border-dashed border-outline-variant pt-4">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Jumlah × Harga</p>
-                <p class="font-headline-lg text-headline-lg text-tertiary mt-1">
+                <p class="font-headline-lg text-xl sm:text-headline-lg text-tertiary mt-1">
                   ${t.jumlah_tiket} × ${t.harga_format} = <span class="text-secondary">${t.total_format}</span>
                 </p>
               </div>

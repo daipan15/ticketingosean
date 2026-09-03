@@ -237,6 +237,7 @@
           showToast(data.message || 'Login gagal.', 'error');
         }
       } catch (err) {
+        console.error('Login error:', err);
         showToast('Tidak dapat terhubung ke server.', 'error');
       } finally {
         btn.disabled = false;

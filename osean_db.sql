@@ -94,6 +94,8 @@ CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `role` enum('user','admin') NOT NULL DEFAULT 'user',
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `verification_token` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -101,8 +103,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `nama`, `email`, `password_hash`, `role`, `created_at`) VALUES
-(1, 'Admin OSEAN', 'admin@osean.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', '2026-09-02 18:11:42');
+INSERT INTO `users` (`id`, `nama`, `email`, `password_hash`, `role`, `is_verified`, `verification_token`, `created_at`) VALUES
+(1, 'Admin OSEAN', 'admin@osean.com', '$2y$12$CnRlbQYA5I5pI8suZGkNkuBdCzy93F0DzrvDQd438ay3GIzn90aJq', 'admin', 1, NULL, '2026-09-02 18:11:42');
 -- Password default admin: admin123
 -- PENTING: Ganti password ini setelah pertama kali login!
 

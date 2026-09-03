@@ -82,10 +82,64 @@
       pointer-events: none;
       z-index: 9999;
     }
+
+    /* Floating & Decorative Animations */
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(-14px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+    }
+    @keyframes float-reverse {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(14px) rotate(calc(var(--rot, 0deg) - 3deg)); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+    }
+    @keyframes spin-ultra-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-float-1 { animation: float-gentle 5s ease-in-out infinite; }
+    .animate-float-2 { animation: float-reverse 6.5s ease-in-out infinite; }
+    .animate-float-3 { animation: float-gentle 7s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+    .animate-spin-slow { animation: spin-ultra-slow 45s linear infinite; }
+    .animate-float-gentle-slow { animation: float-gentle 8s ease-in-out infinite; }
+
+    .bg-splatter {
+      background:
+        radial-gradient(circle at 80% 20%, #5B2E8C 0%, transparent 45%),
+        radial-gradient(circle at 20% 80%, #2E1A47 0%, transparent 50%);
+    }
   </style>
 </head>
 
-<body class="bg-background text-on-background font-body-md overflow-x-hidden min-h-screen flex items-center justify-center selection:bg-tertiary selection:text-on-tertiary">
+<body class="bg-background text-on-background font-body-md overflow-x-hidden min-h-screen flex items-center justify-center relative selection:bg-tertiary selection:text-on-tertiary">
+
+  <!-- Ambient Glow Background -->
+  <div class="fixed inset-0 bg-splatter opacity-70 pointer-events-none -z-10"></div>
+
+  <!-- Decorative Floating Festival Stickers -->
+  <img src="assets/starburst.png" alt=""
+    class="absolute top-10 right-10 sm:right-24 w-32 sm:w-44 opacity-40 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_30px_rgba(239,192,94,0.3)] z-0" />
+
+  <img src="assets/clapboard.png" alt=""
+    class="hidden sm:block absolute top-16 left-12 lg:left-24 w-28 lg:w-36 opacity-75 pointer-events-none select-none animate-float-1 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)] z-0"
+    style="--rot: -14deg;" />
+
+  <img src="assets/drum.png" alt=""
+    class="hidden sm:block absolute bottom-24 right-10 lg:right-24 w-28 lg:w-36 opacity-75 pointer-events-none select-none animate-float-2 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)] z-0"
+    style="--rot: 12deg;" />
+
+  <img src="assets/camera.png" alt=""
+    class="hidden sm:block absolute bottom-16 left-10 lg:left-20 w-24 lg:w-32 opacity-70 pointer-events-none select-none animate-float-3 drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)] z-0"
+    style="--rot: 8deg;" />
+
+  <!-- Crowd Hand rising from bottom -->
+  <div class="fixed -bottom-6 right-0 sm:right-1/4 w-[280px] sm:w-[420px] pointer-events-none select-none -z-10 opacity-50 sm:opacity-65">
+    <img src="assets/hand.png" alt="" class="w-full h-auto animate-float-gentle-slow" />
+  </div>
 
   <!-- Toast Notification -->
   <div id="toast" class="fixed top-6 right-6 z-[99999] hidden">
@@ -96,7 +150,7 @@
   </div>
 
   <!-- ===================== LOGIN FORM ===================== -->
-  <div class="w-full max-w-md px-margin-mobile">
+  <div class="w-full max-w-md px-margin-mobile relative z-10 py-12">
 
     <!-- Logo -->
     <div class="mb-10 text-center flex flex-col items-center">

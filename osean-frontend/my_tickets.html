@@ -79,6 +79,30 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none; z-index: 9999;
     }
+
+    /* Floating & Decorative PNG Animations */
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(-14px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+    }
+    @keyframes float-reverse {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(14px) rotate(calc(var(--rot, 0deg) - 3deg)); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+    }
+    @keyframes spin-ultra-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-float-1 { animation: float-gentle 5s ease-in-out infinite; }
+    .animate-float-2 { animation: float-reverse 6.5s ease-in-out infinite; }
+    .animate-float-3 { animation: float-gentle 7s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+    .animate-spin-slow { animation: spin-ultra-slow 45s linear infinite; }
+    .animate-float-gentle-slow { animation: float-gentle 8s ease-in-out infinite; }
   </style>
 </head>
 
@@ -119,17 +143,30 @@
   </nav>
 
   <!-- ===================== MAIN ===================== -->
-  <main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-16">
+  <main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-16 relative">
 
-    <!-- Page Header -->
-    <div class="mb-12">
+    <!-- Decorative Floating Festival Stickers -->
+    <img src="assets/clapboard.png" alt=""
+      class="hidden lg:block absolute top-8 right-6 w-32 h-auto opacity-30 pointer-events-none select-none rotate-12 animate-float-1" />
+    <img src="assets/drum.png" alt=""
+      class="hidden lg:block absolute top-1/2 -left-10 w-32 h-auto opacity-30 pointer-events-none select-none -rotate-12 animate-float-2" />
+    <img src="assets/camera.png" alt=""
+      class="hidden lg:block absolute bottom-12 right-10 w-28 h-auto opacity-30 pointer-events-none select-none rotate-6 animate-float-3" />
+    <div class="fixed -bottom-6 right-0 w-[300px] md:w-[420px] pointer-events-none select-none -z-10 opacity-35">
+      <img src="assets/hand.png" alt="" class="w-full h-auto animate-float-gentle-slow" />
+    </div>
+
+    <!-- Page Header with Starburst Accent -->
+    <div class="mb-12 relative inline-block">
       <p class="font-label-caps text-label-caps text-secondary uppercase mb-2">Halo, <span id="user-nama">—</span></p>
       <h1 class="font-display-lg text-headline-lg-mobile md:text-display-md text-on-surface uppercase tracking-tighter">
         Tiket <span class="text-secondary italic">Saya</span>
       </h1>
+      <img src="assets/starburst.png" alt=""
+        class="absolute -top-6 -right-16 w-20 md:w-24 h-auto opacity-70 pointer-events-none select-none animate-pulse-glow -z-10 filter drop-shadow-[0_0_20px_rgba(239,192,94,0.5)]" />
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start relative z-10">
 
       <!-- ===== LEFT: Daftar Tiket ===== -->
       <section class="lg:col-span-8 flex flex-col gap-6">

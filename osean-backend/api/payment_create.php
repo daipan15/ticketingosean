@@ -1,16 +1,19 @@
 <?php
 // =============================================
 // OSEAN - payment_create.php
-// DB payments: id, user_id, ticket_id, jumlah_tiket, total_bayar,
-//              metode_pembayaran, bukti_transfer, status, created_at, verified_at
-// DB tickets : kuota_terjual (increment saat beli)
+// Membuat transaksi pembayaran via Midtrans Snap
+// Input JSON: ticket_id, jumlah_tiket
+// Output: snap_token untuk popup Midtrans
 // =============================================
 require_once __DIR__ . '/../config.php';
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') send_error('Method tidak diizinkan.', 405);
 
+$data          = json_decode(file_get_contents('php://input'), true);
 $user_id       = $_SESSION['user_id'];
+$ticket_id     = isset($data['ticket_id'])     ? (int)$data['ticket_id']     : 0;
+$jumlah_tiket  = isset($data['jumlah_tiket'])  ? (int)$data['jumlah_tiket']  : 1;
 $ticket_id     = isset($_POST['ticket_id'])          ? (int)$_POST['ticket_id']             : 0;
 $jumlah_tiket  = isset($_POST['jumlah_tiket'])       ? (int)$_POST['jumlah_tiket']          : 1;
 $metode        = isset($_POST['metode_pembayaran'])   ? sanitize($_POST['metode_pembayaran']) : 'transfer';
@@ -36,25 +39,12 @@ if ($sisa_kuota < $jumlah_tiket) {
     send_error("Stok tiket tidak cukup. Sisa: {$sisa_kuota} tiket.");
 }
 
-// Validasi upload bukti transfer
-if (!isset($_FILES['bukti_transfer']) || $_FILES['bukti_transfer']['error'] !== UPLOAD_ERR_OK) {
-    send_error('Bukti transfer wajib diupload.');
-}
-
-$allowed_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-$file_type     = mime_content_type($_FILES['bukti_transfer']['tmp_name']);
-if (!in_array($file_type, $allowed_types)) send_error('Format file tidak didukung (JPG/PNG/WebP).');
-if ($_FILES['bukti_transfer']['size'] > 5 * 1024 * 1024) send_error('Ukuran file maks 5 MB.');
-
-// Simpan file upload
-$ext      = pathinfo($_FILES['bukti_transfer']['name'], PATHINFO_EXTENSION);
-$filename = 'bukti_' . $user_id . '_' . time() . '.' . $ext;
-$filepath = UPLOAD_DIR . $filename;
-
-if (!is_dir(UPLOAD_DIR)) mkdir(UPLOAD_DIR, 0755, true);
-if (!move_uploaded_file($_FILES['bukti_transfer']['tmp_name'], $filepath)) {
-    send_error('Gagal upload file.', 500);
-}
+// Ambil data user untuk dikirim ke Midtrans
+$stmt = $conn->prepare("SELECT nama, email FROM users WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
 // Generator kode unik tiket (booking code) ber-entropi tinggi & terjamin unik
 function generate_unique_ticket_code($conn) {
@@ -82,35 +72,98 @@ function generate_unique_ticket_code($conn) {
 
 $kode_unik   = generate_unique_ticket_code($conn);
 $total_bayar = $tiket['harga'] * $jumlah_tiket;
-$status      = 'pending';
 
-// Insert payment dengan referral_code
+// Generate order ID unik untuk Midtrans
+$midtrans_order_id = 'OSEAN-' . $user_id . '-' . time() . '-' . mt_rand(100, 999);
+
+// Insert payment record (status: pending, belum increment kuota)
+$status = 'pending';
 $stmt = $conn->prepare("
-    INSERT INTO payments (user_id, ticket_id, kode_unik, jumlah_tiket, total_bayar, metode_pembayaran, referral_code, bukti_transfer, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO payments (user_id, ticket_id, jumlah_tiket, total_bayar, midtrans_order_id, status)
+    VALUES (?, ?, ?, ?, ?, ?)
 ");
-$stmt->bind_param("iisidssss", $user_id, $ticket_id, $kode_unik, $jumlah_tiket, $total_bayar, $metode, $referral_code, $filename, $status);
+$stmt->bind_param("iiidss", $user_id, $ticket_id, $jumlah_tiket, $total_bayar, $midtrans_order_id, $status);
 
 if (!$stmt->execute()) {
-    @unlink($filepath);
     send_error('Gagal menyimpan data: ' . $conn->error, 500);
 }
 $payment_id = $stmt->insert_id;
 $stmt->close();
 
-// Update kuota_terjual
-$stmt = $conn->prepare("UPDATE tickets SET kuota_terjual = kuota_terjual + ? WHERE id = ?");
-$stmt->bind_param("ii", $jumlah_tiket, $ticket_id);
+// =============================================
+// Request Snap Token dari Midtrans
+// =============================================
+$midtrans_params = [
+    'transaction_details' => [
+        'order_id'     => $midtrans_order_id,
+        'gross_amount' => (int)$total_bayar
+    ],
+    'item_details' => [
+        [
+            'id'       => 'TICKET-' . $tiket['id'],
+            'price'    => (int)$tiket['harga'],
+            'quantity' => $jumlah_tiket,
+            'name'     => substr($tiket['nama_tiket'], 0, 50) // Midtrans max 50 char
+        ]
+    ],
+    'customer_details' => [
+        'first_name' => $user['nama'],
+        'email'      => $user['email']
+    ]
+];
+
+$ch = curl_init();
+curl_setopt_array($ch, [
+    CURLOPT_URL            => MIDTRANS_SNAP_URL,
+    CURLOPT_POST           => true,
+    CURLOPT_HTTPHEADER     => [
+        'Content-Type: application/json',
+        'Accept: application/json',
+        'Authorization: Basic ' . base64_encode(MIDTRANS_SERVER_KEY . ':')
+    ],
+    CURLOPT_POSTFIELDS     => json_encode($midtrans_params),
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT        => 30
+]);
+
+$response   = curl_exec($ch);
+$http_code  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curl_error = curl_error($ch);
+curl_close($ch);
+
+if ($curl_error) {
+    // Hapus record payment jika gagal request ke Midtrans
+    $conn->prepare("DELETE FROM payments WHERE id = ?")->bind_param("i", $payment_id);
+    send_error('Gagal terhubung ke Midtrans: ' . $curl_error, 500);
+}
+
+$midtrans_response = json_decode($response, true);
+
+if ($http_code !== 201 || empty($midtrans_response['token'])) {
+    // Hapus record payment jika Midtrans menolak
+    $del = $conn->prepare("DELETE FROM payments WHERE id = ?");
+    $del->bind_param("i", $payment_id);
+    $del->execute();
+    $del->close();
+
+    $err_msg = $midtrans_response['error_messages'][0] ?? ($midtrans_response['message'] ?? 'Unknown error');
+    send_error('Midtrans error: ' . $err_msg, 500);
+}
+
+$snap_token = $midtrans_response['token'];
+
+// Simpan snap_token ke DB
+$stmt = $conn->prepare("UPDATE payments SET snap_token = ? WHERE id = ?");
+$stmt->bind_param("si", $snap_token, $payment_id);
 $stmt->execute();
 $stmt->close();
 
 send_success([
-    'payment_id'    => $payment_id,
-    'kode_unik'     => $kode_unik,
-    'nama_tiket'    => $tiket['nama_tiket'],
-    'jumlah_tiket'  => $jumlah_tiket,
-    'total_bayar'   => $total_bayar,
-    'total_format'  => format_rupiah($total_bayar),
-    'bukti_transfer'=> UPLOAD_URL . $filename,
-    'status'        => 'pending'
-], 'Pembayaran berhasil dikirim! Menunggu verifikasi admin.', 201);
+    'payment_id'       => $payment_id,
+    'snap_token'       => $snap_token,
+    'midtrans_order_id'=> $midtrans_order_id,
+    'nama_tiket'       => $tiket['nama_tiket'],
+    'jumlah_tiket'     => $jumlah_tiket,
+    'total_bayar'      => $total_bayar,
+    'total_format'     => format_rupiah($total_bayar)
+], 'Transaksi dibuat. Silakan selesaikan pembayaran.', 201);

@@ -218,7 +218,7 @@
         <p class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary" id="stat-revenue">—</p>
       </div>
       <div class="bg-surface-container border border-outline-variant p-4 shadow-[4px_4px_0px_0px_#15140c]">
-        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Transaksi Verified</p>
+        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Transaksi Berhasil</p>
         <p class="font-headline-lg text-2xl sm:text-headline-lg text-on-surface" id="stat-verified">—</p>
       </div>
       <div class="bg-[#2E1A47] border border-tertiary p-4 shadow-[4px_4px_0px_0px_#efc05e]">
@@ -289,12 +289,7 @@
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Tiket</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Jumlah</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Total Bayar</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">
-                  <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px] text-secondary">campaign</span>
-                    Referral
-                  </div>
-                </th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Metode / Detail</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Status</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant text-right">Aksi</th>
               </tr>
@@ -596,7 +591,7 @@
         // Update stats
         const s = data.stats || {};
         document.getElementById('stat-revenue').textContent = s.revenue_format || 'Rp 0';
-        document.getElementById('stat-verified').textContent = s.verified || 0;
+        document.getElementById('stat-verified').textContent = s.settled ?? s.verified ?? 0;
         document.getElementById('stat-pending').textContent = s.pending || 0;
 
         // Badge
@@ -604,8 +599,77 @@
         if (s.pending > 0) { badge.textContent = s.pending; badge.classList.remove('hidden'); }
         else badge.classList.add('hidden');
 
-        allPayments = data.payments || [];
-        applyPaymentsFilter();
+        if (!data.success || data.payments.length === 0) {
+          document.getElementById('pay-empty').classList.remove('hidden'); return;
+        }
+
+        document.getElementById('pay-table-wrap').classList.remove('hidden');
+        const tbody = document.getElementById('pay-tbody');
+        tbody.innerHTML = data.payments.map(p => {
+          const isPending = p.status === 'pending';
+          const isSuccess = ['settlement', 'capture', 'verified'].includes(p.status);
+          const isFailed = ['rejected', 'deny'].includes(p.status);
+          const isExpired = ['expire', 'cancel'].includes(p.status);
+
+          let statusCls = 'text-tertiary';
+          let statusLbl = '⏳ Pending';
+          if (isSuccess) {
+            statusCls = 'text-secondary';
+            statusLbl = p.status === 'verified' ? '✓ Verified' : '✓ Settled';
+          } else if (isFailed) {
+            statusCls = 'text-error';
+            statusLbl = '✕ Ditolak';
+          } else if (isExpired) {
+            statusCls = 'text-on-surface-variant opacity-75';
+            statusLbl = p.status === 'expire' ? '⏰ Expired' : '✕ Batal';
+          } else if (p.status === 'refund') {
+            statusCls = 'text-on-surface-variant opacity-75';
+            statusLbl = '↩ Refund';
+          }
+
+          return `
+            <tr class="hover:bg-surface-container transition-colors group">
+              <td class="p-4">
+                <p class="font-body-md text-on-surface font-bold">${p.nama}</p>
+                <p class="text-sm text-on-surface-variant">${p.email}</p>
+              </td>
+              <td class="p-4 font-body-md text-on-surface">${p.nama_tiket}</td>
+              <td class="p-4 font-body-md text-on-surface-variant">${p.jumlah_tiket}x</td>
+              <td class="p-4 font-body-md text-secondary font-bold">${p.total_format}</td>
+              <td class="p-4">
+                ${p.midtrans_order_id ? `
+                  <div class="flex flex-col gap-1">
+                    <span class="font-label-caps text-[10px] text-tertiary bg-tertiary/10 border border-tertiary/30 px-2 py-0.5 inline-block uppercase w-fit">
+                      ${p.payment_type || p.metode_pembayaran || 'Midtrans'}
+                    </span>
+                    <span class="font-mono text-[10px] text-on-surface-variant truncate max-w-[140px]" title="${p.midtrans_order_id}">${p.midtrans_order_id}</span>
+                  </div>
+                ` : p.bukti_transfer ? `
+                  <a href="${p.bukti_transfer}" target="_blank"
+                     class="w-16 h-12 border border-outline-variant group-hover:border-tertiary transition-colors block overflow-hidden flex items-center justify-center hover:opacity-100 opacity-80">
+                    <img src="${p.bukti_transfer}" alt="Bukti" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\'material-symbols-outlined text-on-surface-variant\'>receipt</span>'" />
+                  </a>
+                ` : `<span class="font-label-caps text-[11px] text-on-surface-variant">${p.metode_pembayaran || '—'}</span>`}
+              </td>
+              <td class="p-4 font-label-caps text-label-caps uppercase ${statusCls}">${statusLbl}</td>
+              <td class="p-4">
+                ${isPending ? `
+                  <div class="flex items-center justify-end gap-2">
+                    <button onclick="verifyPayment(${p.payment_id}, 'reject')"
+                            class="p-2 border border-outline-variant text-error hover:bg-error/10 hover:border-error transition-colors" title="Tolak">
+                      <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                    <button onclick="verifyPayment(${p.payment_id}, 'verify')"
+                            class="bg-tertiary text-on-tertiary px-4 py-2 font-label-caps text-label-caps shadow-[2px_2px_0px_0px_#15140c]
+                                   hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_#15140c] transition-all">
+                      Approve
+                    </button>
+                  </div>
+                ` : `<span class="font-label-caps text-[10px] text-on-surface-variant opacity-60">—</span>`}
+              </td>
+            </tr>
+          `;
+        }).join('');
 
       } catch {
         document.getElementById('pay-loading').innerHTML =

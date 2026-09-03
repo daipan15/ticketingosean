@@ -114,6 +114,15 @@ define('SMTP_FROM_NAME', 'OSEAN Ticketing');
 // =============================================
 define('GOOGLE_CLIENT_ID', '869569142796-m45gvcj7mn25re40m3upel2f8lpp3ruj.apps.googleusercontent.com');
 
+// =============================================
+// KONFIGURASI MIDTRANS SANDBOX
+// =============================================
+// Dapatkan key di: https://dashboard.sandbox.midtrans.com → Settings → Access Keys
+// Merchant ID G555422421
+define('MIDTRANS_SERVER_KEY', 'Mid-server-J0HPyeWORq_fAnMbGG7mC5gR');  // Ganti dengan Server Key kamu
+define('MIDTRANS_CLIENT_KEY', 'Mid-client-6lfZVo63M0TC-YI5');  // Ganti dengan Client Key kamu
+define('MIDTRANS_IS_PRODUCTION', false);
+define('MIDTRANS_SNAP_URL', 'https://app.sandbox.midtrans.com/snap/v1/transactions');
 
 require_once __DIR__ . '/phpmailer/PHPMailer.php';
 require_once __DIR__ . '/phpmailer/SMTP.php';

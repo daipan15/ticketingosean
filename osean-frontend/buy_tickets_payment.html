@@ -9,11 +9,13 @@
       window.location.replace('login.html');
     }
   </script>
-  <meta name="description" content="OSEAN - Beli tiket dan upload bukti pembayaran." />
+  <meta name="description" content="OSEAN - Beli tiket dan bayar langsung via Midtrans." />
   <title>OSEAN - Beli Tiket</title>
   <link rel="icon" type="image/png" href="assets/osean_logo.png" />
 
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Midtrans Snap SDK (Sandbox) -->
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-XXXX"></script>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap"
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
@@ -384,106 +386,32 @@
               <p id="summary-nama" class="font-body-lg text-body-lg text-on-surface font-bold"></p>
               <p id="summary-harga" class="font-label-caps text-label-caps text-tertiary mt-1"></p>
             </div>
-            <p id="no-ticket-msg" class="font-body-md text-body-md text-on-surface-variant mb-6 opacity-60">
-              Pilih kategori tiket di sebelah kiri.
-            </p>
-
+            <p id="no-ticket-msg" class="font-body-md text-body-md text-on-surface-variant mb-6 opacity-60">Pilih kategori tiket di sebelah kiri.</p>
             <form id="checkout-form" class="flex flex-col gap-5" novalidate>
-              <!-- Hidden ticket_id -->
               <input type="hidden" id="ticket_id" name="ticket_id" value="" />
-
-              <!-- Jumlah tiket -->
               <div>
-                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2"
-                  for="jumlah_tiket">
-                  Jumlah Tiket
-                </label>
+                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="jumlah_tiket">Jumlah Tiket</label>
                 <div class="flex items-center gap-3">
-                  <button type="button" id="qty-minus"
-                    class="w-10 h-10 bg-surface-container-high border-2 border-outline-variant text-on-surface font-bold text-lg
-                                 hover:border-tertiary hover:text-tertiary transition-colors flex items-center justify-center">−</button>
-                  <span id="qty-display"
-                    class="font-headline-lg text-headline-lg text-on-surface min-w-[2rem] text-center">1</span>
-                  <button type="button" id="qty-plus"
-                    class="w-10 h-10 bg-surface-container-high border-2 border-outline-variant text-on-surface font-bold text-lg
-                                 hover:border-tertiary hover:text-tertiary transition-colors flex items-center justify-center">+</button>
+                  <button type="button" id="qty-minus" class="w-10 h-10 bg-surface-container-high border-2 border-outline-variant text-on-surface font-bold text-lg hover:border-tertiary hover:text-tertiary transition-colors flex items-center justify-center">−</button>
+                  <span id="qty-display" class="font-headline-lg text-headline-lg text-on-surface min-w-[2rem] text-center">1</span>
+                  <button type="button" id="qty-plus" class="w-10 h-10 bg-surface-container-high border-2 border-outline-variant text-on-surface font-bold text-lg hover:border-tertiary hover:text-tertiary transition-colors flex items-center justify-center">+</button>
                   <span id="qty-total" class="ml-2 font-body-md text-body-md text-secondary font-bold"></span>
                 </div>
               </div>
-
-              <!-- Metode Pembayaran -->
-              <div>
-                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2"
-                  for="metode_pembayaran">
-                  Metode Pembayaran
-                </label>
-                <select id="metode_pembayaran" name="metode_pembayaran" class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-body-md px-4 py-3
-                               focus:border-tertiary focus:outline-none transition-colors">
-                  <option value="transfer">Transfer Bank</option>
-                  <option value="qris">QRIS</option>
-                  <option value="tunai">Tunai (On-site)</option>
-                </select>
-              </div>
-
-              <!-- Kode Referral Himpunan (Opsional) -->
-              <div>
-                <div class="flex items-center justify-between mb-1.5">
-                  <label class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center gap-1.5" for="referral_code">
-                    <span class="material-symbols-outlined text-[16px] text-secondary">military_tech</span>
-                    Referral Himpunan
-                  </label>
-                  <span class="font-label-caps text-[9px] text-tertiary uppercase font-bold tracking-wider">Opsional</span>
+              <div class="bg-surface-container-high border border-outline-variant p-4">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="material-symbols-outlined text-tertiary text-[20px]">verified</span>
+                  <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Metode Pembayaran</span>
                 </div>
-                <input type="text" id="referral_code" name="referral_code" maxlength="15" placeholder="Ketik atau klik himpunan pilihan..."
-                  class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-mono text-xs sm:text-sm uppercase tracking-wider px-4 py-2.5 focus:border-tertiary focus:outline-none transition-colors" />
-                <p class="font-body-md text-[11px] text-on-surface-variant mt-1.5">
-                  Dukung Himpunanmu untuk memuncaki Leaderboard:
-                </p>
-                <!-- Quick 9 HIMA Chips -->
-                <div class="flex flex-wrap gap-1.5 mt-2" id="hima-referral-chips">
-                  <button type="button" onclick="selectHimaReferral('HIFI')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HIFI">HIFI</button>
-                  <button type="button" onclick="selectHimaReferral('HIMAKA')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HIMAKA">HIMAKA</button>
-                  <button type="button" onclick="selectHimaReferral('HIMBIO')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HIMBIO">HIMBIO</button>
-                  <button type="button" onclick="selectHimaReferral('HIMATIKA')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HIMATIKA">HIMATIKA</button>
-                  <button type="button" onclick="selectHimaReferral('HIMASTA')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HIMASTA">HIMASTA</button>
-                  <button type="button" onclick="selectHimaReferral('PEDRA')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="PEDRA">PEDRA</button>
-                  <button type="button" onclick="selectHimaReferral('HIMATIF')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HIMATIF">HIMATIF</button>
-                  <button type="button" onclick="selectHimaReferral('HMTE')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HMTE">HMTE</button>
-                  <button type="button" onclick="selectHimaReferral('HIMAKTU')" class="hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all" data-code="HIMAKTU">HIMAKTU</button>
-                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant">Kamu akan memilih metode pembayaran (GoPay, QRIS, Transfer Bank, dll) di popup pembayaran Midtrans yang aman.</p>
               </div>
-
-              <!-- Upload Bukti Transfer -->
-              <div>
-                <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2">
-                  Bukti Transfer / Pembayaran
-                </label>
-                <div id="drop-zone"
-                  class="border-2 border-dashed border-outline-variant p-6 text-center cursor-pointer hover:border-tertiary transition-colors relative">
-                  <input type="file" id="bukti_transfer" name="bukti_transfer" accept="image/*"
-                    class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-                  <span
-                    class="material-symbols-outlined text-[36px] text-on-surface-variant block mb-2">cloud_upload</span>
-                  <p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Klik atau drag file</p>
-                  <p class="font-body-md text-body-md text-on-surface-variant opacity-60 text-sm mt-1">JPG / PNG / WebP
-                    — maks 5 MB</p>
-                  <p id="file-name" class="font-label-caps text-label-caps text-tertiary mt-2 hidden"></p>
-                </div>
-              </div>
-
-              <!-- Total -->
               <div class="border-t border-dashed border-outline-variant pt-4">
                 <div class="flex justify-between items-center">
                   <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Bayar</span>
-                  <span id="total-display" class="font-headline-lg text-xl sm:text-headline-lg text-secondary">—</span>
+                  <span id="total-display" class="font-headline-lg text-headline-lg text-secondary">—</span>
                 </div>
               </div>
-
-              <!-- Submit -->
-              <button type="submit" id="submit-btn" disabled class="w-full bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase py-4
-                             shadow-[6px_6px_0px_0px_#15140c] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#15140c]
-                             active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-200
-                             flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+              <button type="submit" id="submit-btn" disabled class="w-full bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase py-4 shadow-[6px_6px_0px_0px_#15140c] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#15140c] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
                 <span class="material-symbols-outlined">payments</span>
                 Bayar Sekarang
               </button>
@@ -491,7 +419,6 @@
           </div>
         </div>
       </aside>
-
     </div>
   </main>
 
@@ -842,7 +769,7 @@
             expectedVariants: 2,
             startDate: new Date('2026-09-04T00:00:00+07:00'),
             endDate: new Date('2026-09-08T23:59:59+07:00'),
-            rangeLabel: '4 - 8 September 2026'
+            rangeLabel: '1 - 8 September 2026'
           },
           {
             key: 'pre sale 1',
@@ -1258,117 +1185,15 @@
       else showToast(`Maksimal ${max} tiket tersedia.`, 'info');
     });
 
-    /* -------- File Upload Preview -------- */
-    document.getElementById('bukti_transfer').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      const nameEl = document.getElementById('file-name');
-      if (file) {
-        nameEl.textContent = '📎 ' + file.name;
-        nameEl.classList.remove('hidden');
-      }
-    });
-
-    /* -------- Drag & Drop -------- */
-    const dropZone = document.getElementById('drop-zone');
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-    dropZone.addEventListener('drop', e => {
-      e.preventDefault();
-      dropZone.classList.remove('drag-over');
-      const file = e.dataTransfer.files[0];
-      if (file) {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        document.getElementById('bukti_transfer').files = dt.files;
-        document.getElementById('file-name').textContent = '📎 ' + file.name;
-        document.getElementById('file-name').classList.remove('hidden');
-      }
-    });
-
-    /* -------- T&C Modal & Form Submit Flow -------- */
-    const tncCheckbox = document.getElementById('tnc-checkbox');
-    const tncConfirmBtn = document.getElementById('tnc-confirm-btn');
-
-    if (tncCheckbox && tncConfirmBtn) {
-      tncCheckbox.addEventListener('change', (e) => {
-        tncConfirmBtn.disabled = !e.target.checked;
-      });
-    }
-
-    function openTncModal() {
-      const modal = document.getElementById('tnc-modal');
-      const card = document.getElementById('tnc-modal-card');
-      const cb = document.getElementById('tnc-checkbox');
-      const btn = document.getElementById('tnc-confirm-btn');
-
-      if (cb) cb.checked = false;
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check_circle</span> Setuju & Bayar';
-      }
-
-      if (selectedTicket) {
-        document.getElementById('tnc-ticket-name').textContent = `${selectedTicket.nama} (${qty}x)`;
-        const total = selectedTicket.harga * qty;
-        document.getElementById('tnc-ticket-total').textContent = 'Rp ' + total.toLocaleString('id-ID');
-      }
-
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      requestAnimationFrame(() => {
-        modal.classList.remove('opacity-0');
-        card.classList.remove('scale-95');
-        card.classList.add('scale-100');
-      });
-    }
-
-    function closeTncModal() {
-      const modal = document.getElementById('tnc-modal');
-      const card = document.getElementById('tnc-modal-card');
-      modal.classList.add('opacity-0');
-      card.classList.remove('scale-100');
-      card.classList.add('scale-95');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }, 300);
-    }
-
-    // Trigger popup T&C saat klik Bayar Sekarang
-    document.getElementById('checkout-form').addEventListener('submit', (e) => {
+    /* -------- Form Submit (Midtrans Snap) -------- */
+    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
 
       if (!selectedTicket) { showToast('Pilih kategori tiket terlebih dahulu.', 'error'); return; }
-      const file = document.getElementById('bukti_transfer').files[0];
-      if (!file) { showToast('Upload bukti transfer terlebih dahulu.', 'error'); return; }
-      if (file.size > 5 * 1024 * 1024) { showToast('File terlalu besar (maks 5MB).', 'error'); return; }
 
-      openTncModal();
-    });
-
-    // Eksekusi pembayaran setelah user mencentang checkbox T&C
-    async function confirmAndPay() {
-      const cb = document.getElementById('tnc-checkbox');
-      if (!cb || !cb.checked) {
-        showToast('Harap centang persetujuan Syarat & Ketentuan.', 'error');
-        return;
-      }
-
-      const confirmBtn = document.getElementById('tnc-confirm-btn');
-      const submitBtn = document.getElementById('submit-btn');
-      const file = document.getElementById('bukti_transfer').files[0];
-
-      confirmBtn.disabled = true;
-      confirmBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[16px]">refresh</span> Memproses...';
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Memproses...';
-
-      const formData = new FormData();
-      formData.append('ticket_id', selectedTicket.id);
-      formData.append('jumlah_tiket', qty);
-      formData.append('metode_pembayaran', document.getElementById('metode_pembayaran').value);
-      formData.append('bukti_transfer', file);
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Membuat transaksi...';
 
       const refCode = (document.getElementById('referral_code')?.value || '').trim().toUpperCase();
       if (refCode) {
@@ -1376,27 +1201,53 @@
       }
 
       try {
-        const res = await fetch(`${API}/payment_create.php`, { method: 'POST', body: formData });
+        // 1. Request snap_token dari backend
+        const res = await fetch(`${API}/payment_create.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ticket_id: parseInt(selectedTicket.id),
+            jumlah_tiket: qty
+          })
+        });
         const data = await res.json();
 
-        if (data.success) {
-          closeTncModal();
-          const msg = data.kode_unik ? `Berhasil! Kode Unik: ${data.kode_unik}` : data.message;
-          showToast(msg, 'success');
-          setTimeout(() => { window.location.href = 'my_tickets.html'; }, 2000);
-        } else {
-          showToast(data.message || 'Pembayaran gagal.', 'error');
-          confirmBtn.disabled = false;
-          confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check_circle</span> Setuju & Bayar';
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+        if (!data.success || !data.snap_token) {
+          showToast(data.message || 'Gagal membuat transaksi.', 'error');
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+          return;
         }
+
+        // 2. Buka popup Midtrans Snap
+        btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Menunggu pembayaran...';
+
+        window.snap.pay(data.snap_token, {
+          onSuccess: function(result) {
+            showToast('Pembayaran berhasil! 🎉', 'success');
+            setTimeout(() => { window.location.href = 'my_tickets.html'; }, 1500);
+          },
+          onPending: function(result) {
+            showToast('Pembayaran pending. Selesaikan pembayaranmu.', 'info');
+            setTimeout(() => { window.location.href = 'my_tickets.html'; }, 2000);
+          },
+          onError: function(result) {
+            showToast('Pembayaran gagal. Silakan coba lagi.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+          },
+          onClose: function() {
+            // User menutup popup tanpa menyelesaikan pembayaran
+            showToast('Popup pembayaran ditutup. Kamu bisa bayar nanti di halaman Tiket Saya.', 'info');
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+          }
+        });
+
       } catch {
         showToast('Tidak dapat terhubung ke server.', 'error');
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check_circle</span> Setuju & Bayar';
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
       }
     }
 

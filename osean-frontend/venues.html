@@ -231,42 +231,40 @@
   <nav class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
     <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
       <a href="landing_page.html"
-         class="flex items-center gap-3 group">
-        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-10 h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
-        <span class="font-display-md text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+         class="flex items-center gap-2 group">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-8 h-8 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+        <span class="font-display-md text-lg sm:text-2xl md:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
       </a>
 
-      <div class="flex items-center gap-3 sm:gap-6">
+      <div class="flex items-center gap-2 sm:gap-3 lg:gap-6">
         <a href="landing_page.html"
-           class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beranda</a>
-        <span class="hidden md:block font-label-caps text-label-caps text-secondary">Venue</span>
+           class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
+        <span class="hidden lg:block font-label-caps text-label-caps text-secondary uppercase tracking-wider">Venue</span>
         <a href="buy_tickets_payment.html" onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
-           class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beli Tiket</a>
+           class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli Tiket</a>
 
         <!-- Tampil jika BELUM login -->
-        <div id="nav-guest" class="hidden flex items-center gap-2 sm:gap-3">
+        <div id="nav-guest" class="hidden flex items-center gap-1.5 sm:gap-2 lg:gap-3">
           <a href="login.html"
-             class="border-2 border-tertiary text-tertiary font-label-caps text-xs sm:text-label-caps uppercase px-3 sm:px-4 py-1.5 sm:py-2
-                    hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c] sm:shadow-[4px_4px_0px_0px_#15140c]">
+             class="border lg:border-2 border-tertiary text-tertiary font-label-caps text-[10px] sm:text-xs lg:text-label-caps uppercase px-2 py-1 sm:px-2.5 sm:py-1.5 lg:px-4 lg:py-2
+                    hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c] lg:shadow-[4px_4px_0px_0px_#15140c]">
             Masuk
           </a>
           <a href="register.html"
-             class="bg-tertiary text-on-tertiary font-label-caps text-xs sm:text-label-caps uppercase px-3 sm:px-4 py-1.5 sm:py-2
-                    hover:-translate-y-1 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c] sm:shadow-[4px_4px_0px_0px_#15140c]
+             class="bg-tertiary text-on-tertiary font-label-caps text-[10px] sm:text-xs lg:text-label-caps uppercase px-2 py-1 sm:px-2.5 sm:py-1.5 lg:px-4 lg:py-2
+                    hover:-translate-y-1 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c] lg:shadow-[4px_4px_0px_0px_#15140c]
                     active:translate-y-0 active:shadow-none">
             Daftar
           </a>
         </div>
 
         <!-- Tampil jika SUDAH login -->
-        <div id="nav-auth" class="hidden flex items-center gap-3 sm:gap-6">
-          <a href="landing_page.html"
-             class="sm:hidden font-label-caps text-xs text-on-primary-container hover:text-tertiary transition-colors">Beranda</a>
+        <div id="nav-auth" class="hidden flex items-center gap-2 sm:gap-3 lg:gap-6">
           <a href="my_tickets.html"
-             class="font-label-caps text-xs sm:text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Tiket Saya</a>
+             class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket Saya</a>
           <button id="logout-btn"
-                  class="font-label-caps text-xs sm:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1">
-            <span class="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>
+                  class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[14px] sm:text-[16px] lg:text-[18px]">logout</span>
             <span class="hidden sm:inline">Keluar</span>
           </button>
         </div>
@@ -276,22 +274,22 @@
 <main class="flex-grow">
 <!-- Hero Section -->
 <section class="w-full px-margin-mobile md:px-margin-desktop py-24 relative overflow-hidden">
-<div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-
-<!-- Background Starburst -->
-<img src="assets/starburst.png" alt=""
-  class="absolute top-8 left-1/3 w-36 md:w-48 opacity-30 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_25px_rgba(239,192,94,0.3)] z-0" />
+<!-- Ambient Glow & Prism Starburst -->
+<img src="assets/ambient_glow.png" alt=""
+  class="absolute -top-16 left-1/4 w-[600px] md:w-[900px] opacity-60 pointer-events-none select-none filter blur-2xl -z-10 animate-float-gentle-slow" />
+<img src="assets/prism_starburst.png" alt=""
+  class="absolute top-6 right-10 w-32 md:w-48 opacity-70 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_30px_rgba(239,192,94,0.45)] z-0" />
 
 <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-gutter items-start justify-between relative z-10">
 <div class="w-full md:w-2/3 grunge-edge bg-surface-container p-8 hard-shadow -rotate-1 border border-outline-variant relative">
-  <!-- Accent Starburst behind title -->
-  <img src="assets/starburst.png" alt=""
-    class="absolute -top-10 -right-8 w-24 md:w-28 opacity-75 pointer-events-none select-none animate-pulse-glow" />
+  <!-- Accent Prism Starburst behind title -->
+  <img src="assets/prism_starburst.png" alt=""
+    class="absolute -top-10 -right-8 w-24 md:w-28 opacity-85 pointer-events-none select-none animate-pulse-glow" />
 
-<h1 class="font-display-lg text-display-lg text-secondary mb-4 uppercase tracking-tighter">
+<h1 class="font-display-lg text-3xl sm:text-5xl md:text-display-lg text-secondary mb-4 uppercase tracking-tighter">
                         CLOSING VENUES
                     </h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+<p class="font-body-lg text-sm sm:text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
                         Rasakan denyut malam puncak di Lapangan Merah Unpad Jatinangor. Area festival megah di bawah langit terbuka yang siap menampung ribuan energi, melodi, dan momen tak terlupakan.
                     </p>
 </div>
@@ -308,7 +306,7 @@
 </div>
 
 <!-- Audience Hand rising at bottom of Hero -->
-<div class="absolute -bottom-6 right-12 w-[320px] md:w-[480px] pointer-events-none select-none z-10 opacity-60 md:opacity-75">
+<div class="absolute -bottom-6 right-0 sm:right-12 w-[320px] md:w-[480px] pointer-events-none select-none z-10 opacity-60 md:opacity-75">
   <img src="assets/hand.png" alt="" class="w-full h-auto animate-float-gentle-slow" />
 </div>
 </section>
@@ -325,7 +323,7 @@
 <div class="max-w-7xl mx-auto relative z-10">
 <div class="flex items-center gap-4 mb-12">
 <span class="material-symbols-outlined text-secondary text-3xl">map</span>
-<h2 class="font-headline-lg text-headline-lg text-on-surface">LOCATIONS</h2>
+<h2 class="font-headline-lg text-xl sm:text-headline-lg text-on-surface">LOCATIONS</h2>
 <div class="flex-grow h-px bg-outline-variant ml-4"></div>
 </div>
     <!-- Single Featured Venue Showcase -->
@@ -374,7 +372,7 @@
               </div>
             </div>
 
-            <h3 class="font-display-md text-display-md text-on-surface uppercase tracking-tight mb-2">
+            <h3 class="font-display-md text-2xl sm:text-3xl md:text-display-md text-on-surface uppercase tracking-tight mb-2">
               Lapangan <span class="text-tertiary italic">Merah</span>
             </h3>
 
@@ -457,7 +455,7 @@
     <!-- Map Box -->
     <div class="border-4 border-outline-variant shadow-[12px_12px_0px_0px_rgba(21,20,12,1)] relative overflow-hidden bg-[#15140c]">
       <!-- Container Leaflet -->
-      <div id="map" class="w-full h-[520px] z-10"></div>
+      <div id="map" class="w-full h-[300px] sm:h-[400px] md:h-[520px] z-10"></div>
     </div>
   </div>
 </section>

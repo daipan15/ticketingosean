@@ -192,28 +192,110 @@
 
   <!-- ===================== NAVBAR ===================== -->
   <nav
-    class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
-    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
-      <a href="landing_page.html" class="flex items-center gap-2 group">
+    class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)] z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-margin-mobile md:px-margin-desktop flex items-center justify-between py-3 sm:py-4">
+      <!-- Logo -->
+      <a href="landing_page.html" class="flex items-center gap-2.5 sm:gap-3 group">
         <img src="assets/osean_logo.png" alt="OSEAN Logo"
-          class="w-8 h-8 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+          class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
         <span
-          class="font-display-md text-lg sm:text-2xl md:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+          class="font-display-md text-2xl sm:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
       </a>
 
-      <div class="flex items-center gap-2 sm:gap-3 lg:gap-6">
+      <!-- Desktop Nav (lg:flex) -->
+      <div class="hidden lg:flex items-center gap-6">
         <a href="landing_page.html"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
+          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
         <a href="venues.html"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
-        <span class="hidden lg:inline font-label-caps text-label-caps text-secondary uppercase tracking-wider">Beli Tiket</span>
+          class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
+        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-wider">Beli Tiket</span>
+
+        <!-- Tampil jika BELUM login (Desktop) -->
+        <div id="nav-guest" class="hidden flex items-center gap-3">
+          <a href="login.html"
+            class="border-2 border-tertiary text-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+                    hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]">
+            Masuk
+          </a>
+          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+                    hover:-translate-y-1 transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]
+                    active:translate-y-0 active:shadow-none">
+            Daftar
+          </a>
+        </div>
+
+        <!-- Tampil jika SUDAH login (Desktop) -->
+        <div id="nav-auth" class="hidden flex items-center gap-6">
+          <a href="my_tickets.html"
+            class="font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
+            Saya</a>
+          <button id="logout-btn"
+            class="font-label-caps text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[18px]">logout</span>
+            <span>Keluar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile & Tablet Action + Hamburger Button (lg:hidden) -->
+      <div class="flex lg:hidden items-center gap-2.5 sm:gap-3">
         <a href="my_tickets.html"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket Saya</a>
-        <button id="logout-btn"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
-          <span class="material-symbols-outlined text-[14px] sm:text-[16px] lg:text-[18px]">logout</span>
-          <span class="hidden sm:inline">Keluar</span>
+          class="bg-tertiary text-on-tertiary font-label-caps text-xs uppercase px-3 py-1.5 sm:px-4 sm:py-2
+                 shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 transition-all">
+          Tiket Saya
+        </a>
+        <button id="mobile-menu-btn" type="button" aria-label="Buka Menu Navigasi"
+          class="w-9 h-9 sm:w-10 sm:h-10 border-2 border-outline-variant bg-surface-container flex items-center justify-center text-on-surface hover:text-tertiary hover:border-tertiary transition-colors shadow-[2px_2px_0px_0px_#15140c]">
+          <span id="mobile-menu-icon" class="material-symbols-outlined text-2xl">menu</span>
         </button>
+      </div>
+    </div>
+
+    <!-- Mobile & Tablet Drawer Menu (lg:hidden) -->
+    <div id="mobile-menu"
+      class="hidden lg:hidden border-t-2 border-outline-variant bg-surface-container px-4 sm:px-margin-mobile py-5 shadow-2xl transition-all">
+      <div class="flex flex-col gap-3">
+        <a href="landing_page.html"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">home</span>
+          Beranda
+        </a>
+        <a href="venues.html"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">stadium</span>
+          Venue
+        </a>
+        <span
+          class="flex items-center gap-2.5 font-label-caps text-sm text-secondary pb-2.5 border-b border-outline-variant/30">
+          <span class="material-symbols-outlined text-lg">confirmation_number</span>
+          Beli Tiket
+        </span>
+
+        <!-- Mobile & Tablet Guest State -->
+        <div id="nav-guest-mobile" class="hidden flex flex-col sm:flex-row gap-2.5 pt-2">
+          <a href="login.html"
+            class="flex-1 text-center border-2 border-tertiary text-tertiary font-label-caps text-xs sm:text-sm uppercase py-2 shadow-[2px_2px_0px_0px_#15140c] hover:bg-tertiary hover:text-on-tertiary transition-all">
+            Masuk
+          </a>
+          <a href="register.html"
+            class="flex-1 text-center bg-tertiary text-on-tertiary font-label-caps text-xs sm:text-sm uppercase py-2 shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 transition-all">
+            Daftar
+          </a>
+        </div>
+
+        <!-- Mobile & Tablet Auth State -->
+        <div id="nav-auth-mobile" class="hidden flex flex-col gap-2.5 pt-1">
+          <a href="my_tickets.html"
+            class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+            <span class="material-symbols-outlined text-lg">receipt_long</span>
+            Tiket Saya
+          </a>
+          <button id="logout-btn-mobile"
+            class="flex items-center gap-2.5 font-label-caps text-sm text-error hover:text-on-surface text-left pt-1 transition-colors">
+            <span class="material-symbols-outlined text-lg">logout</span>
+            Keluar
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -388,6 +470,65 @@
     let selectedTicket = null;
     let qty = 1;
 
+    /* Helper untuk sinkronisasi tampilan auth/guest di Desktop dan Mobile */
+    function setAuthUI(isLoggedIn) {
+      const navGuest = document.getElementById('nav-guest');
+      const navAuth = document.getElementById('nav-auth');
+      const navGuestMobile = document.getElementById('nav-guest-mobile');
+      const navAuthMobile = document.getElementById('nav-auth-mobile');
+
+      if (isLoggedIn) {
+        if (navGuest) navGuest.classList.add('hidden');
+        if (navAuth) navAuth.classList.remove('hidden');
+        if (navGuestMobile) navGuestMobile.classList.add('hidden');
+        if (navAuthMobile) navAuthMobile.classList.remove('hidden');
+      } else {
+        if (navAuth) navAuth.classList.add('hidden');
+        if (navGuest) navGuest.classList.remove('hidden');
+        if (navAuthMobile) navAuthMobile.classList.add('hidden');
+        if (navGuestMobile) navGuestMobile.classList.remove('hidden');
+      }
+    }
+
+    /* Handler logout */
+    async function handleLogout() {
+      try { await fetch(`${API}/logout.php`); } finally {
+        localStorage.removeItem('isLoggedIn');
+        window.location.href = 'login.html';
+      }
+    }
+    document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
+    document.getElementById('logout-btn-mobile')?.addEventListener('click', handleLogout);
+
+    /* Toggle Mobile / Tablet Menu Drawer */
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isClosed = mobileMenu.classList.contains('hidden');
+        if (isClosed) {
+          mobileMenu.classList.remove('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'close';
+        } else {
+          mobileMenu.classList.add('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+        }
+      });
+
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+        });
+      });
+    }
+
+    /* Langsung tentukan tampilan navbar dari cache instan agar bebas kedip/blink */
+    const isCachedLogin = localStorage.getItem('isLoggedIn') === 'true';
+    setAuthUI(isCachedLogin);
+
     /* -------- Toast -------- */
     function showToast(msg, type = 'info') {
       const map = {
@@ -412,10 +553,22 @@
       try {
         const res = await fetch(`${API}/session_check.php`);
         const data = await res.json();
-        if (!data.logged_in) { window.location.href = 'login.html'; return; }
-        if (data.user.role === 'admin') { window.location.href = 'admin_panel.html'; return; }
+        if (!data.logged_in) {
+          localStorage.removeItem('isLoggedIn');
+          setAuthUI(false);
+          window.location.href = 'login.html';
+          return;
+        }
+        if (data.user.role === 'admin') {
+          window.location.href = 'admin_panel.html';
+          return;
+        }
+        localStorage.setItem('isLoggedIn', 'true');
+        setAuthUI(true);
         loadTickets();
-      } catch { window.location.href = 'login.html'; }
+      } catch {
+        window.location.href = 'login.html';
+      }
     })();
 
     /* -------- Load Tiket -------- */
@@ -669,11 +822,6 @@
         btn.disabled = false;
         btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
       }
-    });
-
-    /* -------- Logout -------- */
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      try { await fetch(`${API}/logout.php`); } finally { window.location.href = 'login.html'; }
     });
   </script>
 </body>

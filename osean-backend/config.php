@@ -97,6 +97,12 @@ define('SMTP_USER', 'dhaiiidhaiiiii@gmail.com');      // Ganti dengan alamat Gma
 define('SMTP_PASS', 'wskk mwpu bqdj ftue'); // Ganti dengan 16 karakter App Password dari Google Account
 define('SMTP_FROM_NAME', 'OSEAN Ticketing');
 
+// =============================================
+// KONFIGURASI GOOGLE SIGN-IN / OAUTH
+// =============================================
+define('GOOGLE_CLIENT_ID', '869569142796-m45gvcj7mn25re40m3upel2f8lpp3ruj.apps.googleusercontent.com');
+
+
 require_once __DIR__ . '/phpmailer/PHPMailer.php';
 require_once __DIR__ . '/phpmailer/SMTP.php';
 require_once __DIR__ . '/phpmailer/Exception.php';

@@ -8,26 +8,28 @@ require_once __DIR__ . '/../config.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') send_error('Method tidak diizinkan.', 405);
 
 $stmt = $conn->prepare("
-    SELECT id, nama_tiket, deskripsi, harga, kuota, kuota_terjual,
-           (kuota - kuota_terjual) AS sisa_kuota, created_at
+    SELECT id, kategori, nama_tiket, deskripsi, harga, kuota, kuota_terjual,
+           GREATEST(0, (kuota - kuota_terjual)) AS sisa_kuota, created_at
     FROM tickets
-    WHERE (kuota - kuota_terjual) > 0
-    ORDER BY harga ASC
+    ORDER BY id ASC
 ");
 $stmt->execute();
 $result = $stmt->get_result();
 
 $tickets = [];
 while ($row = $result->fetch_assoc()) {
+    $sisa = (int)$row['sisa_kuota'];
     $tickets[] = [
         'id'           => (int)$row['id'],
+        'kategori'     => $row['kategori'] ?? '',
         'nama_tiket'   => $row['nama_tiket'],
         'deskripsi'    => $row['deskripsi'],
         'harga'        => (int)$row['harga'],
         'harga_format' => format_rupiah($row['harga']),
         'kuota'        => (int)$row['kuota'],
         'kuota_terjual'=> (int)$row['kuota_terjual'],
-        'sisa_kuota'   => (int)$row['sisa_kuota'],
+        'sisa_kuota'   => $sisa,
+        'is_sold_out'  => ($sisa <= 0),
         'created_at'   => $row['created_at']
     ];
 }

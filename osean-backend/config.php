@@ -47,9 +47,21 @@ if ($conn->connect_error) {
 //            bukti_transfer, status, created_at, verified_at
 // questions: id, user_id, pertanyaan, jawaban, status (menunggu/dijawab), created_at, answered_at
 
-// Konstanta path upload bukti transfer
+// Konstanta path upload bukti transfer (Auto-detect base URL agar tidak 404)
+$app_protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$app_host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$doc_root     = isset($_SERVER['DOCUMENT_ROOT']) ? str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'])) : 'C:/xampp/htdocs';
+$uploads_dir  = str_replace('\\', '/', realpath(__DIR__ . '/uploads'));
+
+if ($uploads_dir && $doc_root && strpos($uploads_dir, $doc_root) === 0) {
+    $rel_path = substr($uploads_dir, strlen($doc_root));
+    $base_upload_url = $app_protocol . $app_host . rtrim($rel_path, '/') . '/';
+} else {
+    $base_upload_url = $app_protocol . $app_host . '/ticketingosean/osean-backend/uploads/';
+}
+
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
-define('UPLOAD_URL', 'http://localhost/osean-backend/uploads/');
+define('UPLOAD_URL', $base_upload_url);
 
 // =============================================
 // HELPER FUNCTIONS

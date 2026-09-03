@@ -83,6 +83,7 @@ if (defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')
 $stmt = $conn->prepare("
     SELECT
         p.id            AS payment_id,
+        p.kode_unik,
         p.jumlah_tiket,
         p.total_bayar,
         p.metode_pembayaran,

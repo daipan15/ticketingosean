@@ -75,7 +75,8 @@
   <style>
     /* Sembunyikan scrollbar tapi tetap bisa discroll */
     html,
-    body {
+    body,
+    .no-scrollbar {
       scrollbar-width: none;
       /* Firefox */
       -ms-overflow-style: none;
@@ -83,10 +84,12 @@
     }
 
     html::-webkit-scrollbar,
-    body::-webkit-scrollbar {
+    body::-webkit-scrollbar,
+    .no-scrollbar::-webkit-scrollbar {
       display: none;
       /* Chrome, Safari, Opera */
       width: 0px;
+      height: 0px;
       background: transparent;
     }
 
@@ -177,6 +180,16 @@
     .animate-float-gentle-slow {
       animation: float-gentle 8s ease-in-out infinite;
     }
+
+    .rotate-chevron-180 {
+      transform: rotate(180deg);
+    }
+
+    .ticket-sub-card.selected {
+      border-color: #efc05e !important;
+      background-color: #2e2c22 !important;
+      box-shadow: 3px 3px 0px 0px #efc05e !important;
+    }
   </style>
 </head>
 
@@ -194,28 +207,124 @@
 
   <!-- ===================== NAVBAR ===================== -->
   <nav
-    class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
-    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
-      <a href="landing_page.html" class="flex items-center gap-2 group">
+    class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)] z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-margin-mobile md:px-margin-desktop flex items-center justify-between py-3 sm:py-4">
+      <!-- Logo -->
+      <a href="landing_page.html" class="flex items-center gap-2.5 sm:gap-3 group">
         <img src="assets/osean_logo.png" alt="OSEAN Logo"
-          class="w-8 h-8 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+          class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
         <span
-          class="font-display-md text-lg sm:text-2xl md:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+          class="font-display-md text-2xl sm:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
       </a>
 
-      <div class="flex items-center gap-2 sm:gap-3 lg:gap-6">
+      <!-- Desktop Nav (lg:flex) -->
+      <div class="hidden lg:flex items-center gap-7">
         <a href="landing_page.html"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
         <a href="venues.html"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
-        <span class="hidden lg:inline font-label-caps text-label-caps text-secondary uppercase tracking-wider">Beli Tiket</span>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
+        <span class="font-label-caps text-sm lg:text-[15px] font-bold text-secondary uppercase tracking-wider">Beli Tiket</span>
+        <a href="landing_page.html#leaderboard"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Leaderboard</a>
+        <a href="landing_page.html#faq"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">FAQ</a>
+
+        <!-- Tampil jika BELUM login (Desktop) -->
+        <div id="nav-guest" class="hidden flex items-center gap-3">
+          <a href="login.html"
+            class="border-2 border-tertiary text-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
+                    hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]">
+            Masuk
+          </a>
+          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
+                    hover:-translate-y-1 transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]
+                    active:translate-y-0 active:shadow-none">
+            Daftar
+          </a>
+        </div>
+
+        <!-- Tampil jika SUDAH login (Desktop) -->
+        <div id="nav-auth" class="hidden flex items-center gap-7">
+          <a href="my_tickets.html"
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
+            Saya</a>
+          <button id="logout-btn"
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-error hover:text-on-surface transition-colors flex items-center gap-1.5 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Keluar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile & Tablet Action + Hamburger Button (lg:hidden) -->
+      <div class="flex lg:hidden items-center gap-2.5 sm:gap-3">
         <a href="my_tickets.html"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket Saya</a>
-        <button id="logout-btn"
-          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
-          <span class="material-symbols-outlined text-[14px] sm:text-[16px] lg:text-[18px]">logout</span>
-          <span class="hidden sm:inline">Keluar</span>
+          class="bg-tertiary text-on-tertiary font-label-caps text-xs uppercase px-3 py-1.5 sm:px-4 sm:py-2
+                 shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 transition-all">
+          Tiket Saya
+        </a>
+        <button id="mobile-menu-btn" type="button" aria-label="Buka Menu Navigasi"
+          class="w-9 h-9 sm:w-10 sm:h-10 border-2 border-outline-variant bg-surface-container flex items-center justify-center text-on-surface hover:text-tertiary hover:border-tertiary transition-colors shadow-[2px_2px_0px_0px_#15140c]">
+          <span id="mobile-menu-icon" class="material-symbols-outlined text-2xl">menu</span>
         </button>
+      </div>
+    </div>
+
+    <!-- Mobile & Tablet Drawer Menu (lg:hidden) -->
+    <div id="mobile-menu"
+      class="hidden lg:hidden border-t-2 border-outline-variant bg-surface-container px-4 sm:px-margin-mobile py-5 shadow-2xl transition-all">
+      <div class="flex flex-col gap-3">
+        <a href="landing_page.html"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">home</span>
+          Beranda
+        </a>
+        <a href="venues.html"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">stadium</span>
+          Venue
+        </a>
+        <span
+          class="flex items-center gap-2.5 font-label-caps text-sm text-secondary pb-2.5 border-b border-outline-variant/30">
+          <span class="material-symbols-outlined text-lg">confirmation_number</span>
+          Beli Tiket
+        </span>
+        <a href="landing_page.html#leaderboard"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">leaderboard</span>
+          Leaderboard
+        </a>
+        <a href="landing_page.html#faq"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">help_outline</span>
+          FAQ
+        </a>
+
+        <!-- Mobile & Tablet Guest State -->
+        <div id="nav-guest-mobile" class="hidden flex flex-col sm:flex-row gap-2.5 pt-2">
+          <a href="login.html"
+            class="flex-1 text-center border-2 border-tertiary text-tertiary font-label-caps text-xs sm:text-sm uppercase py-2 shadow-[2px_2px_0px_0px_#15140c] hover:bg-tertiary hover:text-on-tertiary transition-all">
+            Masuk
+          </a>
+          <a href="register.html"
+            class="flex-1 text-center bg-tertiary text-on-tertiary font-label-caps text-xs sm:text-sm uppercase py-2 shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 transition-all">
+            Daftar
+          </a>
+        </div>
+
+        <!-- Mobile & Tablet Auth State -->
+        <div id="nav-auth-mobile" class="hidden flex flex-col gap-2.5 pt-1">
+          <a href="my_tickets.html"
+            class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+            <span class="material-symbols-outlined text-lg">receipt_long</span>
+            Tiket Saya
+          </a>
+          <button id="logout-btn-mobile"
+            class="flex items-center gap-2.5 font-label-caps text-sm text-error hover:text-on-surface text-left pt-1 transition-colors">
+            <span class="material-symbols-outlined text-lg">logout</span>
+            Keluar
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -315,22 +424,25 @@
 
   <!-- ===================== FOOTER ===================== -->
   <footer
-    class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-8 w-full flex items-center justify-center mt-16">
-    <div class="flex items-center justify-center gap-6">
+    class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-8 sm:py-10 w-full flex flex-col items-center justify-center gap-3.5 mt-16">
+    <div class="flex items-center gap-2">
+      <span class="font-label-caps text-xs sm:text-sm text-secondary uppercase tracking-widest font-bold">✦ Follow Us On</span>
+    </div>
+    <div class="flex items-center justify-center gap-5 sm:gap-6">
       <a href="https://www.instagram.com/oseanfmipa/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-        class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
-        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+        class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
         </svg>
       </a>
       <a href="https://www.youtube.com/@OSEANFMIPAUNPAD" target="_blank" rel="noopener noreferrer" aria-label="YouTube"
-        class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
-        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+        class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
         </svg>
       </a>
       <a href="https://www.tiktok.com/@oseanmipa" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
-        class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
+        class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
         <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
         </svg>
@@ -338,10 +450,256 @@
     </div>
   </footer>
 
+  <!-- ===================== T&C MODAL POPUP ===================== -->
+  <div id="tnc-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+    <div class="relative w-full max-w-xl bg-surface-container border-2 border-outline-variant shadow-[8px_8px_0px_0px_#15140c] overflow-hidden transform scale-95 transition-all duration-300" id="tnc-modal-card">
+      
+      <!-- Modal Header -->
+      <div class="bg-surface-container-high border-b-2 border-outline-variant p-4 sm:p-5 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 bg-tertiary-container border border-tertiary flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-[18px]">gavel</span>
+          </div>
+          <div>
+            <h3 class="font-headline-lg text-base sm:text-lg text-on-surface leading-snug uppercase">Syarat & Ketentuan</h3>
+            <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Terms & Conditions OSEAN</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeTncModal()" class="w-8 h-8 border border-outline-variant text-on-surface-variant hover:text-error hover:border-error flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- Ringkasan Singkat Pesanan -->
+      <div class="bg-surface-container-lowest px-4 sm:px-5 py-3 border-b border-dashed border-outline-variant flex items-center justify-between gap-3 text-xs">
+        <div>
+          <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Pesanan Anda</span>
+          <span id="tnc-ticket-name" class="font-body-md font-bold text-on-surface">—</span>
+        </div>
+        <div class="text-right">
+          <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Total Bayar</span>
+          <span id="tnc-ticket-total" class="font-display-md text-sm sm:text-base font-bold text-secondary">—</span>
+        </div>
+      </div>
+
+      <!-- T&C Scrollable Content Body -->
+      <div class="p-4 sm:p-5 max-h-[50vh] overflow-y-auto space-y-5 text-xs text-on-surface-variant font-body-md select-none border-b border-outline-variant/50">
+        
+        <!-- Bagian 1: Ketentuan Umum Tiket -->
+        <div>
+          <div class="flex items-center gap-2 mb-2.5 pb-1 border-b border-outline-variant/40">
+            <span class="material-symbols-outlined text-tertiary text-[16px]">confirmation_number</span>
+            <span class="font-label-caps text-[11px] font-bold text-tertiary uppercase tracking-wider">1. Ketentuan Umum & Tiket</span>
+          </div>
+          <div class="space-y-2.5 pl-1">
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">01</span>
+              <p><strong class="text-on-surface">Kepemilikan & Kode Unik:</strong> Setiap transaksi tiket yang berhasil akan mendapatkan Kode Unik (Booking Code) resmi yang wajib disimpan dan tidak boleh disebarluaskan kepada pihak lain.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">02</span>
+              <p><strong class="text-on-surface">Non-Refundable:</strong> Tiket yang telah dibeli bersifat final dan tidak dapat dibatalkan, diuangkan kembali (<em>no refund</em>), maupun ditukar jadwalnya dengan alasan apapun.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">03</span>
+              <p><strong class="text-on-surface">Kapasitas Sesuai Varian:</strong> Varian Single berlaku untuk 1 orang, Duo berlaku untuk 2 orang, dan Trio berlaku untuk 3 orang sekaligus saat memasuki pintu masuk venue festival.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">04</span>
+              <p><strong class="text-on-surface">Validasi Bukti Pembayaran:</strong> Pastikan bukti transfer yang diunggah asli, jelas, dan nominal persis sesuai total tagihan. Bukti palsu atau tidak terbaca akan otomatis ditolak sistem.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">05</span>
+              <p><strong class="text-on-surface">Penukaran Wristband:</strong> E-ticket dan Kode Unik wajib ditunjukkan bersama kartu identitas resmi saat penukaran tiket fisik/gelang di venue festival OSEAN.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bagian 2: Tata Tertib & Peraturan Arena -->
+        <div>
+          <div class="flex items-center gap-2 mb-2.5 pb-1 border-b border-outline-variant/40">
+            <span class="material-symbols-outlined text-secondary text-[16px]">verified_user</span>
+            <span class="font-label-caps text-[11px] font-bold text-secondary uppercase tracking-wider">2. Tata Tertib & Peraturan Arena OSEAN 2026</span>
+          </div>
+          <div class="space-y-2.5 pl-1">
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">06</span>
+              <p><strong class="text-on-surface">Presensi & Daftar Hadir:</strong> Wajib mengisi presensi saat open gate dan mengisi form daftar hadir yang telah disediakan panitia.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">07</span>
+              <p><strong class="text-on-surface">Kartu Tanda Mahasiswa (KTM):</strong> Wajib menyiapkan Kartu Tanda Mahasiswa (KTM) yang masih aktif (boleh dalam bentuk digital maupun fisik).</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">08</span>
+              <p><strong class="text-on-surface">Barang Sitaan:</strong> Wajib untuk tidak membawa barang yang telah disebutkan pada kategori barang yang disita (senjata tajam/api, minuman keras, narkoba, flare/smoke bomb, kembang api, laser pointer, atau benda berbahaya lainnya).</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">09</span>
+              <p><strong class="text-error">Larangan Tindakan Anarki:</strong> Dilarang keras melakukan tindakan anarki (berbuat onar, melakukan kekerasan verbal maupun non-verbal, melempar sesuatu, atau melakukan perusakan fasilitas) saat berlangsungnya kegiatan OSEAN 2026.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">10</span>
+              <p><strong class="text-error">Area Bermain (Playing Area):</strong> Dilarang memasuki area bermain (<em>playing area</em>) saat pertandingan sedang berlangsung demi keselamatan pemain dan kelancaran lomba.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">11</span>
+              <p><strong class="text-error">Larangan SARA:</strong> Dilarang menyinggung SARA (Suku, Agama, Ras, dan Antargolongan) atau melakukan ujaran provokatif kepada supporter lain.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">12</span>
+              <p><strong class="text-on-surface">Kebersihan & Ketertiban:</strong> Wajib menjaga kebersihan dan tidak membuang sampah sembarangan di seluruh arena pertandingan OSEAN 2026.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">13</span>
+              <p><strong class="text-on-surface">Keamanan Bersama:</strong> Wajib menjaga keamanan, ketertiban, dan saling menghormati di lingkungan arena pertandingan OSEAN 2026.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bagian 3: Data Pribadi & Perlindungan Asuransi -->
+        <div>
+          <div class="flex items-center gap-2 mb-2.5 pb-1 border-b border-outline-variant/40">
+            <span class="material-symbols-outlined text-tertiary text-[16px]">health_and_safety</span>
+            <span class="font-label-caps text-[11px] font-bold text-tertiary uppercase tracking-wider">3. Data Pribadi & Perlindungan Asuransi</span>
+          </div>
+          <div class="space-y-2.5 pl-1">
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">14</span>
+              <p><strong class="text-on-surface">Validitas Data Diri:</strong> Pembeli wajib mengisi data diri secara lengkap, benar, dan valid (nama lengkap sesuai identitas resmi KTP/KIA/Paspor, NIK, nomor telepon aktif, dan alamat email).</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">15</span>
+              <p><strong class="text-on-surface">Persetujuan Eksplisit Data:</strong> Dengan menyelesaikan transaksi, pembeli memberikan persetujuan eksplisit kepada pihak penyelenggara untuk memproses dan meneruskan data identitas tersebut kepada pihak ketiga penyedia asuransi rekanan resmi OSEAN.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">16</span>
+              <p><strong class="text-on-surface">Penerbitan Polis Asuransi:</strong> Pengalihan data tersebut ditujukan khusus untuk penerbitan polis perlindungan asuransi kecelakaan diri (<em>personal accident</em>) selama periode rangkaian kegiatan OSEAN 2026 berlangsung.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bagian 4: Klaim Asuransi Kecelakaan -->
+        <div>
+          <div class="flex items-center gap-2 mb-2.5 pb-1 border-b border-outline-variant/40">
+            <span class="material-symbols-outlined text-secondary text-[16px]">medical_information</span>
+            <span class="font-label-caps text-[11px] font-bold text-secondary uppercase tracking-wider">4. Klaim Asuransi Kecelakaan</span>
+          </div>
+          <div class="space-y-2.5 pl-1">
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">17</span>
+              <p><strong class="text-on-surface">Hak Pengajuan Klaim:</strong> Pemegang tiket berhak mengajukan klaim asuransi apabila terjadi risiko kecelakaan fisik selama kegiatan OSEAN 2026 berlangsung.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">18</span>
+              <p><strong class="text-on-surface">Kesesuaian Identitas Sah:</strong> Keberhasilan proses klaim bergantung penuh pada kesesuaian data diri pembeli dengan dokumen identitas asli yang sah.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">19</span>
+              <p><strong class="text-error">Gugurnya Hak Klaim:</strong> Ketidaksesuaian atau ketidakvalidan data yang diisi saat pemesanan tiket berada di luar tanggung jawab penyelenggara dan dapat menggugurkan hak klaim asuransi.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">20</span>
+              <p><strong class="text-on-surface">Ketentuan Polis Rekanan:</strong> Syarat teknis, dokumen pendukung, batas waktu pelaporan, serta nominal santunan atau penggantian biaya medis tunduk sepenuhnya pada syarat dan ketentuan yang ditetapkan oleh perusahaan asuransi rekanan resmi.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Checkbox Persetujuan -->
+      <div class="p-4 sm:p-5 pt-3 border-t border-outline-variant bg-surface-container-high/60">
+        <label for="tnc-checkbox" class="flex items-start gap-3 cursor-pointer group select-none">
+          <div class="relative flex items-center justify-center mt-0.5">
+            <input type="checkbox" id="tnc-checkbox" class="w-5 h-5 bg-surface-container border-2 border-outline-variant rounded-none text-tertiary focus:ring-0 focus:ring-offset-0 cursor-pointer transition-all checked:bg-tertiary checked:border-tertiary" />
+          </div>
+          <span class="font-body-md text-xs sm:text-xs text-on-surface group-hover:text-tertiary transition-colors leading-snug">
+            Saya telah membaca, memahami, dan menyetujui seluruh <strong class="text-tertiary underline underline-offset-2">Syarat & Ketentuan (T&C)</strong> yang berlaku untuk pembelian tiket OSEAN ini.
+          </span>
+        </label>
+      </div>
+
+      <!-- Modal Footer Action Buttons -->
+      <div class="p-4 sm:p-5 pt-3 bg-surface-container-high border-t border-outline-variant flex items-center justify-end gap-3">
+        <button type="button" onclick="closeTncModal()" class="px-4 py-2.5 border-2 border-outline-variant text-on-surface-variant font-label-caps text-xs uppercase hover:text-on-surface hover:border-on-surface transition-all">
+          Batal
+        </button>
+        <button type="button" id="tnc-confirm-btn" disabled onclick="confirmAndPay()"
+          class="px-5 py-2.5 bg-tertiary text-on-tertiary font-label-caps text-xs uppercase font-bold
+                 shadow-[4px_4px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_#15140c]
+                 active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-200
+                 flex items-center gap-2 disabled:opacity-35 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_#15140c]">
+          <span class="material-symbols-outlined text-[16px]">check_circle</span>
+          Setuju & Bayar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     const API = '../osean-backend/api';
     let selectedTicket = null;
     let qty = 1;
+
+    /* Helper untuk sinkronisasi tampilan auth/guest di Desktop dan Mobile */
+    function setAuthUI(isLoggedIn) {
+      const navGuest = document.getElementById('nav-guest');
+      const navAuth = document.getElementById('nav-auth');
+      const navGuestMobile = document.getElementById('nav-guest-mobile');
+      const navAuthMobile = document.getElementById('nav-auth-mobile');
+
+      if (isLoggedIn) {
+        if (navGuest) navGuest.classList.add('hidden');
+        if (navAuth) navAuth.classList.remove('hidden');
+        if (navGuestMobile) navGuestMobile.classList.add('hidden');
+        if (navAuthMobile) navAuthMobile.classList.remove('hidden');
+      } else {
+        if (navAuth) navAuth.classList.add('hidden');
+        if (navGuest) navGuest.classList.remove('hidden');
+        if (navAuthMobile) navAuthMobile.classList.add('hidden');
+        if (navGuestMobile) navGuestMobile.classList.remove('hidden');
+      }
+    }
+
+    /* Handler logout */
+    async function handleLogout() {
+      try { await fetch(`${API}/logout.php`); } finally {
+        localStorage.removeItem('isLoggedIn');
+        window.location.href = 'login.html';
+      }
+    }
+    document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
+    document.getElementById('logout-btn-mobile')?.addEventListener('click', handleLogout);
+
+    /* Toggle Mobile / Tablet Menu Drawer */
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isClosed = mobileMenu.classList.contains('hidden');
+        if (isClosed) {
+          mobileMenu.classList.remove('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'close';
+        } else {
+          mobileMenu.classList.add('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+        }
+      });
+
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+        });
+      });
+    }
+
+    /* Langsung tentukan tampilan navbar dari cache instan agar bebas kedip/blink */
+    const isCachedLogin = localStorage.getItem('isLoggedIn') === 'true';
+    setAuthUI(isCachedLogin);
 
     /* -------- Toast -------- */
     function showToast(msg, type = 'info') {
@@ -367,10 +725,22 @@
       try {
         const res = await fetch(`${API}/session_check.php`);
         const data = await res.json();
-        if (!data.logged_in) { window.location.href = 'login.html'; return; }
-        if (data.user.role === 'admin') { window.location.href = 'admin_panel.html'; return; }
+        if (!data.logged_in) {
+          localStorage.removeItem('isLoggedIn');
+          setAuthUI(false);
+          window.location.href = 'login.html';
+          return;
+        }
+        if (data.user.role === 'admin') {
+          window.location.href = 'admin_panel.html';
+          return;
+        }
+        localStorage.setItem('isLoggedIn', 'true');
+        setAuthUI(true);
         loadTickets();
-      } catch { window.location.href = 'login.html'; }
+      } catch {
+        window.location.href = 'login.html';
+      }
     })();
 
     /* -------- Load Tiket -------- */
@@ -390,154 +760,407 @@
         const el = document.getElementById('ticket-options');
         el.classList.remove('hidden');
 
-        // Jadwal rilis dan kedaluwarsa tiket (real-time)
-        const SCHEDULE_MAP = {
-          'early bird': {
-            startDate: new Date('2026-09-01T00:00:00+07:00'),
+        // Definisi 4 Kategori Utama & Jadwal Rilis
+        const CATEGORIES = [
+          {
+            key: 'early bird',
+            title: 'Early Bird',
+            icon: 'wb_twilight',
+            expectedVariants: 2,
+            startDate: new Date('2026-09-04T00:00:00+07:00'),
             endDate: new Date('2026-09-08T23:59:59+07:00'),
             rangeLabel: '1 - 8 September 2026'
           },
-          'pre sale 1': {
+          {
+            key: 'pre sale 1',
+            title: 'Pre Sale 1',
+            icon: 'local_activity',
+            expectedVariants: 3,
             startDate: new Date('2026-09-09T00:00:00+07:00'),
             endDate: new Date('2026-09-16T23:59:59+07:00'),
             rangeLabel: '9 - 16 September 2026'
           },
-          'pre sale 2': {
+          {
+            key: 'pre sale 2',
+            title: 'Pre Sale 2',
+            icon: 'stars',
+            expectedVariants: 3,
             startDate: new Date('2026-09-17T00:00:00+07:00'),
             endDate: new Date('2026-09-24T23:59:59+07:00'),
             rangeLabel: '17 - 24 September 2026'
           },
-          'on the spot': {
+          {
+            key: 'on the spot',
+            title: 'Normal',
+            icon: 'confirmation_number',
+            expectedVariants: 2,
             startDate: new Date('2026-09-25T00:00:00+07:00'),
             endDate: new Date('2026-09-27T23:59:59+07:00'),
             rangeLabel: '25 - 27 September 2026'
           }
-        };
+        ];
+
+        // Kelompokkan tiket berdasarkan kategori
+        const grouped = {};
+        CATEGORIES.forEach(c => { grouped[c.key] = []; });
+
+        data.tickets.forEach(t => {
+          const cat = (t.kategori || '').toLowerCase().trim();
+          const name = t.nama_tiket.toLowerCase().trim();
+          let matched = null;
+
+          if (cat.includes('early bird') || name.includes('early bird')) matched = 'early bird';
+          else if (cat.includes('pre sale 1') || cat.includes('presale 1') || name.includes('pre sale 1') || name.includes('presale 1')) matched = 'pre sale 1';
+          else if (cat.includes('pre sale 2') || cat.includes('presale 2') || name.includes('pre sale 2') || name.includes('presale 2')) matched = 'pre sale 2';
+          else if (cat.includes('on the spot') || cat.includes('ots') || name.includes('on the spot') || name.includes('ots')) matched = 'on the spot';
+
+          if (matched && grouped[matched]) {
+            grouped[matched].push(t);
+          } else {
+            grouped['early bird'].push(t);
+          }
+        });
 
         const now = new Date();
 
-        el.innerHTML = data.tickets.map(t => {
-          const key = t.nama_tiket.toLowerCase().trim();
-          const sched = SCHEDULE_MAP[key];
+        el.innerHTML = CATEGORIES.map(cat => {
+          const items = grouped[cat.key] || [];
+          if (items.length === 0) return '';
 
           let status = 'active'; // 'upcoming', 'active', 'passed'
-          let dateLabel = sched ? sched.rangeLabel : '';
-
-          if (sched) {
-            if (now < sched.startDate) {
-              status = 'upcoming';
-            } else if (now > sched.endDate) {
-              status = 'passed';
-            }
+          if (now < cat.startDate) {
+            status = 'upcoming';
+          } else if (now > cat.endDate) {
+            status = 'passed';
           }
 
+          // Kategori aktif default terbuka
+          const isDefaultOpen = status === 'active';
+
+          const catRemaining = items.reduce((sum, it) => sum + (it.sisa_kuota || 0), 0);
+          const isCategorySoldOut = (items.length > 0 && catRemaining <= 0);
+
+          let statusBadge = '';
           if (status === 'upcoming') {
-            // TIKET BELUM BUKA (HARGA DITUTUP Rp XXX & TIDAK BISA DIPILIH)
-            return `
-              <div class="relative border-2 border-outline-variant p-3.5 opacity-60 bg-surface-container-low cursor-not-allowed select-none">
-                <div class="flex items-start justify-between pr-8">
-                  <div>
-                    <div class="flex flex-wrap items-center gap-1.5">
-                      <p class="font-headline-lg text-base sm:text-headline-lg text-on-surface leading-tight">${t.nama_tiket}</p>
-                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[9px] uppercase px-1.5 py-0.5">
-                        📅 ${dateLabel}
-                      </span>
-                    </div>
-                    <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
-                  </div>
-                  <span class="border border-outline-variant text-on-surface-variant font-label-caps text-[10px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold flex-shrink-0">
-                    <span class="material-symbols-outlined text-[12px]">lock</span> Segera
-                  </span>
-                </div>
-                <div class="flex items-end justify-between mt-3 border-t border-dashed border-outline-variant pt-2.5">
-                  <p class="font-display-md text-outline-variant font-mono tracking-widest" style="font-size:18px;font-weight:700">Rp XXX</p>
-                  <span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Belum Tersedia</span>
-                </div>
-              </div>
+            statusBadge = `
+              <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[9px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold">
+                <span class="material-symbols-outlined text-[12px]">lock</span> Segera Rilis
+              </span>
+            `;
+          } else if (status === 'passed') {
+            statusBadge = `
+              <span class="bg-error-container/40 border border-error/50 text-error font-label-caps text-[9px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold">
+                <span class="material-symbols-outlined text-[12px]">event_busy</span> PASSED
+              </span>
+            `;
+          } else if (isCategorySoldOut) {
+            statusBadge = `
+              <span class="bg-error-container/60 border border-error text-error font-label-caps text-[9px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold">
+                <span class="material-symbols-outlined text-[12px]">block</span> SOLD OUT
+              </span>
+            `;
+          } else {
+            statusBadge = `
+              <span class="bg-secondary/20 border border-secondary text-secondary font-label-caps text-[9px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping inline-block"></span> AKTIF
+              </span>
             `;
           }
 
-          if (status === 'passed') {
-            // TIKET SUDAH LEWAT TANGGALNYA (PASSED & TIDAK BISA DIPILIH)
-            return `
-              <div class="relative border-2 border-outline-variant p-3.5 opacity-50 bg-surface-container-low grayscale-[40%] cursor-not-allowed select-none">
-                <div class="flex items-start justify-between pr-8">
-                  <div>
-                    <div class="flex flex-wrap items-center gap-1.5">
-                      <p class="font-headline-lg text-base sm:text-headline-lg text-on-surface leading-tight">${t.nama_tiket}</p>
-                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[9px] uppercase px-1.5 py-0.5">
-                        📅 ${dateLabel}
-                      </span>
-                    </div>
-                    <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
-                  </div>
-                  <span class="bg-error-container/40 border border-error/50 text-error font-label-caps text-[10px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold flex-shrink-0">
-                    <span class="material-symbols-outlined text-[12px]">event_busy</span> PASSED
-                  </span>
-                </div>
-                <div class="flex items-end justify-between mt-3 border-t border-dashed border-outline-variant pt-2.5">
-                  <p class="font-display-md text-outline-variant line-through" style="font-size:18px;font-weight:700">${t.harga_format}</p>
-                  <span class="font-label-caps text-[10px] text-error uppercase font-bold">Periode Berakhir</span>
-                </div>
-              </div>
-            `;
-          }
+          const prices = items.map(it => it.harga);
+          const minPrice = Math.min(...prices);
+          const minPriceFmt = 'Rp ' + minPrice.toLocaleString('id-ID');
 
-          // TIKET AKTIF (BISA DIPILIH)
+          // Buat options untuk dropdown select cepat
+          const selectOptionsHtml = items.map(item => {
+            let cleanSubName = item.nama_tiket;
+            if (cleanSubName.includes(' - ')) cleanSubName = cleanSubName.split(' - ')[1];
+            if (item.sisa_kuota <= 0) {
+              return `<option value="${item.id}" disabled>${cleanSubName} — Habis (Sold Out)</option>`;
+            }
+            return `<option value="${item.id}">${cleanSubName} — ${status === 'upcoming' ? 'Rp XXX (Segera)' : item.harga_format}</option>`;
+          }).join('');
+
+          // Buat card jenis-jenis tiket di dalam dropdown
+          const subItemsHtml = items.map(item => {
+            let cleanSubName = item.nama_tiket;
+            if (cleanSubName.includes(' - ')) cleanSubName = cleanSubName.split(' - ')[1];
+
+            const lower = cleanSubName.toLowerCase();
+            const isSingle = lower.includes('single');
+            const isDuo = lower.includes('duo');
+            const isTrio = lower.includes('trio');
+            const isVip = lower.includes('vip');
+            const isBundle = lower.includes('bundling') || isDuo || isTrio;
+
+            let badgeHtml = '';
+            if (isSingle) badgeHtml = '<span class="border border-outline-variant text-on-surface-variant text-[8px] font-label-caps px-1.5 py-0.2 uppercase">1 ORANG</span>';
+            else if (isDuo) badgeHtml = '<span class="bg-secondary text-on-secondary text-[8px] font-label-caps px-1.5 py-0.2 uppercase font-bold">DUO (2 TIKET)</span>';
+            else if (isTrio) badgeHtml = '<span class="bg-tertiary text-on-tertiary text-[8px] font-label-caps px-1.5 py-0.2 uppercase font-bold">TRIO (3 TIKET)</span>';
+            else if (isVip) badgeHtml = '<span class="bg-tertiary text-on-tertiary text-[8px] font-label-caps px-1.5 py-0.2 uppercase font-bold">VIP ACCESS</span>';
+
+            if (status === 'upcoming') {
+              return `
+                <div class="border-2 border-outline-variant p-3 bg-surface-container/60 opacity-80 cursor-not-allowed select-none transition-all">
+                  <div class="flex items-center justify-between gap-2">
+                    <div>
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[14px] text-on-surface-variant">lock</span>
+                        <p class="font-headline-lg text-sm text-on-surface">${cleanSubName}</p>
+                        ${badgeHtml}
+                      </div>
+                      <p class="font-body-md text-xs text-on-surface-variant mt-0.5">${item.deskripsi || ''}</p>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                      <span class="font-display-md text-xs sm:text-sm text-outline-variant font-mono tracking-wider">Rp XXX</span>
+                      <span class="block font-label-caps text-[8px] text-on-surface-variant uppercase">Rilis ${cat.rangeLabel}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            if (status === 'passed') {
+              return `
+                <div class="border-2 border-outline-variant p-3 bg-surface-container/40 opacity-50 cursor-not-allowed select-none">
+                  <div class="flex items-center justify-between gap-2">
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[14px] text-error">event_busy</span>
+                        <p class="font-headline-lg text-sm text-on-surface line-through">${cleanSubName}</p>
+                      </div>
+                      <p class="font-body-md text-xs text-on-surface-variant mt-0.5">${item.deskripsi || ''}</p>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                      <span class="font-display-md text-xs sm:text-sm text-outline-variant line-through">${item.harga_format}</span>
+                      <span class="block font-label-caps text-[8px] text-error uppercase font-bold">Berakhir</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            if (item.sisa_kuota <= 0) {
+              return `
+                <div class="border-2 border-outline-variant p-3 bg-surface-container/40 opacity-60 cursor-not-allowed select-none">
+                  <div class="flex items-center justify-between gap-2">
+                    <div>
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[14px] text-error">block</span>
+                        <p class="font-headline-lg text-sm text-on-surface line-through">${cleanSubName}</p>
+                        <span class="bg-error/20 border border-error/50 text-error text-[8px] font-label-caps px-1.5 py-0.2 uppercase font-bold">SOLD OUT</span>
+                      </div>
+                      <p class="font-body-md text-xs text-on-surface-variant mt-0.5">${item.deskripsi || ''}</p>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                      <span class="font-display-md text-xs sm:text-sm text-outline-variant line-through">${item.harga_format}</span>
+                      <span class="block font-label-caps text-[8px] text-error uppercase font-bold">Habis Terjual</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            return `
+              <label class="ticket-sub-option cursor-pointer group/sub block"
+                     data-id="${item.id}"
+                     data-kategori="${cat.title}"
+                     data-subname="${cleanSubName}"
+                     data-nama="${item.nama_tiket}"
+                     data-harga="${item.harga}"
+                     data-harga-fmt="${item.harga_format}"
+                     data-sisa="${item.sisa_kuota}">
+                <div class="ticket-sub-card border-2 border-outline-variant p-3 bg-surface-container hover:border-tertiary hover:bg-surface-container-high transition-all">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-start gap-2.5">
+                      <!-- Radio Indicator -->
+                      <div class="sub-radio-dot w-4 h-4 mt-0.5 rounded-full border-2 border-outline-variant flex items-center justify-center flex-shrink-0 group-[.selected]/sub:border-tertiary group-[.selected]/sub:bg-tertiary transition-all">
+                        <div class="w-1.5 h-1.5 rounded-full bg-on-tertiary hidden group-[.selected]/sub:block"></div>
+                      </div>
+                      <div>
+                        <div class="flex flex-wrap items-center gap-1.5">
+                          <p class="font-headline-lg text-sm sm:text-base text-on-surface leading-snug group-[.selected]/sub:text-tertiary">${cleanSubName}</p>
+                          ${badgeHtml}
+                        </div>
+                        <p class="font-body-md text-xs text-on-surface-variant mt-0.5">${item.deskripsi || ''}</p>
+                      </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                      <p class="font-display-md text-tertiary text-sm sm:text-base font-bold">${item.harga_format}</p>
+                      <span class="font-label-caps text-[9px] text-on-surface-variant uppercase">${item.sisa_kuota} sisa</span>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            `;
+          }).join('');
+
           return `
-            <label class="ticket-option cursor-pointer group" data-id="${t.id}" data-nama="${t.nama_tiket}" data-harga="${t.harga}" data-harga-fmt="${t.harga_format}" data-sisa="${t.sisa_kuota}">
-              <div class="relative border-2 border-outline-variant p-3.5 hover:border-tertiary transition-all
-                          group-[.selected]:border-tertiary group-[.selected]:bg-surface-container-high shadow-[4px_4px_0px_0px_transparent]
-                          group-[.selected]:shadow-[4px_4px_0px_0px_#efc05e]">
-
-                <!-- Selection indicator -->
-                <div class="absolute top-3 right-3 w-4 h-4 border-2 border-outline-variant group-[.selected]:border-tertiary
-                            group-[.selected]:bg-tertiary flex items-center justify-center transition-all">
-                  <span class="material-symbols-outlined text-[11px] text-on-tertiary hidden group-[.selected]:block">check</span>
-                </div>
-
-                <div class="flex items-start justify-between pr-6">
-                  <div>
-                    <div class="flex flex-wrap items-center gap-1.5">
-                      <p class="font-headline-lg text-base sm:text-headline-lg text-on-surface leading-tight">${t.nama_tiket}</p>
-                      ${dateLabel ? `<span class="border border-secondary text-secondary font-label-caps text-[9px] uppercase px-1.5 py-0.5">📅 ${dateLabel}</span>` : ''}
+            <div class="category-box border-2 border-outline-variant bg-surface-container shadow-[4px_4px_0px_0px_#15140c] transition-all overflow-hidden ${status === 'upcoming' ? 'opacity-90' : ''}" data-cat-key="${cat.key}">
+              
+              <!-- Accordion / Dropdown Trigger Header -->
+              <div class="category-header cursor-pointer select-none p-4 flex items-center justify-between gap-3 hover:bg-surface-container-high transition-colors">
+                <div class="flex-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[18px] text-tertiary">${cat.icon}</span>
+                      <h3 class="font-headline-lg text-base sm:text-headline-lg text-on-surface uppercase font-bold leading-tight">${cat.title}</h3>
                     </div>
-                    <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+                    <span class="bg-surface-container-highest border border-outline-variant text-on-surface-variant font-label-caps text-[9px] uppercase px-1.5 py-0.5">
+                      📅 ${cat.rangeLabel}
+                    </span>
+                    ${statusBadge}
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-on-surface-variant">
+                    <span class="font-label-caps text-[10px] text-tertiary uppercase font-bold flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[13px]">expand_circle_down</span>
+                      ${items.length} Jenis Tiket Dropdown
+                    </span>
+                    <span>•</span>
+                    <span class="font-body-md">${status === 'upcoming' ? 'Harga: Mulai Rp XXX' : `Mulai ${minPriceFmt}`}</span>
                   </div>
                 </div>
 
-                <div class="flex items-end justify-between mt-3 border-t border-dashed border-outline-variant pt-2.5">
-                  <p class="font-display-md text-tertiary" style="font-size:18px;font-weight:700">${t.harga_format}</p>
-                  <span class="font-label-caps text-[10px] text-on-surface-variant uppercase">${t.sisa_kuota} sisa</span>
+                <!-- Action Button & Chevron -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                  <span class="hidden sm:inline font-label-caps text-[10px] uppercase text-on-surface-variant font-bold">
+                    ${isDefaultOpen ? 'Tutup' : 'Lihat Jenis'}
+                  </span>
+                  <div class="w-8 h-8 border-2 border-outline-variant bg-surface-container-high flex items-center justify-center text-on-surface group-hover:border-tertiary group-hover:text-tertiary transition-all">
+                    <span class="material-symbols-outlined text-[20px] chevron-arrow transition-transform duration-300 ${isDefaultOpen ? 'rotate-chevron-180' : ''}">
+                      expand_more
+                    </span>
+                  </div>
                 </div>
               </div>
-            </label>
+
+              <!-- Dropdown Content (Jenis-jenis tiket) -->
+              <div class="category-dropdown-content ${isDefaultOpen ? '' : 'hidden'} border-t-2 border-dashed border-outline-variant p-4 bg-surface-container-lowest space-y-3.5">
+                
+                <!-- Quick Dropdown Select -->
+                <div class="bg-surface-container border border-outline-variant p-2.5">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <label class="font-label-caps text-[10px] text-on-surface-variant uppercase font-bold flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[14px] text-secondary">arrow_drop_down_circle</span>
+                      Dropdown Jenis ${cat.title} (${items.length} Opsi):
+                    </label>
+                    <span class="font-label-caps text-[9px] text-tertiary uppercase font-bold bg-tertiary/10 border border-tertiary/30 px-1.5 py-0.5">
+                      ${items.length} dropdown
+                    </span>
+                  </div>
+                  <select class="category-quick-select w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-xs px-3 py-2.5 focus:border-tertiary focus:outline-none transition-colors cursor-pointer" ${status !== 'active' ? 'disabled' : ''}>
+                    <option value="" disabled selected>-- Pilih jenis ${cat.title} (${items.length} pilihan) --</option>
+                    ${selectOptionsHtml}
+                  </select>
+                </div>
+
+                <!-- Sub-type Cards List -->
+                <div class="space-y-2">
+                  <p class="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider">
+                    Daftar ${items.length} Jenis Tiket:
+                  </p>
+                  ${subItemsHtml}
+                </div>
+
+              </div>
+
+            </div>
           `;
         }).join('');
 
-        // Ticket select listener
-        document.querySelectorAll('.ticket-option').forEach(el => {
-          el.addEventListener('click', () => {
-            document.querySelectorAll('.ticket-option').forEach(e => e.classList.remove('selected'));
-            el.classList.add('selected');
-            selectedTicket = {
-              id: el.dataset.id,
-              nama: el.dataset.nama,
-              harga: parseInt(el.dataset.harga),
-              hargaFmt: el.dataset.hargaFmt,
-              sisa: parseInt(el.dataset.sisa)
-            };
-            document.getElementById('ticket_id').value = selectedTicket.id;
-            document.getElementById('summary-nama').textContent = selectedTicket.nama;
-            document.getElementById('summary-harga').textContent = el.dataset.hargaFmt + ' / tiket';
-            document.getElementById('order-summary').classList.remove('hidden');
-            document.getElementById('no-ticket-msg').classList.add('hidden');
-            updateTotal();
-            document.getElementById('submit-btn').disabled = false;
+        // Toggle Accordion / Dropdown Handler
+        document.querySelectorAll('.category-header').forEach(header => {
+          header.addEventListener('click', () => {
+            const box = header.closest('.category-box');
+            const content = box.querySelector('.category-dropdown-content');
+            const chevron = box.querySelector('.chevron-arrow');
+            const labelSpan = header.querySelector('.sm\\:inline');
+            const isHidden = content.classList.contains('hidden');
+
+            if (isHidden) {
+              content.classList.remove('hidden');
+              chevron.classList.add('rotate-chevron-180');
+              if (labelSpan) labelSpan.textContent = 'Tutup';
+            } else {
+              content.classList.add('hidden');
+              chevron.classList.remove('rotate-chevron-180');
+              if (labelSpan) labelSpan.textContent = 'Lihat Jenis';
+            }
           });
         });
 
-      } catch {
+        // Function to handle Sub-Ticket Selection
+        function selectSubTicket(itemEl) {
+          // Deselect previous selection
+          document.querySelectorAll('.ticket-sub-option').forEach(e => {
+            e.classList.remove('selected');
+            const card = e.querySelector('.ticket-sub-card');
+            if (card) card.classList.remove('selected');
+          });
+
+          // Select current
+          itemEl.classList.add('selected');
+          const card = itemEl.querySelector('.ticket-sub-card');
+          if (card) card.classList.add('selected');
+
+          selectedTicket = {
+            id: itemEl.dataset.id,
+            kategori: itemEl.dataset.kategori,
+            subname: itemEl.dataset.subname,
+            nama: itemEl.dataset.nama,
+            harga: parseInt(itemEl.dataset.harga),
+            hargaFmt: itemEl.dataset.hargaFmt,
+            sisa: parseInt(itemEl.dataset.sisa)
+          };
+
+          // Sync with the quick select dropdown inside the same box
+          const box = itemEl.closest('.category-box');
+          if (box) {
+            const select = box.querySelector('.category-quick-select');
+            if (select) select.value = selectedTicket.id;
+          }
+
+          // Highlight parent box border
+          document.querySelectorAll('.category-box').forEach(b => {
+            b.classList.remove('border-tertiary', 'shadow-[4px_4px_0px_0px_#efc05e]');
+            b.classList.add('border-outline-variant', 'shadow-[4px_4px_0px_0px_#15140c]');
+          });
+          if (box) {
+            box.classList.remove('border-outline-variant', 'shadow-[4px_4px_0px_0px_#15140c]');
+            box.classList.add('border-tertiary', 'shadow-[4px_4px_0px_0px_#efc05e]');
+          }
+
+          // Update Order Summary
+          document.getElementById('ticket_id').value = selectedTicket.id;
+          document.getElementById('summary-nama').textContent = selectedTicket.nama;
+          document.getElementById('summary-harga').textContent = selectedTicket.hargaFmt + ' / tiket';
+          document.getElementById('order-summary').classList.remove('hidden');
+          document.getElementById('no-ticket-msg').classList.add('hidden');
+          updateTotal();
+          document.getElementById('submit-btn').disabled = false;
+        }
+
+        // Sub-option card click listener
+        document.querySelectorAll('.ticket-sub-option').forEach(el => {
+          el.addEventListener('click', () => {
+            selectSubTicket(el);
+          });
+        });
+
+        // Quick select dropdown change listener
+        document.querySelectorAll('.category-quick-select').forEach(sel => {
+          sel.addEventListener('change', (e) => {
+            const id = e.target.value;
+            const targetItem = document.querySelector(`.ticket-sub-option[data-id="${id}"]`);
+            if (targetItem) {
+              selectSubTicket(targetItem);
+            }
+          });
+        });
+
+      } catch (err) {
+        console.error(err);
         document.getElementById('tickets-loading').innerHTML =
           '<p class="text-error font-body-md">Gagal memuat tiket. Pastikan server aktif.</p>';
       }
@@ -571,6 +1194,11 @@
 
       btn.disabled = true;
       btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Membuat transaksi...';
+
+      const refCode = (document.getElementById('referral_code')?.value || '').trim().toUpperCase();
+      if (refCode) {
+        formData.append('referral_code', refCode);
+      }
 
       try {
         // 1. Request snap_token dari backend
@@ -621,12 +1249,33 @@
         btn.disabled = false;
         btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
       }
-    });
+    }
 
-    /* -------- Logout -------- */
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      try { await fetch(`${API}/logout.php`); } finally { window.location.href = 'login.html'; }
-    });
+    /* -------- Referral Himpunan Chips Handler -------- */
+    function selectHimaReferral(code) {
+      const input = document.getElementById('referral_code');
+      if (!input) return;
+      if (input.value.trim().toUpperCase() === code) {
+        input.value = '';
+      } else {
+        input.value = code;
+      }
+      updateHimaChips();
+    }
+
+    function updateHimaChips() {
+      const input = document.getElementById('referral_code');
+      const val = input ? input.value.trim().toUpperCase() : '';
+      document.querySelectorAll('.hima-chip').forEach(btn => {
+        if (btn.dataset.code === val) {
+          btn.className = 'hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-secondary bg-secondary/20 text-secondary shadow-[1px_1px_0px_0px_#15140c]';
+        } else {
+          btn.className = 'hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all';
+        }
+      });
+    }
+
+    document.getElementById('referral_code')?.addEventListener('input', updateHimaChips);
   </script>
 </body>
 

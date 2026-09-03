@@ -240,6 +240,32 @@
         </button>
       </div>
 
+      <!-- Search Bar & Status Filter Strip -->
+      <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-6">
+        <!-- Search Box -->
+        <div class="relative flex-1 max-w-xl">
+          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none">search</span>
+          <input type="text" id="pay-search-input" placeholder="Cari Kode Unik (OSN-XXXX), User, Referral (HIMATIF, HIFI..), Tiket..."
+            class="w-full bg-surface-container border-2 border-outline-variant pl-10 pr-10 py-2.5 text-on-surface font-body-md text-xs sm:text-sm placeholder:text-on-surface-variant/50 focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c]" />
+          <button type="button" id="pay-search-clear" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error transition-colors">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+
+        <!-- Quick Filter Buttons & Counter -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="flex border border-outline-variant bg-surface-container p-1 shadow-[2px_2px_0px_0px_#15140c]" id="pay-status-filters">
+            <button type="button" onclick="setFilterStatus('')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-tertiary bg-tertiary-container border border-tertiary" data-status="">Semua</button>
+            <button type="button" onclick="setFilterStatus('pending')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface" data-status="pending">Pending</button>
+            <button type="button" onclick="setFilterStatus('verified')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface" data-status="verified">Verified</button>
+            <button type="button" onclick="setFilterStatus('rejected')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface" data-status="rejected">Ditolak</button>
+          </div>
+          <span id="search-count" class="font-label-caps text-[10px] text-on-surface-variant uppercase px-2.5 py-1.5 bg-surface-container border border-outline-variant shadow-[2px_2px_0px_0px_#15140c]">
+            Total: <strong id="search-count-num" class="text-secondary">0</strong>
+          </span>
+        </div>
+      </div>
+
       <!-- Loading -->
       <div id="pay-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
         <span class="material-symbols-outlined animate-spin">refresh</span>
@@ -253,6 +279,12 @@
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b-2 border-dashed border-outline-variant bg-surface-container-highest">
+                <th class="p-4 font-label-caps text-label-caps text-tertiary font-bold tracking-wider">
+                  <div class="flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px]">fingerprint</span>
+                    Kode Unik
+                  </div>
+                </th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">User</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Tiket</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Jumlah</th>
@@ -268,6 +300,7 @@
       </div>
 
       <p id="pay-empty" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Belum ada pembayaran.</p>
+      <p id="pay-no-search" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Tidak ada pembayaran yang cocok dengan kata kunci pencarian.</p>
     </section>
 
     <!-- ===== TAB: QnA ===== -->
@@ -369,11 +402,186 @@
       } catch { window.location.href = 'login.html'; }
     })();
 
+    /* -------- Payments State & Search -------- */
+    let allPayments = [];
+    let currentFilterStatus = '';
+    let currentSearchQuery = '';
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(`Kode unik "${text}" berhasil disalin!`, 'success');
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(`Kode unik "${text}" berhasil disalin!`, 'success');
+    }
+
+    function setFilterStatus(status) {
+      currentFilterStatus = status;
+      document.querySelectorAll('.pay-filter-btn').forEach(btn => {
+        const isActive = btn.dataset.status === status;
+        if (isActive) {
+          btn.className = 'pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-tertiary bg-tertiary-container border border-tertiary';
+        } else {
+          btn.className = 'pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface';
+        }
+      });
+      applyPaymentsFilter();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('pay-search-input');
+      if (input) input.value = '';
+      currentSearchQuery = '';
+      document.getElementById('pay-search-clear')?.classList.add('hidden');
+      applyPaymentsFilter();
+    }
+
+    document.getElementById('pay-search-input')?.addEventListener('input', (e) => {
+      currentSearchQuery = e.target.value.trim().toLowerCase();
+      const clearBtn = document.getElementById('pay-search-clear');
+      if (clearBtn) {
+        if (currentSearchQuery.length > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+      applyPaymentsFilter();
+    });
+
+    function applyPaymentsFilter() {
+      if (!allPayments) return;
+
+      const filtered = allPayments.filter(p => {
+        // Filter status
+        if (currentFilterStatus && p.status !== currentFilterStatus) return false;
+
+        // Filter search keyword
+        if (currentSearchQuery) {
+          const q = currentSearchQuery;
+          const matchCode = (p.kode_unik || '').toLowerCase().includes(q);
+          const matchName = (p.nama || '').toLowerCase().includes(q);
+          const matchEmail = (p.email || '').toLowerCase().includes(q);
+          const matchTicket = (p.nama_tiket || '').toLowerCase().includes(q);
+          const matchMethod = (p.metode_pembayaran || '').toLowerCase().includes(q);
+          const matchReferral = (p.referral_code || '').toLowerCase().includes(q);
+          if (!matchCode && !matchName && !matchEmail && !matchTicket && !matchMethod && !matchReferral) return false;
+        }
+
+        return true;
+      });
+
+      renderPaymentsTable(filtered);
+    }
+
+    function renderPaymentsTable(payments) {
+      const tableWrap = document.getElementById('pay-table-wrap');
+      const emptyMsg = document.getElementById('pay-empty');
+      const noSearchMsg = document.getElementById('pay-no-search');
+      const tbody = document.getElementById('pay-tbody');
+      const countNum = document.getElementById('search-count-num');
+
+      if (countNum) countNum.textContent = payments.length;
+
+      if (allPayments.length === 0) {
+        tableWrap.classList.add('hidden');
+        emptyMsg.classList.remove('hidden');
+        if (noSearchMsg) noSearchMsg.classList.add('hidden');
+        return;
+      }
+
+      emptyMsg.classList.add('hidden');
+
+      if (payments.length === 0) {
+        tableWrap.classList.add('hidden');
+        if (noSearchMsg) noSearchMsg.classList.remove('hidden');
+        return;
+      }
+
+      if (noSearchMsg) noSearchMsg.classList.add('hidden');
+      tableWrap.classList.remove('hidden');
+
+      tbody.innerHTML = payments.map(p => {
+        const isPending = p.status === 'pending';
+        const statusCls = p.status === 'verified' ? 'text-secondary' : p.status === 'rejected' ? 'text-error' : 'text-tertiary';
+        const statusLbl = p.status === 'verified' ? '✓ Verified' : p.status === 'rejected' ? '✕ Ditolak' : '⏳ Pending';
+
+        return `
+          <tr class="hover:bg-surface-container transition-colors group">
+            <td class="p-4">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-extrabold text-tertiary bg-surface-container-lowest border-2 border-outline-variant px-2.5 py-1 tracking-wider select-all shadow-[2px_2px_0px_0px_#15140c]">
+                  ${p.kode_unik || '—'}
+                </span>
+                ${p.kode_unik ? `
+                  <button type="button" onclick="copyToClipboard('${p.kode_unik}')" class="text-on-surface-variant hover:text-tertiary transition-colors p-1" title="Salin Kode Unik">
+                    <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                  </button>
+                ` : ''}
+              </div>
+            </td>
+            <td class="p-4">
+              <p class="font-body-md text-on-surface font-bold">${p.nama}</p>
+              <p class="text-sm text-on-surface-variant">${p.email}</p>
+            </td>
+            <td class="p-4 font-body-md text-on-surface">${p.nama_tiket}</td>
+            <td class="p-4 font-body-md text-on-surface-variant">${p.jumlah_tiket}x</td>
+            <td class="p-4 font-body-md text-secondary font-bold">${p.total_format}</td>
+            <td class="p-4">
+              ${p.referral_code ? `
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-highest border border-outline-variant shadow-[1px_1px_0px_0px_#15140c]">
+                  <span class="material-symbols-outlined text-[14px] text-secondary">campaign</span>
+                  <span class="font-mono text-xs font-bold text-secondary tracking-wider">${p.referral_code}</span>
+                </div>
+              ` : `
+                <span class="font-body-md text-xs text-on-surface-variant/40">—</span>
+              `}
+            </td>
+            <td class="p-4 font-label-caps text-label-caps uppercase ${statusCls}">${statusLbl}</td>
+            <td class="p-4">
+              ${isPending ? `
+                <div class="flex items-center justify-end gap-2">
+                  <button onclick="verifyPayment(${p.payment_id}, 'reject')"
+                          class="p-2 border border-outline-variant text-error hover:bg-error/10 hover:border-error transition-colors" title="Tolak">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                  </button>
+                  <button onclick="verifyPayment(${p.payment_id}, 'verify')"
+                          class="bg-tertiary text-on-tertiary px-4 py-2 font-label-caps text-label-caps shadow-[2px_2px_0px_0px_#15140c]
+                                 hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_#15140c] transition-all">
+                    Approve
+                  </button>
+                </div>
+              ` : `
+                <div class="flex items-center justify-end gap-2">
+                  <button onclick="deletePayment(${p.payment_id}, '${p.kode_unik}', '${p.nama ? p.nama.replace(/'/g, "\\'") : ''}', '${p.status}')"
+                          class="px-3 py-1.5 ${p.status === 'verified' ? 'bg-error/15 border border-error/60 text-error hover:bg-error hover:text-on-error' : 'bg-surface-container border border-outline-variant text-on-surface-variant hover:text-error hover:border-error'} font-label-caps text-[11px] uppercase font-bold flex items-center gap-1 transition-all shadow-[2px_2px_0px_0px_#15140c] active:scale-95"
+                          title="${p.status === 'verified' ? 'Hapus Tiket Terverifikasi & Kembalikan Kuota' : 'Hapus Riwayat Transaksi'}">
+                    <span class="material-symbols-outlined text-[15px]">delete_forever</span>
+                    Hapus Tiket
+                  </button>
+                </div>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     /* -------- Load Payments -------- */
     async function loadPayments() {
       document.getElementById('pay-loading').classList.remove('hidden');
       document.getElementById('pay-table-wrap').classList.add('hidden');
       document.getElementById('pay-empty').classList.add('hidden');
+      document.getElementById('pay-no-search')?.classList.add('hidden');
 
       try {
         const res = await fetch(`${API}/admin_payments_list.php`);
@@ -486,6 +694,35 @@
         else { showToast(data.message, 'error'); }
       } catch {
         showToast('Gagal memproses. Coba lagi.', 'error');
+      }
+    }
+
+    /* -------- Hapus Tiket / Pembayaran (Termasuk yang Verified) -------- */
+    async function deletePayment(paymentId, kodeUnik, namaUser, status) {
+      const isVerified = (status === 'verified');
+      const confirmMsg = isVerified
+        ? `⚠️ KONFIRMASI PENGHAPUSAN TIKET TERVERIFIKASI:\n\nTiket dengan kode "${kodeUnik}" atas nama "${namaUser}" sudah berstatus VERIFIED (Sah).\n\nJika dihapus:\n1. Tiket akan dicabut dari akun user ("Tiket Saya").\n2. Kuota tiket akan otomatis dikembalikan ke stok tiket.\n3. Data transaksi akan dihapus permanen.\n\nApakah Anda yakin ingin menghapus tiket ini?`
+        : `Apakah Anda yakin ingin menghapus data pembayaran "${kodeUnik}" milik "${namaUser}"?`;
+
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch(`${API}/admin_payment_delete.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payment_id: paymentId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message || 'Tiket berhasil dihapus!', 'success');
+          loadPayments();
+        } else {
+          showToast(data.message || 'Gagal menghapus tiket.', 'error');
+        }
+      } catch (err) {
+        console.error('Error deletePayment:', err);
+        showToast('Terjadi kesalahan koneksi saat menghapus tiket.', 'error');
       }
     }
 

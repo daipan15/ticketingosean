@@ -228,44 +228,127 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col overflow-x-hidden bg-surface-container-lowest text-on-surface">
   <!-- ===================== NAVBAR ===================== -->
-  <nav class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
-    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
-      <a href="landing_page.html"
-         class="flex items-center gap-2 group">
-        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="w-8 h-8 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
-        <span class="font-display-md text-lg sm:text-2xl md:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+  <nav
+    class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)] z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-margin-mobile md:px-margin-desktop flex items-center justify-between py-3 sm:py-4">
+      <!-- Logo -->
+      <a href="landing_page.html" class="flex items-center gap-2.5 sm:gap-3 group">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo"
+          class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+        <span
+          class="font-display-md text-2xl sm:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
       </a>
 
-      <div class="flex items-center gap-2 sm:gap-3 lg:gap-6">
+      <!-- Desktop Nav (lg:flex) -->
+      <div class="hidden lg:flex items-center gap-7">
         <a href="landing_page.html"
-           class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
-        <span class="hidden lg:block font-label-caps text-label-caps text-secondary uppercase tracking-wider">Venue</span>
-        <a href="buy_tickets_payment.html" onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
-           class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli Tiket</a>
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
+        <span class="font-label-caps text-sm lg:text-[15px] font-bold text-secondary uppercase tracking-wider">Venue</span>
+        <a href="buy_tickets_payment.html"
+          onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beli
+          Tiket</a>
+        <a href="landing_page.html#leaderboard"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Leaderboard</a>
+        <a href="landing_page.html#faq"
+          class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">FAQ</a>
 
-        <!-- Tampil jika BELUM login -->
-        <div id="nav-guest" class="hidden flex items-center gap-1.5 sm:gap-2 lg:gap-3">
+        <!-- Tampil jika BELUM login (Desktop) -->
+        <div id="nav-guest" class="hidden flex items-center gap-3">
           <a href="login.html"
-             class="border lg:border-2 border-tertiary text-tertiary font-label-caps text-[10px] sm:text-xs lg:text-label-caps uppercase px-2 py-1 sm:px-2.5 sm:py-1.5 lg:px-4 lg:py-2
-                    hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c] lg:shadow-[4px_4px_0px_0px_#15140c]">
+            class="border-2 border-tertiary text-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
+                    hover:-translate-y-1 hover:bg-tertiary hover:text-on-tertiary transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]">
             Masuk
           </a>
-          <a href="register.html"
-             class="bg-tertiary text-on-tertiary font-label-caps text-[10px] sm:text-xs lg:text-label-caps uppercase px-2 py-1 sm:px-2.5 sm:py-1.5 lg:px-4 lg:py-2
-                    hover:-translate-y-1 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c] lg:shadow-[4px_4px_0px_0px_#15140c]
+          <a href="register.html" class="bg-tertiary text-on-tertiary font-label-caps text-xs lg:text-sm font-bold uppercase px-5 py-2.5
+                    hover:-translate-y-1 transition-all duration-200 shadow-[4px_4px_0px_0px_#15140c]
                     active:translate-y-0 active:shadow-none">
             Daftar
           </a>
         </div>
 
-        <!-- Tampil jika SUDAH login -->
-        <div id="nav-auth" class="hidden flex items-center gap-2 sm:gap-3 lg:gap-6">
+        <!-- Tampil jika SUDAH login (Desktop) -->
+        <div id="nav-auth" class="hidden flex items-center gap-7">
           <a href="my_tickets.html"
-             class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket Saya</a>
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket
+            Saya</a>
           <button id="logout-btn"
-                  class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
-            <span class="material-symbols-outlined text-[14px] sm:text-[16px] lg:text-[18px]">logout</span>
-            <span class="hidden sm:inline">Keluar</span>
+            class="font-label-caps text-sm lg:text-[15px] font-bold text-error hover:text-on-surface transition-colors flex items-center gap-1.5 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Keluar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile & Tablet Action + Hamburger Button (lg:hidden) -->
+      <div class="flex lg:hidden items-center gap-2.5 sm:gap-3">
+        <a href="buy_tickets_payment.html"
+          onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
+          class="bg-tertiary text-on-tertiary font-label-caps text-xs uppercase px-3 py-1.5 sm:px-4 sm:py-2
+                 shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 transition-all">
+          Beli Tiket
+        </a>
+        <button id="mobile-menu-btn" type="button" aria-label="Buka Menu Navigasi"
+          class="w-9 h-9 sm:w-10 sm:h-10 border-2 border-outline-variant bg-surface-container flex items-center justify-center text-on-surface hover:text-tertiary hover:border-tertiary transition-colors shadow-[2px_2px_0px_0px_#15140c]">
+          <span id="mobile-menu-icon" class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile & Tablet Drawer Menu (lg:hidden) -->
+    <div id="mobile-menu"
+      class="hidden lg:hidden border-t-2 border-outline-variant bg-surface-container px-4 sm:px-margin-mobile py-5 shadow-2xl transition-all">
+      <div class="flex flex-col gap-3">
+        <a href="landing_page.html"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">home</span>
+          Beranda
+        </a>
+        <span
+          class="flex items-center gap-2.5 font-label-caps text-sm text-secondary pb-2.5 border-b border-outline-variant/30">
+          <span class="material-symbols-outlined text-lg">stadium</span>
+          Venue
+        </span>
+        <a href="buy_tickets_payment.html"
+          onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">confirmation_number</span>
+          Beli Tiket
+        </a>
+        <a href="landing_page.html#leaderboard"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">leaderboard</span>
+          Leaderboard
+        </a>
+        <a href="landing_page.html#faq"
+          class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+          <span class="material-symbols-outlined text-lg">help_outline</span>
+          FAQ
+        </a>
+
+        <!-- Mobile & Tablet Guest State -->
+        <div id="nav-guest-mobile" class="hidden flex flex-col sm:flex-row gap-2.5 pt-2">
+          <a href="login.html"
+            class="flex-1 text-center border-2 border-tertiary text-tertiary font-label-caps text-xs sm:text-sm uppercase py-2 shadow-[2px_2px_0px_0px_#15140c] hover:bg-tertiary hover:text-on-tertiary transition-all">
+            Masuk
+          </a>
+          <a href="register.html"
+            class="flex-1 text-center bg-tertiary text-on-tertiary font-label-caps text-xs sm:text-sm uppercase py-2 shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 transition-all">
+            Daftar
+          </a>
+        </div>
+
+        <!-- Mobile & Tablet Auth State -->
+        <div id="nav-auth-mobile" class="hidden flex flex-col gap-2.5 pt-1">
+          <a href="my_tickets.html"
+            class="flex items-center gap-2.5 font-label-caps text-sm text-on-primary-container hover:text-tertiary pb-2.5 border-b border-outline-variant/30 transition-colors">
+            <span class="material-symbols-outlined text-lg">receipt_long</span>
+            Tiket Saya
+          </a>
+          <button id="logout-btn-mobile"
+            class="flex items-center gap-2.5 font-label-caps text-sm text-error hover:text-on-surface text-left pt-1 transition-colors">
+            <span class="material-symbols-outlined text-lg">logout</span>
+            Keluar
           </button>
         </div>
       </div>
@@ -434,13 +517,147 @@
     </div>
   </div>
 </section>
+
+<!-- Tata Tertib Arena & Protokol Supporter -->
+<section class="w-full px-margin-mobile md:px-margin-desktop py-16 bg-surface-container-low border-t-2 border-outline-variant relative overflow-hidden">
+  <!-- Background Glow & Sparkle -->
+  <img src="assets/ambient_glow.png" alt=""
+    class="absolute top-1/2 -translate-y-1/2 right-1/4 w-[500px] md:w-[700px] opacity-25 pointer-events-none select-none filter blur-3xl -z-0" />
+  <img src="assets/prism_starburst.png" alt=""
+    class="hidden lg:block absolute -top-4 right-10 w-16 h-auto opacity-35 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_15px_rgba(239,192,94,0.3)]" />
+
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="mb-10 text-center max-w-2xl mx-auto">
+      <p class="font-label-caps text-label-caps text-tertiary uppercase mb-1.5">✦ Regulasi & Keamanan Venue</p>
+      <h2 class="font-headline-lg text-2xl sm:text-3xl md:text-headline-lg text-on-surface uppercase tracking-tight">
+        TATA TERTIB & PROTOKOL SUPPORTER
+      </h2>
+      <p class="font-body-md text-sm text-on-surface-variant mt-2 leading-relaxed">
+        Seluruh pengunjung dan supporter wajib mematuhi peraturan dan ketentuan resmi berikut demi kenyamanan, keselamatan, dan kelancaran kegiatan OSEAN 2026.
+      </p>
+    </div>
+
+    <!-- Grid 4 Card Tata Tertib -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      
+      <!-- Card 1: Registrasi & Identitas -->
+      <div class="bg-surface-container border-2 border-outline-variant p-5 shadow-[4px_4px_0px_0px_#15140c] flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 bg-tertiary-container border border-tertiary flex items-center justify-center text-tertiary mb-4">
+            <span class="material-symbols-outlined text-[22px]">badge</span>
+          </div>
+          <h3 class="font-headline-lg text-base text-on-surface uppercase mb-3">Presensi & KTM Aktif</h3>
+          <ul class="space-y-2.5 text-xs text-on-surface-variant font-body-md">
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-tertiary text-[16px] shrink-0 mt-0.5">check_circle</span>
+              <span><strong>Presensi:</strong> Wajib mengisi presensi saat open gate dan mengisi form daftar hadir yang disediakan.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-tertiary text-[16px] shrink-0 mt-0.5">check_circle</span>
+              <span><strong>KTM Mahasiswa:</strong> Wajib menyiapkan Kartu Tanda Mahasiswa (KTM) yang masih aktif (boleh digital maupun fisik).</span>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-t border-dashed border-outline-variant">
+          <span class="font-label-caps text-[10px] text-tertiary uppercase font-bold">Wajib Dipatuhi</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Larangan Barang Bawaan -->
+      <div class="bg-surface-container border-2 border-outline-variant p-5 shadow-[4px_4px_0px_0px_#15140c] flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 bg-error-container border border-error flex items-center justify-center text-error mb-4">
+            <span class="material-symbols-outlined text-[22px]">block</span>
+          </div>
+          <h3 class="font-headline-lg text-base text-on-surface uppercase mb-3">Barang Sitaan</h3>
+          <ul class="space-y-2.5 text-xs text-on-surface-variant font-body-md">
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">cancel</span>
+              <span><strong>Bebas Benda Berbahaya:</strong> Wajib untuk tidak membawa barang yang telah disebutkan pada kategori barang yang disita.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">cancel</span>
+              <span>Dilarang membawa senjata tajam/api, minuman keras, narkoba, flare, smoke bomb, laser pointer, atau kembang api.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-t border-dashed border-outline-variant">
+          <span class="font-label-caps text-[10px] text-error uppercase font-bold">Pemeriksaan Ketat di Gate</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Larangan Anarki & Area Bermain -->
+      <div class="bg-surface-container border-2 border-outline-variant p-5 shadow-[4px_4px_0px_0px_#15140c] flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 bg-error-container border border-error flex items-center justify-center text-error mb-4">
+            <span class="material-symbols-outlined text-[22px]">gavel</span>
+          </div>
+          <h3 class="font-headline-lg text-base text-on-surface uppercase mb-3">Larangan Keras</h3>
+          <ul class="space-y-2.5 text-xs text-on-surface-variant font-body-md">
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">do_not_disturb_on</span>
+              <span><strong>Anti Anarki:</strong> Dilarang berbuat onar, melakukan kekerasan verbal/non-verbal, melempar sesuatu, atau merusak fasilitas.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">do_not_disturb_on</span>
+              <span><strong>Area Bermain:</strong> Dilarang memasuki area bermain (<em>playing area</em>) saat pertandingan berlangsung.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">do_not_disturb_on</span>
+              <span><strong>Bebas SARA:</strong> Dilarang menyinggung SARA kepada supporter lain.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-t border-dashed border-outline-variant">
+          <span class="font-label-caps text-[10px] text-error uppercase font-bold">Sanksi Tegas Panitia</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Kebersihan & Perlindungan Asuransi -->
+      <div class="bg-surface-container border-2 border-outline-variant p-5 shadow-[4px_4px_0px_0px_#15140c] flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 bg-secondary-container border border-secondary flex items-center justify-center text-secondary mb-4">
+            <span class="material-symbols-outlined text-[22px]">health_and_safety</span>
+          </div>
+          <h3 class="font-headline-lg text-base text-on-surface uppercase mb-3">Arena & Asuransi</h3>
+          <ul class="space-y-2.5 text-xs text-on-surface-variant font-body-md">
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">eco</span>
+              <span><strong>Kebersihan & Keamanan:</strong> Wajib menjaga kebersihan dan keamanan arena pertandingan OSEAN 2026.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">security</span>
+              <span><strong>Perlindungan Asuransi:</strong> Pemegang tiket dilindungi asuransi kecelakaan diri sesuai data diri identitas sah yang telah didaftarkan.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="mt-4 pt-3 border-t border-dashed border-outline-variant">
+          <span class="font-label-caps text-[10px] text-secondary uppercase font-bold">Kenyamanan Bersama</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- Interactive Map Section -->
-<section class="w-full px-margin-mobile md:px-margin-desktop py-24">
-  <div class="max-w-7xl mx-auto">
+<section class="w-full px-margin-mobile md:px-margin-desktop py-24 relative overflow-hidden">
+  <!-- Ambient Glow & Decorative Festival Accents for Map Section -->
+  <img src="assets/ambient_glow.png" alt=""
+    class="absolute top-1/2 -translate-y-1/2 left-1/4 w-[600px] md:w-[850px] opacity-30 pointer-events-none select-none filter blur-3xl -z-0" />
+  <img src="assets/starburst.png" alt=""
+    class="hidden lg:block absolute top-8 right-12 w-20 h-auto opacity-30 pointer-events-none select-none animate-pulse-glow" />
+  <img src="assets/camera.png" alt=""
+    class="hidden xl:block absolute bottom-24 -left-6 w-28 h-auto opacity-25 pointer-events-none select-none rotate-12 animate-float-3" />
+  <div class="absolute -bottom-6 right-0 sm:right-12 w-[240px] sm:w-[340px] pointer-events-none select-none -z-0 opacity-25">
+    <img src="assets/hand.png" alt="" class="w-full h-auto animate-float-gentle-slow" />
+  </div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
     <div class="flex items-center justify-between mb-8">
       <div>
         <p class="font-label-caps text-label-caps text-secondary uppercase mb-1">✦ Radar Lokasi & Rute</p>
-        <h2 class="font-headline-lg text-headline-lg text-on-surface uppercase">INTERACTIVE MAP ARENA</h2>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface uppercase">MAP VENUE CLOSING CEREMONY</h2>
       </div>
       <div class="hidden sm:flex items-center gap-3">
         <span class="font-label-caps text-[11px] text-on-surface-variant flex items-center gap-1">
@@ -462,23 +679,26 @@
 </main>
 <!-- Footer from JSON -->
 <footer
-  class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-8 w-full flex items-center justify-center">
-  <div class="flex items-center justify-center gap-6">
+  class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-8 sm:py-10 w-full flex flex-col items-center justify-center gap-3.5">
+  <div class="flex items-center gap-2">
+    <span class="font-label-caps text-xs sm:text-sm text-secondary uppercase tracking-widest font-bold">✦ Follow Us On</span>
+  </div>
+  <div class="flex items-center justify-center gap-5 sm:gap-6">
     <a href="https://www.instagram.com/oseanfmipa/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-      class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+      class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
+      <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
       </svg>
     </a>
     <a href="https://www.youtube.com/@OSEANFMIPAUNPAD" target="_blank" rel="noopener noreferrer" aria-label="YouTube"
-      class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+      class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
+      <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
       </svg>
     </a>
     <a href="https://www.tiktok.com/@oseanmipa" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
-      class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+      class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-surface-container border border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary hover:scale-110 active:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_#15140c]">
+      <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
       </svg>
     </a>
@@ -488,13 +708,65 @@
   <script>
     const API = '../osean-backend/api';
 
+    /* Helper untuk sinkronisasi tampilan auth/guest di Desktop dan Mobile */
+    function setAuthUI(isLoggedIn) {
+      const navGuest = document.getElementById('nav-guest');
+      const navAuth = document.getElementById('nav-auth');
+      const navGuestMobile = document.getElementById('nav-guest-mobile');
+      const navAuthMobile = document.getElementById('nav-auth-mobile');
+
+      if (isLoggedIn) {
+        if (navGuest) navGuest.classList.add('hidden');
+        if (navAuth) navAuth.classList.remove('hidden');
+        if (navGuestMobile) navGuestMobile.classList.add('hidden');
+        if (navAuthMobile) navAuthMobile.classList.remove('hidden');
+      } else {
+        if (navAuth) navAuth.classList.add('hidden');
+        if (navGuest) navGuest.classList.remove('hidden');
+        if (navAuthMobile) navAuthMobile.classList.add('hidden');
+        if (navGuestMobile) navGuestMobile.classList.remove('hidden');
+      }
+    }
+
+    /* Handler logout */
+    async function handleLogout() {
+      try { await fetch(`${API}/logout.php`); } finally {
+        localStorage.removeItem('isLoggedIn');
+        window.location.reload();
+      }
+    }
+    document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
+    document.getElementById('logout-btn-mobile')?.addEventListener('click', handleLogout);
+
+    /* Toggle Mobile / Tablet Menu Drawer */
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isClosed = mobileMenu.classList.contains('hidden');
+        if (isClosed) {
+          mobileMenu.classList.remove('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'close';
+        } else {
+          mobileMenu.classList.add('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+        }
+      });
+
+      // Tutup menu saat salah satu link diklik
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+        });
+      });
+    }
+
     /* Langsung tentukan tampilan navbar dari cache instan agar bebas kedip/blink */
     const isCachedLogin = localStorage.getItem('isLoggedIn') === 'true';
-    if (isCachedLogin) {
-      document.getElementById('nav-auth').classList.remove('hidden');
-    } else {
-      document.getElementById('nav-guest').classList.remove('hidden');
-    }
+    setAuthUI(isCachedLogin);
 
     /* Validasi status session sebenarnya dengan server di latar belakang */
     (async () => {
@@ -503,19 +775,10 @@
         const data = await res.json();
         if (data.logged_in) {
           localStorage.setItem('isLoggedIn', 'true');
-          document.getElementById('nav-guest').classList.add('hidden');
-          document.getElementById('nav-auth').classList.remove('hidden');
-
-          document.getElementById('logout-btn').onclick = async () => {
-            try { await fetch(`${API}/logout.php`); } finally {
-              localStorage.removeItem('isLoggedIn');
-              window.location.reload();
-            }
-          };
+          setAuthUI(true);
         } else {
           localStorage.removeItem('isLoggedIn');
-          document.getElementById('nav-auth').classList.add('hidden');
-          document.getElementById('nav-guest').classList.remove('hidden');
+          setAuthUI(false);
         }
       } catch {
         /* Bila offline/gagal fetch, biarkan state saat ini */
@@ -569,7 +832,7 @@
           </h4>
           <p style="font-size: 12px; color: #ccc4cf; margin: 0 0 10px 0; line-height: 1.4;">
             Kawasan Kampus Universitas Padjadjaran, Jatinangor<br>
-            <b style="color:#e7e2d5;">Main Festival Arena OSEAN 2026</b>
+            <b style="color:#e7e2d5;">Closing Ceremony Osean 2026
           </p>
           <a href="https://maps.google.com/?q=${VENUE_COORDS[0]},${VENUE_COORDS[1]}" target="_blank"
              style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #efc05e; text-decoration: underline;">

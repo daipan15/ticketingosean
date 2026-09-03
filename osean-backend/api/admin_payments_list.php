@@ -14,6 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') send_error('Method tidak diizinkan.', 
 $filter_status = isset($_GET['status']) ? sanitize($_GET['status']) : '';
 $valid_status  = ['pending', 'settlement', 'capture', 'expire', 'cancel', 'deny', 'refund', 'verified', 'rejected'];
 
+$where_clauses = [];
+$params        = [];
+$types         = '';
+
 if (!empty($filter_status) && in_array($filter_status, $valid_status)) {
     $stmt = $conn->prepare("
         SELECT p.id AS payment_id, p.jumlah_tiket, p.total_bayar, p.metode_pembayaran,
@@ -42,6 +46,24 @@ if (!empty($filter_status) && in_array($filter_status, $valid_status)) {
     ");
 }
 
+$where_sql = count($where_clauses) > 0 ? "WHERE " . implode(" AND ", $where_clauses) : "";
+
+$sql = "
+    SELECT p.id AS payment_id, p.kode_unik, p.jumlah_tiket, p.total_bayar, p.metode_pembayaran,
+           p.referral_code, p.bukti_transfer, p.status, p.created_at AS tanggal_order, p.verified_at,
+           t.id AS ticket_id, t.nama_tiket, t.harga,
+           u.id AS user_id, u.nama, u.email
+    FROM payments p
+    JOIN tickets t ON p.ticket_id = t.id
+    JOIN users u ON p.user_id = u.id
+    {$where_sql}
+    ORDER BY p.created_at DESC
+";
+
+$stmt = $conn->prepare($sql);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
 $stmt->execute();
 $result = $stmt->get_result();
 

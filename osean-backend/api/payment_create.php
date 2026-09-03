@@ -14,6 +14,14 @@ $data          = json_decode(file_get_contents('php://input'), true);
 $user_id       = $_SESSION['user_id'];
 $ticket_id     = isset($data['ticket_id'])     ? (int)$data['ticket_id']     : 0;
 $jumlah_tiket  = isset($data['jumlah_tiket'])  ? (int)$data['jumlah_tiket']  : 1;
+$ticket_id     = isset($_POST['ticket_id'])          ? (int)$_POST['ticket_id']             : 0;
+$jumlah_tiket  = isset($_POST['jumlah_tiket'])       ? (int)$_POST['jumlah_tiket']          : 1;
+$metode        = isset($_POST['metode_pembayaran'])   ? sanitize($_POST['metode_pembayaran']) : 'transfer';
+$raw_referral  = isset($_POST['referral_code'])       ? strtoupper(trim(sanitize($_POST['referral_code']))) : '';
+
+// Daftar resmi 9 Himpunan FMIPA UNPAD
+$valid_hima = ['HIFI', 'HIMAKA', 'HIMBIO', 'HIMATIKA', 'HIMASTA', 'PEDRA', 'HIMATIF', 'HMTE', 'HIMAKTU'];
+$referral_code = in_array($raw_referral, $valid_hima) ? $raw_referral : null;
 
 if ($ticket_id <= 0 || $jumlah_tiket <= 0) send_error('ticket_id dan jumlah_tiket wajib diisi.');
 
@@ -38,6 +46,31 @@ $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
+// Generator kode unik tiket (booking code) ber-entropi tinggi & terjamin unik
+function generate_unique_ticket_code($conn) {
+    $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    $len = strlen($chars);
+    for ($attempt = 0; $attempt < 50; $attempt++) {
+        $p1 = '';
+        $p2 = '';
+        for ($j = 0; $j < 4; $j++) {
+            $p1 .= $chars[random_int(0, $len - 1)];
+            $p2 .= $chars[random_int(0, $len - 1)];
+        }
+        $code = "OSN-{$p1}-{$p2}";
+
+        $stmt = $conn->prepare("SELECT id FROM payments WHERE kode_unik = ? LIMIT 1");
+        $stmt->bind_param("s", $code);
+        $stmt->execute();
+        $exists = ($stmt->get_result()->num_rows > 0);
+        $stmt->close();
+
+        if (!$exists) return $code;
+    }
+    return 'OSN-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
+}
+
+$kode_unik   = generate_unique_ticket_code($conn);
 $total_bayar = $tiket['harga'] * $jumlah_tiket;
 
 // Generate order ID unik untuk Midtrans

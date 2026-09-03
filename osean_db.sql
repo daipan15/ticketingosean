@@ -31,9 +31,11 @@ CREATE TABLE `payments` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `ticket_id` int(11) NOT NULL,
+  `kode_unik` varchar(50) NOT NULL,
   `jumlah_tiket` int(11) NOT NULL DEFAULT 1,
   `total_bayar` int(11) NOT NULL,
   `metode_pembayaran` varchar(50) DEFAULT NULL,
+  `referral_code` varchar(20) DEFAULT NULL,
   `bukti_transfer` varchar(255) DEFAULT NULL,
   `status` enum('pending','verified','rejected') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -64,6 +66,7 @@ CREATE TABLE `questions` (
 
 CREATE TABLE `tickets` (
   `id` int(11) NOT NULL,
+  `kategori` varchar(50) NOT NULL DEFAULT 'Early Bird',
   `nama_tiket` varchar(100) NOT NULL,
   `deskripsi` text DEFAULT NULL,
   `harga` int(11) NOT NULL,
@@ -76,11 +79,17 @@ CREATE TABLE `tickets` (
 -- Dumping data for table `tickets`
 --
 
-INSERT INTO `tickets` (`id`, `nama_tiket`, `deskripsi`, `harga`, `kuota`, `kuota_terjual`, `created_at`) VALUES
-(1, 'Early Bird', 'Early Bird Ticketing Osean', 38000, 300, 0, '2026-09-02 18:11:42'),
-(2, 'Pre Sale 1', 'Pre Sale 1 Ticketing Osean', 48000, 100, 0, '2026-09-02 18:11:42'),
-(3, 'Pre Sale 2', 'Pre Sale 2 Ticketing Osean', 58000, 300, 0, '2026-09-02 18:11:42'),
-(4, 'On The Spot', 'On The Spot Ticketing Osean', 68000, 300, 0, '2026-09-02 18:11:42');
+INSERT INTO `tickets` (`id`, `kategori`, `nama_tiket`, `deskripsi`, `harga`, `kuota`, `kuota_terjual`, `created_at`) VALUES
+(1, 'Early Bird', 'Early Bird - Spectrum Single', 'Akses tiket masuk area festival untuk 1 orang', 38000, 100, 0, '2026-09-02 18:11:42'),
+(2, 'Early Bird', 'Early Bird - Spectrum Duo', 'Paket hemat tiket masuk festival untuk 2 orang (Duo)', 68000, 50, 0, '2026-09-02 18:11:42'),
+(3, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Single', 'Akses tiket masuk area festival untuk 1 orang', 48000, 200, 0, '2026-09-02 18:11:42'),
+(4, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Duo', 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', 88000, 100, 0, '2026-09-02 18:11:42'),
+(5, 'Pre Sale 1', 'Pre Sale 1 - Spectrum Trio', 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', 123000, 50, 0, '2026-09-02 18:11:42'),
+(6, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Single', 'Akses tiket masuk area festival untuk 1 orang', 58000, 200, 0, '2026-09-02 18:11:42'),
+(7, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Duo', 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', 108000, 100, 0, '2026-09-02 18:11:42'),
+(8, 'Pre Sale 2', 'Pre Sale 2 - Spectrum Trio', 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', 153000, 50, 0, '2026-09-02 18:11:42'),
+(9, 'On The Spot', 'On The Spot - Spectrum Single', 'Akses tiket masuk langsung di venue hari H untuk 1 orang', 68000, 100, 0, '2026-09-02 18:11:42'),
+(10, 'On The Spot', 'On The Spot - Spectrum Duo', 'Akses tiket masuk langsung di venue hari H untuk 2 orang (Duo)', 128000, 50, 0, '2026-09-02 18:11:42');
 
 -- --------------------------------------------------------
 
@@ -117,6 +126,7 @@ INSERT INTO `users` (`id`, `nama`, `email`, `password_hash`, `role`, `is_verifie
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `kode_unik` (`kode_unik`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `ticket_id` (`ticket_id`);
 
@@ -160,7 +170,7 @@ ALTER TABLE `questions`
 -- AUTO_INCREMENT for table `tickets`
 --
 ALTER TABLE `tickets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`

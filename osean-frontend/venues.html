@@ -199,6 +199,30 @@
         .leaflet-popup-tip {
             background: #212017 !important;
         }
+
+        /* Floating & Decorative PNG Animations */
+        @keyframes float-gentle {
+          0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+          50% { transform: translateY(-14px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+        }
+        @keyframes float-reverse {
+          0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+          50% { transform: translateY(14px) rotate(calc(var(--rot, 0deg) - 3deg)); }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+          50% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+        }
+        @keyframes spin-ultra-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-float-1 { animation: float-gentle 5s ease-in-out infinite; }
+        .animate-float-2 { animation: float-reverse 6.5s ease-in-out infinite; }
+        .animate-float-3 { animation: float-gentle 7s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-ultra-slow 45s linear infinite; }
+        .animate-float-gentle-slow { animation: float-gentle 8s ease-in-out infinite; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col overflow-x-hidden bg-surface-container-lowest text-on-surface">
@@ -252,8 +276,17 @@
 <!-- Hero Section -->
 <section class="w-full px-margin-mobile md:px-margin-desktop py-24 relative overflow-hidden">
 <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+<!-- Background Starburst -->
+<img src="assets/starburst.png" alt=""
+  class="absolute top-8 left-1/3 w-36 md:w-48 opacity-30 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_25px_rgba(239,192,94,0.3)] z-0" />
+
 <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-gutter items-start justify-between relative z-10">
-<div class="w-full md:w-2/3 grunge-edge bg-surface-container p-8 hard-shadow -rotate-1 border border-outline-variant">
+<div class="w-full md:w-2/3 grunge-edge bg-surface-container p-8 hard-shadow -rotate-1 border border-outline-variant relative">
+  <!-- Accent Starburst behind title -->
+  <img src="assets/starburst.png" alt=""
+    class="absolute -top-10 -right-8 w-24 md:w-28 opacity-75 pointer-events-none select-none animate-pulse-glow" />
+
 <h1 class="font-display-lg text-display-lg text-secondary mb-4 uppercase tracking-tighter">
                         CLOSING VENUES
                     </h1>
@@ -261,16 +294,34 @@
                         Rasakan denyut malam puncak di Lapangan Merah Unpad Jatinangor. Area festival megah di bawah langit terbuka yang siap menampung ribuan energi, melodi, dan momen tak terlupakan.
                     </p>
 </div>
-<div class="w-full md:w-1/3 mt-8 md:mt-0 flex justify-end">
+<div class="w-full md:w-1/3 mt-8 md:mt-0 flex justify-end relative">
+  <!-- Floating Camera Sticker near Location Pin -->
+  <img src="assets/camera.png" alt="Camera Sticker"
+    class="absolute -top-6 -left-6 w-24 md:w-28 z-20 pointer-events-none select-none animate-float-3 drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]"
+    style="--rot: -10deg;" />
+
 <div class="w-48 h-48 bg-primary-container rounded-full flex items-center justify-center hard-shadow-gold border-4 border-tertiary rotate-12 hover:rotate-45 transition-transform duration-700">
 <span class="material-symbols-outlined text-[80px] text-tertiary" style="font-variation-settings: 'FILL' 1;">location_on</span>
 </div>
 </div>
 </div>
+
+<!-- Audience Hand rising at bottom of Hero -->
+<div class="absolute -bottom-6 right-12 w-[320px] md:w-[480px] pointer-events-none select-none z-10 opacity-60 md:opacity-75">
+  <img src="assets/hand.png" alt="" class="w-full h-auto animate-float-gentle-slow" />
+</div>
 </section>
+
 <!-- Venue List Section -->
-<section class="w-full px-margin-mobile md:px-margin-desktop py-16 relative">
-<div class="max-w-7xl mx-auto">
+<section class="w-full px-margin-mobile md:px-margin-desktop py-16 relative overflow-hidden">
+
+  <!-- Background Decorative Stickers -->
+  <img src="assets/clapboard.png" alt=""
+    class="hidden lg:block absolute top-12 -right-8 w-36 opacity-30 pointer-events-none select-none rotate-12 animate-float-1" />
+  <img src="assets/drum.png" alt=""
+    class="hidden lg:block absolute bottom-12 -left-8 w-36 opacity-30 pointer-events-none select-none -rotate-12 animate-float-2" />
+
+<div class="max-w-7xl mx-auto relative z-10">
 <div class="flex items-center gap-4 mb-12">
 <span class="material-symbols-outlined text-secondary text-3xl">map</span>
 <h2 class="font-headline-lg text-headline-lg text-on-surface">LOCATIONS</h2>
@@ -287,7 +338,7 @@
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent lg:hidden"></div>
           
-          <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+          <div class="absolute top-6 left-6 flex flex-wrap gap-2 z-20">
             <span class="bg-secondary text-on-secondary font-label-caps text-label-caps uppercase px-3 py-1.5 font-bold shadow-[4px_4px_0px_0px_#15140c] flex items-center gap-1">
               <span class="material-symbols-outlined text-[16px]">stars</span> MAIN VENUE
             </span>
@@ -296,7 +347,7 @@
             </span>
           </div>
 
-          <div class="absolute bottom-6 left-6 right-6 hidden lg:flex items-center justify-between bg-surface-container-low/90 backdrop-blur-md p-4 border border-outline-variant">
+          <div class="absolute bottom-6 left-6 right-6 hidden lg:flex items-center justify-between bg-surface-container-low/90 backdrop-blur-md p-4 border border-outline-variant z-20">
             <div class="flex items-center gap-2 text-on-surface">
               <span class="material-symbols-outlined text-secondary">verified</span>
               <span class="font-label-caps text-[11px] uppercase tracking-wider">Open Festival Arena • Industrial Grade Sound</span>
@@ -307,6 +358,10 @@
 
         <!-- Kanan: Detail Lengkap, Fasilitas & Info -->
         <div class="lg:col-span-5 p-8 lg:p-10 flex flex-col justify-between bg-surface-container-high relative">
+          <!-- Floating Drum Sticker on Featured Venue Card -->
+          <img src="assets/drum.png" alt=""
+            class="absolute -top-6 -right-6 w-24 md:w-28 z-20 pointer-events-none select-none animate-float-2 drop-shadow-[0_8px_20px_rgba(0,0,0,0.6)]"
+            style="--rot: 12deg;" />
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest border border-secondary px-2.5 py-1">

@@ -83,6 +83,30 @@
       pointer-events: none;
       z-index: 9999;
     }
+
+    /* Floating & Decorative PNG Animations */
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(-14px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+    }
+    @keyframes float-reverse {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(14px) rotate(calc(var(--rot, 0deg) - 3deg)); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+    }
+    @keyframes spin-ultra-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-float-1 { animation: float-gentle 5s ease-in-out infinite; }
+    .animate-float-2 { animation: float-reverse 6.5s ease-in-out infinite; }
+    .animate-float-3 { animation: float-gentle 7s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+    .animate-spin-slow { animation: spin-ultra-slow 45s linear infinite; }
+    .animate-float-gentle-slow { animation: float-gentle 8s ease-in-out infinite; }
   </style>
 </head>
 
@@ -169,14 +193,18 @@
 
     <!-- Header Desktop/Tablet -->
     <header
-      class="bg-surface-container-low/90 backdrop-blur border-b border-outline-variant px-4 sm:px-6 py-4 flex justify-between items-center">
+      class="bg-surface-container-low/90 backdrop-blur border-b border-outline-variant px-4 sm:px-6 py-4 flex justify-between items-center relative overflow-hidden">
+      <!-- Background subtle starburst in admin header -->
+      <img src="assets/starburst.png" alt=""
+        class="absolute -top-6 left-60 w-24 h-auto opacity-35 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_15px_rgba(239,192,94,0.3)]" />
+
       <div>
-        <h2 class="font-display-md text-2xl sm:text-display-md text-on-surface leading-none">Overview</h2>
-        <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">
+        <h2 class="font-display-md text-2xl sm:text-display-md text-on-surface leading-none relative z-10">Overview</h2>
+        <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1 relative z-10">
           Monitor pembayaran & jawab pertanyaan user secara real-time.
         </p>
       </div>
-      <div class="hidden sm:flex items-center gap-2 text-secondary font-label-caps text-label-caps">
+      <div class="hidden sm:flex items-center gap-2 text-secondary font-label-caps text-label-caps relative z-10">
         <span class="w-2 h-2 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_#c4cd6f]"></span>
         LIVE
       </div>

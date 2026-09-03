@@ -194,25 +194,24 @@
   <nav
     class="relative w-full bg-primary-container border-b border-outline-variant shadow-[0_4px_0px_0px_rgba(21,20,12,.5)]">
     <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex items-center justify-between py-4">
-      <a href="landing_page.html" class="flex items-center gap-3 group">
+      <a href="landing_page.html" class="flex items-center gap-2 group">
         <img src="assets/osean_logo.png" alt="OSEAN Logo"
-          class="w-10 h-10 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
+          class="w-8 h-8 object-contain drop-shadow-[0_2px_8px_rgba(239,192,94,0.3)] group-hover:rotate-12 transition-transform duration-300" />
         <span
-          class="font-display-md text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
+          class="font-display-md text-lg sm:text-2xl md:text-display-md italic text-tertiary leading-none group-hover:text-secondary transition-colors">OSEAN</span>
       </a>
 
-      <div class="flex items-center gap-3 sm:gap-6">
+      <div class="flex items-center gap-2 sm:gap-3 lg:gap-6">
         <a href="landing_page.html"
-          class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Beranda</a>
+          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Beranda</a>
         <a href="venues.html"
-          class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Venue</a>
-        <span class="font-label-caps text-xs sm:text-label-caps text-secondary">Beli Tiket</span>
+          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Venue</a>
+        <span class="hidden lg:inline font-label-caps text-label-caps text-secondary uppercase tracking-wider">Beli Tiket</span>
         <a href="my_tickets.html"
-          class="font-label-caps text-xs sm:text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Tiket
-          Saya</a>
+          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-on-primary-container hover:text-tertiary transition-colors uppercase tracking-wider">Tiket Saya</a>
         <button id="logout-btn"
-          class="font-label-caps text-xs sm:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>
+          class="font-label-caps text-[10px] sm:text-xs lg:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1 uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[14px] sm:text-[16px] lg:text-[18px]">logout</span>
           <span class="hidden sm:inline">Keluar</span>
         </button>
       </div>
@@ -241,7 +240,7 @@
       </h1>
       <!-- Starburst Accent -->
       <img src="assets/starburst.png" alt=""
-        class="absolute -top-6 -right-20 w-20 md:w-24 h-auto opacity-70 pointer-events-none select-none animate-pulse-glow -z-10 filter drop-shadow-[0_0_20px_rgba(239,192,94,0.5)]" />
+        class="absolute -top-6 -right-10 sm:-right-20 w-16 sm:w-20 md:w-24 h-auto opacity-70 pointer-events-none select-none animate-pulse-glow -z-10 filter drop-shadow-[0_0_20px_rgba(239,192,94,0.5)]" />
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start relative z-10">
@@ -268,7 +267,7 @@
         <div class="relative">
           <div class="absolute inset-0 translate-x-2 translate-y-2 bg-tertiary-container -z-10"></div>
           <div class="bg-surface-container border-2 border-outline-variant p-6">
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6 uppercase">Order Summary</h2>
+            <h2 class="font-headline-lg text-xl sm:text-headline-lg text-on-surface mb-6 uppercase">Order Summary</h2>
 
             <!-- Selected ticket info -->
             <div id="order-summary" class="hidden mb-6 bg-surface-container-high p-4 border border-outline-variant">
@@ -339,7 +338,7 @@
               <div class="border-t border-dashed border-outline-variant pt-4">
                 <div class="flex justify-between items-center">
                   <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Total Bayar</span>
-                  <span id="total-display" class="font-headline-lg text-headline-lg text-secondary">—</span>
+                  <span id="total-display" class="font-headline-lg text-xl sm:text-headline-lg text-secondary">—</span>
                 </div>
               </div>
 
@@ -480,24 +479,24 @@
           if (status === 'upcoming') {
             // TIKET BELUM BUKA (HARGA DITUTUP Rp XXX & TIDAK BISA DIPILIH)
             return `
-              <div class="relative border-2 border-outline-variant p-5 opacity-60 bg-surface-container-low cursor-not-allowed select-none">
+              <div class="relative border-2 border-outline-variant p-3.5 opacity-60 bg-surface-container-low cursor-not-allowed select-none">
                 <div class="flex items-start justify-between pr-8">
                   <div>
-                    <div class="flex items-center gap-2">
-                      <p class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</p>
-                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[10px] uppercase px-2 py-0.5">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      <p class="font-headline-lg text-base sm:text-headline-lg text-on-surface leading-tight">${t.nama_tiket}</p>
+                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[9px] uppercase px-1.5 py-0.5">
                         📅 ${dateLabel}
                       </span>
                     </div>
-                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+                    <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
                   </div>
-                  <span class="border border-outline-variant text-on-surface-variant font-label-caps text-[11px] uppercase px-2.5 py-1 flex items-center gap-1 font-bold">
-                    <span class="material-symbols-outlined text-[14px]">lock</span> Segera
+                  <span class="border border-outline-variant text-on-surface-variant font-label-caps text-[10px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold flex-shrink-0">
+                    <span class="material-symbols-outlined text-[12px]">lock</span> Segera
                   </span>
                 </div>
-                <div class="flex items-end justify-between mt-4 border-t border-dashed border-outline-variant pt-3">
-                  <p class="font-display-md text-outline-variant font-mono tracking-widest" style="font-size:22px;font-weight:700">Rp XXX</p>
-                  <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Belum Tersedia</span>
+                <div class="flex items-end justify-between mt-3 border-t border-dashed border-outline-variant pt-2.5">
+                  <p class="font-display-md text-outline-variant font-mono tracking-widest" style="font-size:18px;font-weight:700">Rp XXX</p>
+                  <span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Belum Tersedia</span>
                 </div>
               </div>
             `;
@@ -506,24 +505,24 @@
           if (status === 'passed') {
             // TIKET SUDAH LEWAT TANGGALNYA (PASSED & TIDAK BISA DIPILIH)
             return `
-              <div class="relative border-2 border-outline-variant p-5 opacity-50 bg-surface-container-low grayscale-[40%] cursor-not-allowed select-none">
+              <div class="relative border-2 border-outline-variant p-3.5 opacity-50 bg-surface-container-low grayscale-[40%] cursor-not-allowed select-none">
                 <div class="flex items-start justify-between pr-8">
                   <div>
-                    <div class="flex items-center gap-2">
-                      <p class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</p>
-                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[10px] uppercase px-2 py-0.5">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      <p class="font-headline-lg text-base sm:text-headline-lg text-on-surface leading-tight">${t.nama_tiket}</p>
+                      <span class="bg-surface-variant border border-outline-variant text-on-surface-variant font-label-caps text-[9px] uppercase px-1.5 py-0.5">
                         📅 ${dateLabel}
                       </span>
                     </div>
-                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+                    <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
                   </div>
-                  <span class="bg-error-container/40 border border-error/50 text-error font-label-caps text-[11px] uppercase px-2.5 py-1 flex items-center gap-1 font-bold">
-                    <span class="material-symbols-outlined text-[14px]">event_busy</span> PASSED
+                  <span class="bg-error-container/40 border border-error/50 text-error font-label-caps text-[10px] uppercase px-2 py-0.5 flex items-center gap-1 font-bold flex-shrink-0">
+                    <span class="material-symbols-outlined text-[12px]">event_busy</span> PASSED
                   </span>
                 </div>
-                <div class="flex items-end justify-between mt-4 border-t border-dashed border-outline-variant pt-3">
-                  <p class="font-display-md text-outline-variant line-through" style="font-size:22px;font-weight:700">${t.harga_format}</p>
-                  <span class="font-label-caps text-label-caps text-error uppercase font-bold">Periode Berakhir</span>
+                <div class="flex items-end justify-between mt-3 border-t border-dashed border-outline-variant pt-2.5">
+                  <p class="font-display-md text-outline-variant line-through" style="font-size:18px;font-weight:700">${t.harga_format}</p>
+                  <span class="font-label-caps text-[10px] text-error uppercase font-bold">Periode Berakhir</span>
                 </div>
               </div>
             `;
@@ -532,29 +531,29 @@
           // TIKET AKTIF (BISA DIPILIH)
           return `
             <label class="ticket-option cursor-pointer group" data-id="${t.id}" data-nama="${t.nama_tiket}" data-harga="${t.harga}" data-harga-fmt="${t.harga_format}" data-sisa="${t.sisa_kuota}">
-              <div class="relative border-2 border-outline-variant p-5 hover:border-tertiary transition-all
+              <div class="relative border-2 border-outline-variant p-3.5 hover:border-tertiary transition-all
                           group-[.selected]:border-tertiary group-[.selected]:bg-surface-container-high shadow-[4px_4px_0px_0px_transparent]
                           group-[.selected]:shadow-[4px_4px_0px_0px_#efc05e]">
 
                 <!-- Selection indicator -->
-                <div class="absolute top-4 right-4 w-5 h-5 border-2 border-outline-variant group-[.selected]:border-tertiary
+                <div class="absolute top-3 right-3 w-4 h-4 border-2 border-outline-variant group-[.selected]:border-tertiary
                             group-[.selected]:bg-tertiary flex items-center justify-center transition-all">
-                  <span class="material-symbols-outlined text-[14px] text-on-tertiary hidden group-[.selected]:block">check</span>
+                  <span class="material-symbols-outlined text-[11px] text-on-tertiary hidden group-[.selected]:block">check</span>
                 </div>
 
-                <div class="flex items-start justify-between pr-8">
+                <div class="flex items-start justify-between pr-6">
                   <div>
-                    <div class="flex items-center gap-2">
-                      <p class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</p>
-                      ${dateLabel ? `<span class="border border-secondary text-secondary font-label-caps text-[10px] uppercase px-2 py-0.5">📅 ${dateLabel}</span>` : ''}
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      <p class="font-headline-lg text-base sm:text-headline-lg text-on-surface leading-tight">${t.nama_tiket}</p>
+                      ${dateLabel ? `<span class="border border-secondary text-secondary font-label-caps text-[9px] uppercase px-1.5 py-0.5">📅 ${dateLabel}</span>` : ''}
                     </div>
-                    <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+                    <p class="font-body-md text-xs sm:text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
                   </div>
                 </div>
 
-                <div class="flex items-end justify-between mt-4 border-t border-dashed border-outline-variant pt-3">
-                  <p class="font-display-md text-tertiary" style="font-size:24px;font-weight:700">${t.harga_format}</p>
-                  <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">${t.sisa_kuota} sisa</span>
+                <div class="flex items-end justify-between mt-3 border-t border-dashed border-outline-variant pt-2.5">
+                  <p class="font-display-md text-tertiary" style="font-size:18px;font-weight:700">${t.harga_format}</p>
+                  <span class="font-label-caps text-[10px] text-on-surface-variant uppercase">${t.sisa_kuota} sisa</span>
                 </div>
               </div>
             </label>

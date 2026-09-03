@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description"
     content="OSEAN - Closing Ceremony. Festival musik dan seni terbesar. Dapatkan tiketmu sekarang." />
-  <title>OSEAN - Opening Ceremony</title>
+  <title>OSEAN - Closing Ceremony</title>
   <link rel="icon" type="image/png" href="assets/osean_logo.png" />
 
   <!-- Tailwind CSS CDN -->
@@ -412,33 +412,33 @@
 
       <!-- Right: Decorative Ticket / Visual Card with Floating Clapboard and Drum Stickers -->
       <div class="hidden lg:block lg:col-span-5 relative">
-        <div class="relative max-w-[340px] xl:max-w-[400px] ml-auto mr-2 xl:mr-6">
+        <div class="relative max-w-[340px] xl:max-w-[400px] ml-auto mr-2 xl:mr-6 isolate">
 
-          <!-- Floating Clapboard on Card Corner -->
+          <!-- Floating Clapboard behind Card -->
           <img src="assets/clapboard.png" alt="Clapboard Sticker"
-            class="absolute -top-8 -right-4 w-20 xl:w-28 h-auto z-30 pointer-events-none select-none animate-float-1 drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]"
+            class="absolute -top-8 -right-4 w-20 xl:w-28 h-auto -z-10 pointer-events-none select-none animate-float-1 drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]"
             style="--rot: 14deg;" />
 
-          <!-- Floating Drum on Card Corner -->
+          <!-- Floating Drum behind Card -->
           <img src="assets/drum.png" alt="Drum Sticker"
-            class="absolute -bottom-6 -left-12 xl:-left-18 w-20 xl:w-28 h-auto z-30 pointer-events-none select-none animate-float-2 drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]"
+            class="absolute -bottom-6 -left-12 xl:-left-18 w-20 xl:w-28 h-auto -z-10 pointer-events-none select-none animate-float-2 drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]"
             style="--rot: -12deg;" />
 
           <!-- Shadow / background block (brutalist offset) -->
           <div
-            class="absolute inset-0 translate-x-asymmetric-offset translate-y-asymmetric-offset bg-secondary-container -z-10">
+            class="absolute inset-0 translate-x-asymmetric-offset translate-y-asymmetric-offset bg-secondary-container z-0">
           </div>
 
           <!-- Main card -->
           <div
-            class="relative bg-surface-container border-2 border-outline-variant p-3.5 xl:p-5 -rotate-2 hover:rotate-0 transition-transform duration-500 group">
+            class="relative z-10 bg-surface-container border-2 border-outline-variant p-3.5 xl:p-5 -rotate-2 hover:rotate-0 transition-transform duration-500 group">
 
             <!-- Card header -->
             <div class="flex items-center justify-between mb-3 xl:mb-4 border-b border-outline-variant pb-2.5 xl:pb-3">
               <div class="flex items-center gap-2">
                 <img src="assets/osean_logo.png" alt="OSEAN"
                   class="w-7 h-7 xl:w-8 xl:h-8 object-contain drop-shadow-[0_2px_10px_rgba(239,192,94,0.4)]" />
-                <span class="font-display-md text-xl xl:text-display-md text-tertiary font-bold uppercase">CLOSING</span>
+                <span class="font-display-md text-base xl:text-xl text-tertiary font-bold uppercase tracking-wider">CLOSING CEREMONY</span>
               </div>
             </div>
 
@@ -497,11 +497,11 @@
 
     <!-- Floating Background Decorative Stickers -->
     <img src="assets/drum.png" alt=""
-      class="hidden lg:block absolute top-20 -left-8 w-36 h-auto opacity-30 pointer-events-none select-none -rotate-12 animate-float-2 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)]" />
+      class="hidden lg:block absolute top-20 -left-8 w-36 h-auto opacity-30 pointer-events-none select-none -rotate-12 animate-float-2 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)] z-0" />
     <img src="assets/clapboard.png" alt=""
-      class="hidden lg:block absolute top-1/3 -right-8 w-36 h-auto opacity-30 pointer-events-none select-none rotate-12 animate-float-1 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)]" />
+      class="hidden lg:block absolute top-1/3 -right-8 w-36 h-auto opacity-30 pointer-events-none select-none rotate-12 animate-float-1 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)] z-0" />
     <img src="assets/camera.png" alt=""
-      class="hidden lg:block absolute bottom-8 left-12 w-28 h-auto opacity-25 pointer-events-none select-none -rotate-6 animate-float-3 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)]" />
+      class="hidden lg:block absolute bottom-8 left-12 w-28 h-auto opacity-25 pointer-events-none select-none -rotate-6 animate-float-3 filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.5)] z-0" />
 
     <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
 

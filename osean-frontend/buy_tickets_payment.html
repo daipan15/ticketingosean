@@ -419,7 +419,7 @@
                     <option value="PEDRA">PEDRA — Geofisika</option>
                     <option value="HIMATIF">Himatif — Teknik Informatika</option>
                     <option value="HIMAKTU">HIMAKTU — Aktuaria</option>
-                    <option value="HMTE">HTME — Teknik Elektro</option>
+                    <option value="HMTE">HMTE — Teknik Elektro</option>
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant">
                     <span class="material-symbols-outlined text-[20px]">expand_more</span>
@@ -512,19 +512,19 @@
         </div>
       </div>
 
-      <!-- T&C Scrollable Content Body -->
-      <div class="p-4 sm:p-5 max-h-[50vh] overflow-y-auto space-y-5 text-xs text-on-surface-variant font-body-md select-none border-b border-outline-variant/50">
+      <!-- T&C Scrollable Content Body (Scrollbar hidden, scrolling tetap aktif) -->
+      <div class="p-4 sm:p-5 max-h-[52vh] overflow-y-auto no-scrollbar space-y-5 text-xs text-on-surface-variant font-body-md select-none border-b border-outline-variant/50">
         
-        <!-- Bagian 1: Ketentuan Umum Tiket -->
+        <!-- Bagian 1: Ketentuan Umum & Tiket -->
         <div>
           <div class="flex items-center gap-2 mb-2.5 pb-1 border-b border-outline-variant/40">
             <span class="material-symbols-outlined text-tertiary text-[16px]">confirmation_number</span>
-            <span class="font-label-caps text-[11px] font-bold text-tertiary uppercase tracking-wider">1. Ketentuan Umum & Tiket</span>
+            <span class="font-label-caps text-[11px] font-bold text-tertiary uppercase tracking-wider">1. Ketentuan Umum & Pembelian Tiket</span>
           </div>
           <div class="space-y-2.5 pl-1">
             <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">01</span>
-              <p><strong class="text-on-surface">Kepemilikan & Kode Unik:</strong> Setiap transaksi tiket yang berhasil akan mendapatkan Kode Unik (Booking Code) resmi yang wajib disimpan dan tidak boleh disebarluaskan kepada pihak lain.</p>
+              <p><strong class="text-on-surface">Kepemilikan & Kode Unik:</strong> Setiap transaksi tiket yang berhasil akan mendapatkan Kode Unik (Booking Code) resmi yang wajib disimpan dan tidak boleh disebarluaskan kepada pihak lain untuk menghindari penyalahgunaan.</p>
             </div>
             <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">02</span>
@@ -532,57 +532,101 @@
             </div>
             <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">03</span>
-              <p><strong class="text-on-surface">Kapasitas Sesuai Varian:</strong> Varian Single berlaku untuk 1 orang, Duo berlaku untuk 2 orang, dan Trio berlaku untuk 3 orang sekaligus saat memasuki pintu masuk venue festival.</p>
+              <p><strong class="text-on-surface">Kapasitas Sesuai Varian:</strong> Varian Single berlaku untuk 1 orang, Duo berlaku untuk 2 orang, dan Trio berlaku untuk 3 orang sekaligus saat memasuki pintu masuk venue konser.</p>
             </div>
             <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">04</span>
-              <p><strong class="text-on-surface">Validasi Bukti Pembayaran:</strong> Pastikan bukti transfer yang diunggah asli, jelas, dan nominal persis sesuai total tagihan. Bukti palsu atau tidak terbaca akan otomatis ditolak sistem.</p>
+              <p><strong class="text-on-surface">Penukaran Wristband:</strong> Kode Unik wajib ditunjukkan bersama kartu identitas resmi (KTP/KTM/Paspor) saat penukaran tiket fisik/gelang (<em>wristband</em>) di venue festival OSEAN.</p>
             </div>
             <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">05</span>
-              <p><strong class="text-on-surface">Penukaran Wristband:</strong> E-ticket dan Kode Unik wajib ditunjukkan bersama kartu identitas resmi saat penukaran tiket fisik/gelang di venue festival OSEAN.</p>
+              <p><strong class="text-on-surface">Keutuhan Gelang & Re-Entry:</strong> Gelang fisik (<em>wristband</em>) wajib terus terpasang di pergelangan tangan selama berada di area konser. Gelang yang rusak, putus, atau berpindah tangan dianggap hangus dan panitia berhak menolak akses masuk kembali (<em>re-entry</em>).</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">06</span>
+              <p><strong class="text-on-surface">Larangan Percaloan:</strong> Dilarang keras memperjualbelikan tiket di atas harga resmi. Panitia berhak menonaktifkan kode tiket yang terindikasi diperjualbelikan secara ilegal oleh pihak ketiga.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">07</span>
+              <p><strong class="text-tertiary">Doorprize Referral Himpunan:</strong> Pembeli yang memasukkan atau memilih kode referral himpunan secara otomatis namanya akan dicantumkan dan diikutsertakan dalam pengundian Doorprize resmi OSEAN 2026.</p>
             </div>
           </div>
         </div>
 
-        <!-- Bagian 2: Tata Tertib & Peraturan Arena -->
+        <!-- Bagian 2: Tata Tertib & Peraturan Konser -->
         <div>
           <div class="flex items-center gap-2 mb-2.5 pb-1 border-b border-outline-variant/40">
             <span class="material-symbols-outlined text-secondary text-[16px]">verified_user</span>
-            <span class="font-label-caps text-[11px] font-bold text-secondary uppercase tracking-wider">2. Tata Tertib & Peraturan Arena OSEAN 2026</span>
+            <span class="font-label-caps text-[11px] font-bold text-secondary uppercase tracking-wider">2. Tata Tertib & Protokol Penonton Konser</span>
           </div>
           <div class="space-y-2.5 pl-1">
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">06</span>
-              <p><strong class="text-on-surface">Presensi & Daftar Hadir:</strong> Wajib mengisi presensi saat open gate dan mengisi form daftar hadir yang telah disediakan panitia.</p>
-            </div>
-            <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">07</span>
-              <p><strong class="text-on-surface">Kartu Tanda Mahasiswa (KTM):</strong> Wajib menyiapkan Kartu Tanda Mahasiswa (KTM) yang masih aktif (boleh dalam bentuk digital maupun fisik).</p>
-            </div>
-            <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">08</span>
-              <p><strong class="text-on-surface">Barang Sitaan:</strong> Wajib untuk tidak membawa barang yang telah disebutkan pada kategori barang yang disita (senjata tajam/api, minuman keras, narkoba, flare/smoke bomb, kembang api, laser pointer, atau benda berbahaya lainnya).</p>
+              <p><strong class="text-on-surface">KTM/KTP:</strong> Penonton wajib menyiapkan KTM/KTP yang masih aktif (boleh dalam bentuk digital maupun fisik) saat memasuki gerbang pemeriksaan.</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">09</span>
-              <p><strong class="text-error">Larangan Tindakan Anarki:</strong> Dilarang keras melakukan tindakan anarki (berbuat onar, melakukan kekerasan verbal maupun non-verbal, melempar sesuatu, atau melakukan perusakan fasilitas) saat berlangsungnya kegiatan OSEAN 2026.</p>
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">09</span>
+              <p><strong class="text-on-surface">Keamanan Barang Pribadi:</strong> Diharapkan barang pribadi dan barang berharga dijaga masing-masing secara cermat. Panitia penyelenggara tidak bertanggung jawab atas kehilangan, kerusakan, atau kelalaian pribadi selama berada di venue konser.</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">10</span>
-              <p><strong class="text-error">Area Bermain (Playing Area):</strong> Dilarang memasuki area bermain (<em>playing area</em>) saat pertandingan sedang berlangsung demi keselamatan pemain dan kelancaran lomba.</p>
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">10</span>
+              <p><strong class="text-on-surface">Pemeriksaan Keamanan (Security & Bag Check):</strong> Petugas keamanan berhak melakukan pemeriksaan badan (<em>body check</em>) dan barang bawaan/tas di gerbang masuk demi menjaga keselamatan seluruh pengunjung.</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">11</span>
-              <p><strong class="text-error">Larangan SARA:</strong> Dilarang menyinggung SARA (Suku, Agama, Ras, dan Antargolongan) atau melakukan ujaran provokatif kepada supporter lain.</p>
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">11</span>
+              <p><strong class="text-on-surface">Larangan Kamera Profesional & Drone:</strong> Dilarang membawa kamera profesional (DSLR, Mirrorless dengan lensa tele/panjang), handycam, tongsis/selfie stick, tripod, serta menerbangkan drone tanpa ID Card Media/Press resmi dari panitia OSEAN. Penggunaan kamera smartphone diperbolehkan.</p>
             </div>
             <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">12</span>
-              <p><strong class="text-on-surface">Kebersihan & Ketertiban:</strong> Wajib menjaga kebersihan dan tidak membuang sampah sembarangan di seluruh arena pertandingan OSEAN 2026.</p>
+              <p><strong class="text-on-surface">Makanan & Minuman Luar:</strong> Dilarang membawa makanan dan minuman dalam kemasan dari luar venue demi alasan kebersihan dan keamanan. Makanan dan minuman dapat dibeli di area bazaar/tenant resmi OSEAN di dalam venue.</p>
             </div>
             <div class="flex items-start gap-2.5">
               <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">13</span>
-              <p><strong class="text-on-surface">Keamanan Bersama:</strong> Wajib menjaga keamanan, ketertiban, dan saling menghormati di lingkungan arena pertandingan OSEAN 2026.</p>
+              <p><strong class="text-on-surface">Cuaca Terbuka & Larangan Payung:</strong> Konser Lapangan Merah bersifat <em>open-air</em> dan tetap berlangsung saat hujan. Penonton disarankan membawa jas hujan (<em>raincoat</em>) pribadi. <strong>Dilarang keras membuka payung</strong> di area penonton karena menghalangi pandangan dan membahayakan penonton lain.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">14</span>
+              <p><strong class="text-on-surface">Larangan Merokok & Vape di Kerumunan:</strong> Dilarang merokok konvensional maupun rokok elektrik (vape/pod) di area padat penonton di depan panggung demi kenyamanan bersama. Merokok hanya diizinkan di titik <em>Designated Smoking Area</em> yang telah ditentukan.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">15</span>
+              <p><strong class="text-on-surface">Barang Sitaan Konser:</strong> Wajib untuk tidak membawa barang terlarang: senjata tajam/api, minuman keras, narkoba/zat psikotropika, flare, smoke bomb, kembang api, laser pointer, botol kaca, atau benda berbahaya lainnya. Barang sitaan tidak akan dikembalikan.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">16</span>
+              <p><strong class="text-error">Larangan Tindakan Anarki:</strong> Dilarang keras melakukan tindakan anarki (berbuat onar, kekerasan verbal/non-verbal, melempar benda ke arah panggung/penonton, atau merusak fasilitas) saat berlangsungnya konser OSEAN 2026.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">17</span>
+              <p><strong class="text-error">Larangan SARA & Provokasi:</strong> Dilarang menyinggung SARA (Suku, Agama, Ras, dan Antargolongan) atau melakukan ujaran provokatif kepada sesama penonton konser.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">18</span>
+              <p><strong class="text-on-surface">Area Panggung & Barikade:</strong> Dilarang menaiki panggung (<em>stage & backstage</em>), melompati barikade pengaman (FOH), atau memasuki area steril tanpa tanda pengenal khusus panitia demi keselamatan artis dan penonton.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">19</span>
+              <p><strong class="text-on-surface">Posko Medis & Riwayat Kesehatan:</strong> Panitia menyediakan posko medis P3K darurat. Pengunjung dengan riwayat kesehatan khusus (asma, alergi, penyakit jantung, atau sensitivitas tata cahaya strobo) diwajibkan membawa obat pribadi dan tidak memaksakan diri di barisan depan penonton.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">20</span>
+              <p><strong class="text-on-surface">Perubahan Jadwal & Force Majeure:</strong> Penyelenggara berhak melakukan penyesuaian susunan artis penampil atau jadwal tampil (<em>rundown</em>) apabila terjadi kondisi darurat atau teknis di luar kendali panitia (<em>force majeure</em>) tanpa kewajiban pengembalian dana.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">21</span>
+              <p><strong class="text-on-surface">Hak Penertiban Panitia:</strong> Panitia berhak menolak akses masuk atau mengeluarkan pengunjung dari venue konser tanpa pengembalian dana apabila terbukti melanggar aturan, berbuat onar, atau membahayakan keselamatan umum.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">22</span>
+              <p><strong class="text-on-surface">Dokumentasi & Publikasi Acara:</strong> Pengunjung menyetujui bahwa foto, audio, dan rekaman video selama konser berlangsung dapat digunakan oleh panitia OSEAN untuk kebutuhan dokumentasi dan publikasi media resmi.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">23</span>
+              <p><strong class="text-on-surface">Kebersihan & Ketertiban:</strong> Wajib menjaga kebersihan dan membuang sampah pada tempat yang telah disediakan di seluruh area venue konser Closing Ceremony OSEAN 2026.</p>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">24</span>
+              <p><strong class="text-on-surface">Keamanan Bersama:</strong> Wajib saling menghormati dan menjaga suasana kondusif agar jalannya konser musik OSEAN 2026 berjalan tertib, aman, dan berkesan.</p>
             </div>
           </div>
         </div>
@@ -595,16 +639,16 @@
           </div>
           <div class="space-y-2.5 pl-1">
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">14</span>
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">25</span>
               <p><strong class="text-on-surface">Validitas Data Diri:</strong> Pembeli wajib mengisi data diri secara lengkap, benar, dan valid (nama lengkap sesuai identitas resmi KTP/KIA/Paspor, NIK, nomor telepon aktif, dan alamat email).</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">15</span>
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">26</span>
               <p><strong class="text-on-surface">Persetujuan Eksplisit Data:</strong> Dengan menyelesaikan transaksi, pembeli memberikan persetujuan eksplisit kepada pihak penyelenggara untuk memproses dan meneruskan data identitas tersebut kepada pihak ketiga penyedia asuransi rekanan resmi OSEAN.</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">16</span>
-              <p><strong class="text-on-surface">Penerbitan Polis Asuransi:</strong> Pengalihan data tersebut ditujukan khusus untuk penerbitan polis perlindungan asuransi kecelakaan diri (<em>personal accident</em>) selama periode rangkaian kegiatan OSEAN 2026 berlangsung.</p>
+              <span class="font-mono font-bold text-tertiary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">27</span>
+              <p><strong class="text-on-surface">Penerbitan Polis Asuransi:</strong> Pengalihan data tersebut ditujukan khusus untuk penerbitan polis perlindungan asuransi kecelakaan diri (<em>personal accident</em>) selama periode rangkaian kegiatan konser OSEAN 2026 berlangsung.</p>
             </div>
           </div>
         </div>
@@ -617,19 +661,19 @@
           </div>
           <div class="space-y-2.5 pl-1">
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">17</span>
-              <p><strong class="text-on-surface">Hak Pengajuan Klaim:</strong> Pemegang tiket berhak mengajukan klaim asuransi apabila terjadi risiko kecelakaan fisik selama kegiatan OSEAN 2026 berlangsung.</p>
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">28</span>
+              <p><strong class="text-on-surface">Hak Pengajuan Klaim:</strong> Pemegang tiket berhak mengajukan klaim asuransi apabila terjadi risiko kecelakaan fisik selama kegiatan konser OSEAN 2026 berlangsung.</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">18</span>
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">29</span>
               <p><strong class="text-on-surface">Kesesuaian Identitas Sah:</strong> Keberhasilan proses klaim bergantung penuh pada kesesuaian data diri pembeli dengan dokumen identitas asli yang sah.</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">19</span>
+              <span class="font-mono font-bold text-error text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-error/50 flex-shrink-0 mt-0.5">30</span>
               <p><strong class="text-error">Gugurnya Hak Klaim:</strong> Ketidaksesuaian atau ketidakvalidan data yang diisi saat pemesanan tiket berada di luar tanggung jawab penyelenggara dan dapat menggugurkan hak klaim asuransi.</p>
             </div>
             <div class="flex items-start gap-2.5">
-              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">20</span>
+              <span class="font-mono font-bold text-secondary text-[10px] bg-surface-container-high px-1.5 py-0.5 border border-outline-variant flex-shrink-0 mt-0.5">31</span>
               <p><strong class="text-on-surface">Ketentuan Polis Rekanan:</strong> Syarat teknis, dokumen pendukung, batas waktu pelaporan, serta nominal santunan atau penggantian biaya medis tunduk sepenuhnya pada syarat dan ketentuan yang ditetapkan oleh perusahaan asuransi rekanan resmi.</p>
             </div>
           </div>
@@ -802,7 +846,7 @@
             expectedVariants: 2,
             startDate: new Date('2026-09-04T00:00:00+07:00'),
             endDate: new Date('2026-09-08T23:59:59+07:00'),
-            rangeLabel: '1 - 8 September 2026'
+            rangeLabel: '4 - 8 September 2026'
           },
           {
             key: 'pre sale 1',

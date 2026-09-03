@@ -13,6 +13,7 @@ $user_id = $_SESSION['user_id'];
 $stmt = $conn->prepare("
     SELECT
         p.id            AS payment_id,
+        p.kode_unik,
         p.jumlah_tiket,
         p.total_bayar,
         p.metode_pembayaran,
@@ -37,6 +38,7 @@ $tikets = [];
 while ($row = $result->fetch_assoc()) {
     $tikets[] = [
         'payment_id'         => (int)$row['payment_id'],
+        'kode_unik'          => $row['kode_unik'] ?? '',
         'jumlah_tiket'       => (int)$row['jumlah_tiket'],
         'total_bayar'        => (int)$row['total_bayar'],
         'total_format'       => format_rupiah($row['total_bayar']),

@@ -508,6 +508,25 @@
       }
     }
 
+    /* -------- Copy Code Helper -------- */
+    function copyCode(code) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => showToast(`Kode tiket "${code}" berhasil disalin!`, 'success'))
+        .catch(() => fallbackCopy(code));
+      } else {
+        fallbackCopy(code);
+      }
+    }
+    function fallbackCopy(code) {
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(`Kode tiket "${code}" berhasil disalin!`, 'success');
+    }
+
     function renderTickets(tikets) {
       const el = document.getElementById('tickets-list');
       el.innerHTML = tikets.map(t => `
@@ -526,6 +545,23 @@
                 </p>
                 <h3 class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</h3>
                 <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
+
+                <!-- Unique Code Display Badge -->
+                <div class="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-dashed border-outline-variant/60">
+                  <span class="font-label-caps text-[10px] text-on-surface-variant uppercase font-bold flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[13px] text-tertiary">fingerprint</span>
+                    Kode Unik:
+                  </span>
+                  <span class="font-mono text-xs sm:text-sm font-extrabold text-tertiary bg-surface-container-lowest border-2 border-outline-variant px-2.5 py-0.5 tracking-wider select-all shadow-[2px_2px_0px_0px_#15140c]">
+                    ${t.kode_unik || '—'}
+                  </span>
+                  ${t.kode_unik ? `
+                    <button type="button" onclick="copyCode('${t.kode_unik}')" class="text-on-surface-variant hover:text-tertiary transition-colors flex items-center gap-1 text-[11px] font-label-caps uppercase font-bold bg-surface-container-high px-2 py-0.5 border border-outline-variant shadow-[1px_1px_0px_0px_#15140c]" title="Salin Kode Unik">
+                      <span class="material-symbols-outlined text-[14px]">content_copy</span>
+                      <span>Salin</span>
+                    </button>
+                  ` : ''}
+                </div>
               </div>
               ${statusBadge(t.status)}
             </div>
@@ -558,7 +594,10 @@
       el.innerHTML = tikets.map(t => `
         <li class="flex justify-between items-center border-b border-outline-variant pb-2 gap-3">
           <div>
-            <p class="font-body-md text-on-surface font-bold text-sm">${t.nama_tiket}</p>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <p class="font-body-md text-on-surface font-bold text-sm">${t.nama_tiket}</p>
+              ${t.kode_unik ? `<span class="font-mono text-[9px] text-tertiary bg-surface-container-lowest px-1.5 py-0.2 border border-outline-variant font-bold">${t.kode_unik}</span>` : ''}
+            </div>
             <p class="font-label-caps text-[10px] ${t.status==='verified'?'text-secondary':t.status==='pending'?'text-tertiary':'text-error'} mt-0.5 uppercase">
               ${t.status==='verified'?'Confirmed':t.status==='pending'?'Menunggu':'Ditolak'}
             </p>

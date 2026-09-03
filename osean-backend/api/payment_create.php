@@ -51,15 +51,40 @@ if (!move_uploaded_file($_FILES['bukti_transfer']['tmp_name'], $filepath)) {
     send_error('Gagal upload file.', 500);
 }
 
+// Generator kode unik tiket (booking code) ber-entropi tinggi & terjamin unik
+function generate_unique_ticket_code($conn) {
+    $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    $len = strlen($chars);
+    for ($attempt = 0; $attempt < 50; $attempt++) {
+        $p1 = '';
+        $p2 = '';
+        for ($j = 0; $j < 4; $j++) {
+            $p1 .= $chars[random_int(0, $len - 1)];
+            $p2 .= $chars[random_int(0, $len - 1)];
+        }
+        $code = "OSN-{$p1}-{$p2}";
+
+        $stmt = $conn->prepare("SELECT id FROM payments WHERE kode_unik = ? LIMIT 1");
+        $stmt->bind_param("s", $code);
+        $stmt->execute();
+        $exists = ($stmt->get_result()->num_rows > 0);
+        $stmt->close();
+
+        if (!$exists) return $code;
+    }
+    return 'OSN-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
+}
+
+$kode_unik   = generate_unique_ticket_code($conn);
 $total_bayar = $tiket['harga'] * $jumlah_tiket;
 $status      = 'pending';
 
 // Insert payment
 $stmt = $conn->prepare("
-    INSERT INTO payments (user_id, ticket_id, jumlah_tiket, total_bayar, metode_pembayaran, bukti_transfer, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO payments (user_id, ticket_id, kode_unik, jumlah_tiket, total_bayar, metode_pembayaran, bukti_transfer, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 ");
-$stmt->bind_param("iiidsss", $user_id, $ticket_id, $jumlah_tiket, $total_bayar, $metode, $filename, $status);
+$stmt->bind_param("iisidsss", $user_id, $ticket_id, $kode_unik, $jumlah_tiket, $total_bayar, $metode, $filename, $status);
 
 if (!$stmt->execute()) {
     @unlink($filepath);
@@ -76,6 +101,7 @@ $stmt->close();
 
 send_success([
     'payment_id'    => $payment_id,
+    'kode_unik'     => $kode_unik,
     'nama_tiket'    => $tiket['nama_tiket'],
     'jumlah_tiket'  => $jumlah_tiket,
     'total_bayar'   => $total_bayar,

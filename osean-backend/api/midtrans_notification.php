@@ -3,6 +3,7 @@
 // OSEAN - midtrans_notification.php
 // Webhook handler untuk menerima notifikasi dari Midtrans
 // URL ini harus di-set di Midtrans Dashboard → Settings → Payment Notification URL
+// CATATAN: order_id di Midtrans = kode_unik (format OSN-XXXX-XXXX)
 // =============================================
 require_once __DIR__ . '/../config.php';
 
@@ -26,6 +27,7 @@ if (!$notification) {
 error_log("[OSEAN Midtrans] Notification received: " . $raw_body);
 
 // Extract data dari notifikasi
+// order_id di Midtrans = kode_unik (misal: OSN-ABCD-EFGH)
 $order_id           = $notification['order_id'] ?? '';
 $transaction_status = $notification['transaction_status'] ?? '';
 $fraud_status       = $notification['fraud_status'] ?? '';
@@ -50,8 +52,8 @@ if ($signature_key !== $expected_signature) {
     exit();
 }
 
-// Cari payment berdasarkan midtrans_order_id
-$stmt = $conn->prepare("SELECT id, status, jumlah_tiket, ticket_id FROM payments WHERE midtrans_order_id = ?");
+// Cari payment berdasarkan kode_unik (order_id dari Midtrans = kode_unik)
+$stmt = $conn->prepare("SELECT id, status, jumlah_tiket, ticket_id FROM payments WHERE kode_unik = ?");
 $stmt->bind_param("s", $order_id);
 $stmt->execute();
 $result = $stmt->get_result();

@@ -15,7 +15,7 @@
 
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <!-- Midtrans Snap SDK (Sandbox) -->
-  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-XXXX"></script>
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="Mid-client-6lfZVo63M0TC-YI5"></script>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap"
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
@@ -398,12 +398,42 @@
                   <span id="qty-total" class="ml-2 font-body-md text-body-md text-secondary font-bold"></span>
                 </div>
               </div>
+
+              <!-- ===== DUKUNG HIMPUNANMU (Opsional) ===== -->
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block" for="referral_code">
+                    Dukung Himpunanmu
+                  </label>
+                  <span class="font-label-caps text-[9px] text-on-surface-variant border border-outline-variant px-1.5 py-0.5 uppercase">Opsional</span>
+                </div>
+                <div class="relative">
+                  <select id="referral_code" name="referral_code"
+                    class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-sm px-4 py-3 focus:border-tertiary focus:outline-none transition-colors appearance-none cursor-pointer">
+                    <option value="">-- Pilih Himpunan (Opsional) --</option>
+                    <option value="HIMATIKA">Himatika — Matematika</option>
+                    <option value="HIMAKA">HIMAKA — Kimia</option>
+                    <option value="HIFI">HIFI — Fisika</option>
+                    <option value="HIMBIO">Himbio — Biologi</option>
+                    <option value="HIMASTA">HIMASTA — Statistika</option>
+                    <option value="PEDRA">PEDRA — Geofisika</option>
+                    <option value="HIMATIF">Himatif — Teknik Informatika</option>
+                    <option value="HIMAKTU">HIMAKTU — Aktuaria</option>
+                    <option value="HMTE">HTME — Teknik Elektro</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                <p class="font-body-md text-[11px] text-on-surface-variant mt-1.5">Pilihan himpunan akan ditampilkan di leaderboard OSEAN.</p>
+              </div>
+
               <div class="bg-surface-container-high border border-outline-variant p-4">
                 <div class="flex items-center gap-2 mb-2">
                   <span class="material-symbols-outlined text-tertiary text-[20px]">verified</span>
                   <span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Metode Pembayaran</span>
                 </div>
-                <p class="font-body-md text-body-md text-on-surface-variant">Kamu akan memilih metode pembayaran (GoPay, QRIS, Transfer Bank, dll) di popup pembayaran Midtrans yang aman.</p>
+                <p class="font-body-md text-body-md text-on-surface-variant">Kamu akan memilih metode pembayaran (GoPay, QRIS, Transfer Bank, dll) di popup pembayaran.</p>
               </div>
               <div class="border-t border-dashed border-outline-variant pt-4">
                 <div class="flex justify-between items-center">
@@ -720,7 +750,7 @@
       t._t = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 400); }, 3500);
     }
 
-    /* -------- Session -------- */
+    /* -------- Session & Init -------- */
     (async () => {
       try {
         const res = await fetch(`${API}/session_check.php`);
@@ -737,20 +767,23 @@
         }
         localStorage.setItem('isLoggedIn', 'true');
         setAuthUI(true);
-        loadTickets();
-      } catch {
-        window.location.href = 'login.html';
+      } catch (e) {
+        console.warn('Session check fallback:', e);
       }
     })();
+
+    // Muat tiket langsung tanpa menunggu auth selesai
+    loadTickets();
 
     /* -------- Load Tiket -------- */
     async function loadTickets() {
       try {
         const res = await fetch(`${API}/tickets_list.php`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         document.getElementById('tickets-loading').classList.add('hidden');
 
-        if (!data.success || data.tickets.length === 0) {
+        if (!data.success || !data.tickets || data.tickets.length === 0) {
           document.getElementById('ticket-options').innerHTML =
             '<p class="text-on-surface-variant font-body-md">Tidak ada tiket tersedia saat ini.</p>';
           document.getElementById('ticket-options').classList.remove('hidden');
@@ -1015,7 +1048,7 @@
                   <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-on-surface-variant">
                     <span class="font-label-caps text-[10px] text-tertiary uppercase font-bold flex items-center gap-1">
                       <span class="material-symbols-outlined text-[13px]">expand_circle_down</span>
-                      ${items.length} Jenis Tiket Dropdown
+                      ${items.length} Jenis Tiket
                     </span>
                     <span>•</span>
                     <span class="font-body-md">${status === 'upcoming' ? 'Harga: Mulai Rp XXX' : `Mulai ${minPriceFmt}`}</span>
@@ -1037,23 +1070,6 @@
 
               <!-- Dropdown Content (Jenis-jenis tiket) -->
               <div class="category-dropdown-content ${isDefaultOpen ? '' : 'hidden'} border-t-2 border-dashed border-outline-variant p-4 bg-surface-container-lowest space-y-3.5">
-                
-                <!-- Quick Dropdown Select -->
-                <div class="bg-surface-container border border-outline-variant p-2.5">
-                  <div class="flex items-center justify-between mb-1.5">
-                    <label class="font-label-caps text-[10px] text-on-surface-variant uppercase font-bold flex items-center gap-1">
-                      <span class="material-symbols-outlined text-[14px] text-secondary">arrow_drop_down_circle</span>
-                      Dropdown Jenis ${cat.title} (${items.length} Opsi):
-                    </label>
-                    <span class="font-label-caps text-[9px] text-tertiary uppercase font-bold bg-tertiary/10 border border-tertiary/30 px-1.5 py-0.5">
-                      ${items.length} dropdown
-                    </span>
-                  </div>
-                  <select class="category-quick-select w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-xs px-3 py-2.5 focus:border-tertiary focus:outline-none transition-colors cursor-pointer" ${status !== 'active' ? 'disabled' : ''}>
-                    <option value="" disabled selected>-- Pilih jenis ${cat.title} (${items.length} pilihan) --</option>
-                    ${selectOptionsHtml}
-                  </select>
-                </div>
 
                 <!-- Sub-type Cards List -->
                 <div class="space-y-2">
@@ -1160,9 +1176,19 @@
         });
 
       } catch (err) {
-        console.error(err);
-        document.getElementById('tickets-loading').innerHTML =
-          '<p class="text-error font-body-md">Gagal memuat tiket. Pastikan server aktif.</p>';
+        console.error('loadTickets error:', err);
+        const loadingEl = document.getElementById('tickets-loading');
+        if (loadingEl) {
+          loadingEl.innerHTML = `
+            <div class="flex items-center gap-3 py-2">
+              <span class="material-symbols-outlined text-error text-[22px]">error</span>
+              <span class="text-error font-body-md text-sm">Gagal memuat tiket: ${err.message || 'Server offline'}</span>
+              <button type="button" onclick="loadTickets()" class="ml-2 px-3 py-1 border border-tertiary text-tertiary font-label-caps text-xs uppercase hover:bg-tertiary hover:text-on-tertiary transition-all">
+                Coba Lagi
+              </button>
+            </div>
+          `;
+        }
       }
     }
 
@@ -1185,9 +1211,52 @@
       else showToast(`Maksimal ${max} tiket tersedia.`, 'info');
     });
 
-    /* -------- Form Submit (Midtrans Snap) -------- */
-    document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+    /* -------- T&C Modal Handlers -------- */
+    function openTncModal() {
+      if (!selectedTicket) { showToast('Pilih kategori tiket terlebih dahulu.', 'error'); return; }
+      const modal = document.getElementById('tnc-modal');
+      const card = document.getElementById('tnc-modal-card');
+      const total = selectedTicket.harga * qty;
+      document.getElementById('tnc-ticket-name').textContent = `${selectedTicket.nama} (×${qty})`;
+      document.getElementById('tnc-ticket-total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+      const checkbox = document.getElementById('tnc-checkbox');
+      if (checkbox) checkbox.checked = false;
+      const confirmBtn = document.getElementById('tnc-confirm-btn');
+      if (confirmBtn) confirmBtn.disabled = true;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(() => {
+        modal.classList.remove('opacity-0');
+        card.classList.remove('scale-95');
+      });
+    }
+
+    function closeTncModal() {
+      const modal = document.getElementById('tnc-modal');
+      const card = document.getElementById('tnc-modal-card');
+      modal.classList.add('opacity-0');
+      card.classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 300);
+    }
+
+    document.getElementById('tnc-checkbox')?.addEventListener('change', (e) => {
+      const confirmBtn = document.getElementById('tnc-confirm-btn');
+      if (confirmBtn) confirmBtn.disabled = !e.target.checked;
+    });
+
+    /* -------- Form Submit (Buka Modal T&C) -------- */
+    document.getElementById('checkout-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      openTncModal();
+    });
+
+    /* -------- Konfirmasi & Proses Bayar (Midtrans Snap) -------- */
+    async function confirmAndPay() {
+      closeTncModal();
       const btn = document.getElementById('submit-btn');
 
       if (!selectedTicket) { showToast('Pilih kategori tiket terlebih dahulu.', 'error'); return; }
@@ -1196,9 +1265,6 @@
       btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Membuat transaksi...';
 
       const refCode = (document.getElementById('referral_code')?.value || '').trim().toUpperCase();
-      if (refCode) {
-        formData.append('referral_code', refCode);
-      }
 
       try {
         // 1. Request snap_token dari backend
@@ -1207,19 +1273,36 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ticket_id: parseInt(selectedTicket.id),
-            jumlah_tiket: qty
+            jumlah_tiket: qty,
+            referral_code: refCode || undefined
           })
         });
-        const data = await res.json();
+        
+        let data;
+        try {
+          data = await res.json();
+        } catch (jsonErr) {
+          throw new Error('Gagal membaca respons server.');
+        }
 
         if (!data.success || !data.snap_token) {
           showToast(data.message || 'Gagal membuat transaksi.', 'error');
+          if (res.status === 401) {
+            setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+          }
           btn.disabled = false;
           btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
           return;
         }
 
         // 2. Buka popup Midtrans Snap
+        if (typeof window.snap === 'undefined' || !window.snap.pay) {
+          showToast('Sistem pembayaran Midtrans sedang memuat atau terblokir ad-blocker. Silakan refresh halaman.', 'error');
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
+          return;
+        }
+
         btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Menunggu pembayaran...';
 
         window.snap.pay(data.snap_token, {
@@ -1237,45 +1320,20 @@
             btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
           },
           onClose: function() {
-            // User menutup popup tanpa menyelesaikan pembayaran
             showToast('Popup pembayaran ditutup. Kamu bisa bayar nanti di halaman Tiket Saya.', 'info');
             btn.disabled = false;
             btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
           }
         });
 
-      } catch {
-        showToast('Tidak dapat terhubung ke server.', 'error');
+      } catch (err) {
+        console.error('Payment error:', err);
+        showToast(err.message || 'Tidak dapat terhubung ke server.', 'error');
         btn.disabled = false;
         btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Bayar Sekarang';
       }
     }
 
-    /* -------- Referral Himpunan Chips Handler -------- */
-    function selectHimaReferral(code) {
-      const input = document.getElementById('referral_code');
-      if (!input) return;
-      if (input.value.trim().toUpperCase() === code) {
-        input.value = '';
-      } else {
-        input.value = code;
-      }
-      updateHimaChips();
-    }
-
-    function updateHimaChips() {
-      const input = document.getElementById('referral_code');
-      const val = input ? input.value.trim().toUpperCase() : '';
-      document.querySelectorAll('.hima-chip').forEach(btn => {
-        if (btn.dataset.code === val) {
-          btn.className = 'hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-secondary bg-secondary/20 text-secondary shadow-[1px_1px_0px_0px_#15140c]';
-        } else {
-          btn.className = 'hima-chip font-label-caps text-[10px] uppercase font-bold px-2 py-1 border border-outline-variant bg-surface-container hover:border-tertiary hover:text-tertiary transition-all';
-        }
-      });
-    }
-
-    document.getElementById('referral_code')?.addEventListener('input', updateHimaChips);
   </script>
 </body>
 

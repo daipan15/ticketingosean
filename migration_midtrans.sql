@@ -4,7 +4,7 @@
 -- SETELAH database osean_db sudah ada
 -- =============================================
 
--- 1. Tambah kolom Midtrans ke tabel payments
+-- 2. Tambah kolom Midtrans ke tabel payments
 ALTER TABLE `payments`
   ADD COLUMN `snap_token` VARCHAR(255) DEFAULT NULL AFTER `bukti_transfer`,
   ADD COLUMN `midtrans_order_id` VARCHAR(100) DEFAULT NULL AFTER `snap_token`,

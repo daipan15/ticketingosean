@@ -4,20 +4,23 @@
 // Membuat transaksi pembayaran via Midtrans Snap
 // Input JSON: ticket_id, jumlah_tiket
 // Output: snap_token untuk popup Midtrans
+// CATATAN: kode_unik digunakan sebagai Midtrans order_id
 // =============================================
 require_once __DIR__ . '/../config.php';
 require_login();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') send_error('Method tidak diizinkan.', 405);
 
-$data          = json_decode(file_get_contents('php://input'), true);
+$raw_input     = file_get_contents('php://input');
+$data          = json_decode($raw_input, true);
+if (!is_array($data)) {
+    $data = [];
+}
 $user_id       = $_SESSION['user_id'];
-$ticket_id     = isset($data['ticket_id'])     ? (int)$data['ticket_id']     : 0;
-$jumlah_tiket  = isset($data['jumlah_tiket'])  ? (int)$data['jumlah_tiket']  : 1;
-$ticket_id     = isset($_POST['ticket_id'])          ? (int)$_POST['ticket_id']             : 0;
-$jumlah_tiket  = isset($_POST['jumlah_tiket'])       ? (int)$_POST['jumlah_tiket']          : 1;
-$metode        = isset($_POST['metode_pembayaran'])   ? sanitize($_POST['metode_pembayaran']) : 'transfer';
-$raw_referral  = isset($_POST['referral_code'])       ? strtoupper(trim(sanitize($_POST['referral_code']))) : '';
+$ticket_id     = (int)($data['ticket_id'] ?? $_POST['ticket_id'] ?? 0);
+$jumlah_tiket  = (int)($data['jumlah_tiket'] ?? $_POST['jumlah_tiket'] ?? 1);
+$metode        = sanitize($data['metode_pembayaran'] ?? $_POST['metode_pembayaran'] ?? 'midtrans');
+$raw_referral  = strtoupper(trim(sanitize($data['referral_code'] ?? $_POST['referral_code'] ?? '')));
 
 // Daftar resmi 9 Himpunan FMIPA UNPAD
 $valid_hima = ['HIFI', 'HIMAKA', 'HIMBIO', 'HIMATIKA', 'HIMASTA', 'PEDRA', 'HIMATIF', 'HMTE', 'HIMAKTU'];
@@ -46,6 +49,12 @@ $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
+if (!$user) {
+    session_unset();
+    session_destroy();
+    send_error('Akun pengguna tidak ditemukan atau sesi telah berakhir. Silakan login kembali.', 401);
+}
+
 // Generator kode unik tiket (booking code) ber-entropi tinggi & terjamin unik
 function generate_unique_ticket_code($conn) {
     $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -73,29 +82,32 @@ function generate_unique_ticket_code($conn) {
 $kode_unik   = generate_unique_ticket_code($conn);
 $total_bayar = $tiket['harga'] * $jumlah_tiket;
 
-// Generate order ID unik untuk Midtrans
-$midtrans_order_id = 'OSEAN-' . $user_id . '-' . time() . '-' . mt_rand(100, 999);
-
 // Insert payment record (status: pending, belum increment kuota)
+// kode_unik digunakan sebagai order_id ke Midtrans
 $status = 'pending';
 $stmt = $conn->prepare("
-    INSERT INTO payments (user_id, ticket_id, jumlah_tiket, total_bayar, midtrans_order_id, status)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO payments (kode_unik, user_id, ticket_id, jumlah_tiket, total_bayar, metode_pembayaran, referral_code, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 ");
-$stmt->bind_param("iiidss", $user_id, $ticket_id, $jumlah_tiket, $total_bayar, $midtrans_order_id, $status);
+$stmt->bind_param("siiissss", $kode_unik, $user_id, $ticket_id, $jumlah_tiket, $total_bayar, $metode, $referral_code, $status);
 
-if (!$stmt->execute()) {
-    send_error('Gagal menyimpan data: ' . $conn->error, 500);
+try {
+    if (!$stmt->execute()) {
+        send_error('Gagal menyimpan data: ' . $conn->error, 500);
+    }
+} catch (mysqli_sql_exception $e) {
+    send_error('Gagal menyimpan transaksi: ' . $e->getMessage(), 500);
 }
 $payment_id = $stmt->insert_id;
 $stmt->close();
 
 // =============================================
 // Request Snap Token dari Midtrans
+// kode_unik digunakan sebagai order_id (satu-satunya identifier)
 // =============================================
 $midtrans_params = [
     'transaction_details' => [
-        'order_id'     => $midtrans_order_id,
+        'order_id'     => $kode_unik,    // kode_unik sebagai Midtrans order_id
         'gross_amount' => (int)$total_bayar
     ],
     'item_details' => [
@@ -125,6 +137,7 @@ curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT        => 30
 ]);
+apply_curl_ssl_options($ch);
 
 $response   = curl_exec($ch);
 $http_code  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -159,11 +172,11 @@ $stmt->execute();
 $stmt->close();
 
 send_success([
-    'payment_id'       => $payment_id,
-    'snap_token'       => $snap_token,
-    'midtrans_order_id'=> $midtrans_order_id,
-    'nama_tiket'       => $tiket['nama_tiket'],
-    'jumlah_tiket'     => $jumlah_tiket,
-    'total_bayar'      => $total_bayar,
-    'total_format'     => format_rupiah($total_bayar)
+    'payment_id'   => $payment_id,
+    'snap_token'   => $snap_token,
+    'kode_unik'    => $kode_unik,
+    'nama_tiket'   => $tiket['nama_tiket'],
+    'jumlah_tiket' => $jumlah_tiket,
+    'total_bayar'  => $total_bayar,
+    'total_format' => format_rupiah($total_bayar)
 ], 'Transaksi dibuat. Silakan selesaikan pembayaran.', 201);

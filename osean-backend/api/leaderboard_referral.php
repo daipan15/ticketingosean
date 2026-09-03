@@ -10,27 +10,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') send_error('Method tidak diizinkan.', 
 
 // Definisi resmi 9 Himpunan Mahasiswa FMIPA UNPAD
 $HIMPUNAN_DATA = [
-    'HIFI'     => ['code' => 'HIFI',     'name' => 'HIFI',     'prodi' => 'Fisika',             'color' => '#EFC05E', 'badge' => '⚡'],
-    'HIMAKA'   => ['code' => 'HIMAKA',   'name' => 'HIMAKA',   'prodi' => 'Kimia',              'color' => '#C4CD6F', 'badge' => '🧪'],
-    'HIMBIO'   => ['code' => 'HIMBIO',   'name' => 'HIMBIO',   'prodi' => 'Biologi',            'color' => '#4ADE80', 'badge' => '🌱'],
-    'HIMATIKA' => ['code' => 'HIMATIKA', 'name' => 'HIMATIKA', 'prodi' => 'Matematika',          'color' => '#38BDF8', 'badge' => '📐'],
-    'HIMASTA'  => ['code' => 'HIMASTA',  'name' => 'HIMASTA',  'prodi' => 'Statistika',         'color' => '#F472B6', 'badge' => '📊'],
-    'PEDRA'    => ['code' => 'PEDRA',    'name' => 'PEDRA',    'prodi' => 'Geofisika',          'color' => '#FB923C', 'badge' => '🌋'],
-    'HIMATIF'  => ['code' => 'HIMATIF',  'name' => 'HIMATIF',  'prodi' => 'Teknik Informatika', 'color' => '#A78BFA', 'badge' => '💻'],
-    'HMTE'     => ['code' => 'HMTE',     'name' => 'HMTE',     'prodi' => 'Teknik Elektro',     'color' => '#FACC15', 'badge' => '💡'],
-    'HIMAKTU'  => ['code' => 'HIMAKTU',  'name' => 'HIMAKTU',  'prodi' => 'Aktuaria',           'color' => '#2DD4BF', 'badge' => '📈'],
+    'HIFI'     => ['code' => 'HIFI',     'name' => 'HIFI',     'prodi' => 'Fisika',             'color' => '#EFC05E', 'badge' => ''],
+    'HIMAKA'   => ['code' => 'HIMAKA',   'name' => 'HIMAKA',   'prodi' => 'Kimia',              'color' => '#C4CD6F', 'badge' => ''],
+    'HIMBIO'   => ['code' => 'HIMBIO',   'name' => 'HIMBIO',   'prodi' => 'Biologi',            'color' => '#4ADE80', 'badge' => ''],
+    'HIMATIKA' => ['code' => 'HIMATIKA', 'name' => 'HIMATIKA', 'prodi' => 'Matematika',          'color' => '#38BDF8', 'badge' => ''],
+    'HIMASTA'  => ['code' => 'HIMASTA',  'name' => 'HIMASTA',  'prodi' => 'Statistika',         'color' => '#F472B6', 'badge' => ''],
+    'PEDRA'    => ['code' => 'PEDRA',    'name' => 'PEDRA',    'prodi' => 'Geofisika',          'color' => '#FB923C', 'badge' => ''],
+    'HIMATIF'  => ['code' => 'HIMATIF',  'name' => 'HIMATIF',  'prodi' => 'Teknik Informatika', 'color' => '#A78BFA', 'badge' => ''],
+    'HMTE'     => ['code' => 'HMTE',     'name' => 'HMTE',     'prodi' => 'Teknik Elektro',     'color' => '#FACC15', 'badge' => ''],
+    'HIMAKTU'  => ['code' => 'HIMAKTU',  'name' => 'HIMAKTU',  'prodi' => 'Aktuaria',           'color' => '#2DD4BF', 'badge' => ''],
 ];
 
-// Agregasi jumlah tiket sah (verified) per referral_code
+// Agregasi jumlah tiket sah (sudah bayar: settlement, capture, atau verified) per referral_code
+// Memperhitungkan paket bundle tiket: Duo = 2 tiket, Trio = 3 tiket
 $sql = "
-    SELECT UPPER(TRIM(referral_code)) AS ref,
-           SUM(jumlah_tiket) AS total_tiket,
-           COUNT(id) AS total_transaksi
-    FROM payments
-    WHERE status = 'verified'
-      AND referral_code IS NOT NULL
-      AND TRIM(referral_code) != ''
-    GROUP BY UPPER(TRIM(referral_code))
+    SELECT UPPER(TRIM(p.referral_code)) AS ref,
+           SUM(
+               p.jumlah_tiket * (
+                   CASE
+                       WHEN LOWER(t.nama_tiket) LIKE '%trio%' THEN 3
+                       WHEN LOWER(t.nama_tiket) LIKE '%duo%'  THEN 2
+                       ELSE 1
+                   END
+               )
+           ) AS total_tiket,
+           COUNT(p.id) AS total_transaksi
+    FROM payments p
+    JOIN tickets t ON p.ticket_id = t.id
+    WHERE p.status IN ('settlement', 'capture', 'verified')
+      AND p.referral_code IS NOT NULL
+      AND TRIM(p.referral_code) != ''
+    GROUP BY UPPER(TRIM(p.referral_code))
 ";
 
 $result = $conn->query($sql);
@@ -38,11 +48,13 @@ $tally = [];
 
 if ($result) {
     while ($row = $result->fetch_assoc()) {
-        $ref = strtoupper($row['ref']);
-        $tally[$ref] = [
-            'tiket'     => (int)$row['total_tiket'],
-            'transaksi' => (int)$row['total_transaksi']
-        ];
+        $ref = strtoupper(trim($row['ref']));
+        if ($ref === 'HTME') $ref = 'HMTE';
+        if (!isset($tally[$ref])) {
+            $tally[$ref] = ['tiket' => 0, 'transaksi' => 0];
+        }
+        $tally[$ref]['tiket'] += (int)$row['total_tiket'];
+        $tally[$ref]['transaksi'] += (int)$row['total_transaksi'];
     }
 }
 

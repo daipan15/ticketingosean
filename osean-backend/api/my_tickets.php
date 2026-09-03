@@ -2,7 +2,7 @@
 // =============================================
 // OSEAN - my_tickets.php
 // Menampilkan tiket milik user yang login
-// Termasuk data Midtrans (snap_token, payment_type, midtrans_order_id)
+// Termasuk kode_unik untuk verifikasi, snap_token, payment_type
 // =============================================
 require_once __DIR__ . '/../config.php';
 require_login();
@@ -14,12 +14,13 @@ $user_id = $_SESSION['user_id'];
 // =============================================
 // Auto-Sync Status Midtrans untuk Tiket Pending
 // (Sangat penting di localhost karena Midtrans Webhook tidak bisa tembus ke IP lokal)
+// kode_unik digunakan sebagai order_id ke Midtrans API
 // =============================================
 if (defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')) {
     $pending_stmt = $conn->prepare("
-        SELECT id, midtrans_order_id, jumlah_tiket, ticket_id, status 
+        SELECT id, kode_unik, jumlah_tiket, ticket_id, status 
         FROM payments 
-        WHERE user_id = ? AND status = 'pending' AND midtrans_order_id IS NOT NULL
+        WHERE user_id = ? AND status = 'pending' AND kode_unik IS NOT NULL
     ");
     $pending_stmt->bind_param("i", $user_id);
     $pending_stmt->execute();
@@ -27,12 +28,13 @@ if (defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')
     $pending_stmt->close();
 
     foreach ($pendings as $p) {
-        $order_id = $p['midtrans_order_id'];
+        $order_id = $p['kode_unik']; // kode_unik = Midtrans order_id
         $auth = base64_encode(MIDTRANS_SERVER_KEY . ':');
         $ch = curl_init("https://api.sandbox.midtrans.com/v2/{$order_id}/status");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic ' . $auth]);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        apply_curl_ssl_options($ch);
         $res = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -89,11 +91,11 @@ $stmt = $conn->prepare("
         p.metode_pembayaran,
         p.bukti_transfer,
         p.status,
+        p.is_checked_in,
+        p.checked_in_at,
         p.created_at    AS tanggal_order,
         p.verified_at,
         p.snap_token,
-        p.midtrans_order_id,
-        p.midtrans_transaction_id,
         p.payment_type,
         t.id            AS ticket_id,
         t.nama_tiket,
@@ -111,24 +113,25 @@ $result = $stmt->get_result();
 $tikets = [];
 while ($row = $result->fetch_assoc()) {
     $tikets[] = [
-        'payment_id'              => (int)$row['payment_id'],
-        'jumlah_tiket'            => (int)$row['jumlah_tiket'],
-        'total_bayar'             => (int)$row['total_bayar'],
-        'total_format'            => format_rupiah($row['total_bayar']),
-        'metode_pembayaran'       => $row['metode_pembayaran'],
-        'bukti_transfer'          => $row['bukti_transfer'] ? UPLOAD_URL . $row['bukti_transfer'] : null,
-        'status'                  => $row['status'],
-        'tanggal_order'           => $row['tanggal_order'],
-        'verified_at'             => $row['verified_at'],
-        'snap_token'              => $row['snap_token'],
-        'midtrans_order_id'       => $row['midtrans_order_id'],
-        'midtrans_transaction_id' => $row['midtrans_transaction_id'],
-        'payment_type'            => $row['payment_type'],
-        'ticket_id'               => (int)$row['ticket_id'],
-        'nama_tiket'              => $row['nama_tiket'],
-        'harga'                   => (int)$row['harga'],
-        'harga_format'            => format_rupiah($row['harga']),
-        'deskripsi'               => $row['deskripsi']
+        'payment_id'        => (int)$row['payment_id'],
+        'kode_unik'         => $row['kode_unik'],
+        'jumlah_tiket'      => (int)$row['jumlah_tiket'],
+        'total_bayar'       => (int)$row['total_bayar'],
+        'total_format'      => format_rupiah($row['total_bayar']),
+        'metode_pembayaran' => $row['metode_pembayaran'],
+        'bukti_transfer'    => $row['bukti_transfer'] ? UPLOAD_URL . $row['bukti_transfer'] : null,
+        'status'            => $row['status'],
+        'is_checked_in'     => (int)$row['is_checked_in'],
+        'checked_in_at'     => $row['checked_in_at'],
+        'tanggal_order'     => $row['tanggal_order'],
+        'verified_at'       => $row['verified_at'],
+        'snap_token'        => $row['snap_token'],
+        'payment_type'      => $row['payment_type'],
+        'ticket_id'         => (int)$row['ticket_id'],
+        'nama_tiket'        => $row['nama_tiket'],
+        'harga'             => (int)$row['harga'],
+        'harga_format'      => format_rupiah($row['harga']),
+        'deskripsi'         => $row['deskripsi']
     ];
 }
 

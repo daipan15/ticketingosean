@@ -2112,9 +2112,9 @@
           const isTop3 = item.rank === 3 && item.tiket > 0;
 
           let rankBadge = `<span class="font-label-caps text-[10px] text-on-surface-variant font-bold">#${item.rank}</span>`;
-          if (isTop1) rankBadge = `<span class="text-sm font-bold drop-shadow-[0_0_8px_#efc05e]">🥇 1st</span>`;
-          else if (isTop2) rankBadge = `<span class="text-sm font-bold">🥈 2nd</span>`;
-          else if (isTop3) rankBadge = `<span class="text-sm font-bold">🥉 3rd</span>`;
+          if (isTop1) rankBadge = `<span class="font-mono text-xs font-bold text-tertiary border border-tertiary/60 bg-tertiary/10 px-1.5 py-0.5">#1</span>`;
+          else if (isTop2) rankBadge = `<span class="font-mono text-xs font-bold text-secondary border border-secondary/60 bg-secondary/10 px-1.5 py-0.5">#2</span>`;
+          else if (isTop3) rankBadge = `<span class="font-mono text-xs font-bold text-on-surface border border-outline-variant bg-surface-container px-1.5 py-0.5">#3</span>`;
 
           return `
             <div class="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer" title="${item.name} (${item.prodi}): ${item.tiket} tiket (${item.persentase}%)">
@@ -2164,15 +2164,12 @@
           const isTop3 = item.rank === 3 && item.tiket > 0;
 
           let rankBadge = `#${item.rank}`;
-          if (isTop1) rankBadge = `🥇`;
-          else if (isTop2) rankBadge = `🥈`;
-          else if (isTop3) rankBadge = `🥉`;
 
           return `
             <div class="border-2 border-outline-variant p-3 bg-surface-container-high shadow-[2px_2px_0px_0px_#15140c] transition-all">
               <div class="flex items-center justify-between gap-2 mb-1.5">
                 <div class="flex items-center gap-2">
-                  <span class="font-mono text-xs font-bold w-6 text-center text-secondary">${rankBadge}</span>
+                  <span class="font-mono text-xs font-bold w-7 text-center ${isTop1 ? 'text-tertiary' : isTop2 ? 'text-secondary' : 'text-on-surface'}">${rankBadge}</span>
                   <div>
                     <span class="font-headline-lg text-xs font-bold text-on-surface uppercase">${item.name}</span>
                     <span class="font-body-md text-[10px] text-on-surface-variant ml-1">(${item.prodi})</span>
@@ -2210,9 +2207,9 @@
       const rank3 = top3[2] || null;
 
       const podiumItems = [
-        { data: rank2, medal: '🥈', title: 'RUNNER UP', border: 'border-outline-variant', glow: '' },
-        { data: rank1, medal: '🥇', title: 'PEMUNCAK LEADERBOARD', border: 'border-tertiary', glow: 'shadow-[0_0_20px_rgba(239,192,94,0.2)] md:-translate-y-2' },
-        { data: rank3, medal: '🥉', title: 'PERINGKAT 3', border: 'border-outline-variant', glow: '' }
+        { data: rank2, rankText: 'RANK #2', title: 'RUNNER UP', border: 'border-outline-variant', glow: '', badgeColor: 'text-secondary border-secondary/40 bg-secondary/10' },
+        { data: rank1, rankText: 'RANK #1', title: 'PEMUNCAK LEADERBOARD', border: 'border-tertiary', glow: 'shadow-[0_0_20px_rgba(239,192,94,0.2)] md:-translate-y-2', badgeColor: 'text-tertiary border-tertiary/40 bg-tertiary/10' },
+        { data: rank3, rankText: 'RANK #3', title: 'PERINGKAT 3', border: 'border-outline-variant', glow: '', badgeColor: 'text-on-surface border-outline-variant bg-surface-container-high' }
       ];
 
       container.innerHTML = podiumItems.map(p => {
@@ -2224,7 +2221,7 @@
               <span class="font-label-caps text-[10px] uppercase font-bold text-tertiary tracking-widest bg-tertiary/10 border border-tertiary/30 px-2 py-0.5">
                 ${p.title}
               </span>
-              <span class="text-2xl">${p.medal}</span>
+              <span class="font-mono text-xs font-bold px-2 py-0.5 border ${p.badgeColor}">${p.rankText}</span>
             </div>
 
             <div>

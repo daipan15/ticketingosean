@@ -100,6 +100,26 @@ function format_rupiah($angka) {
     return 'Rp ' . number_format($angka, 0, ',', '.');
 }
 
+function apply_curl_ssl_options($ch) {
+    $ca_candidates = [
+        'D:/laragon/etc/ssl/cacert.pem',
+        'C:/laragon/etc/ssl/cacert.pem',
+        ini_get('curl.cainfo'),
+        ini_get('openssl.cafile')
+    ];
+    foreach ($ca_candidates as $path) {
+        if (!empty($path) && file_exists($path)) {
+            curl_setopt($ch, CURLOPT_CAINFO, $path);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            return;
+        }
+    }
+    // Fallback jika sertifikat CA tidak ditemukan di mesin lokal
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+}
+
 // =============================================
 // KONFIGURASI SMTP GMAIL (PHPMailer)
 // =============================================

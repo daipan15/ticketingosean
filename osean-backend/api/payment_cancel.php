@@ -2,6 +2,7 @@
 // =============================================
 // OSEAN - payment_cancel.php
 // Membatalkan transaksi pembayaran yang masih pending
+// CATATAN: kode_unik digunakan sebagai Midtrans order_id
 // =============================================
 require_once __DIR__ . '/../config.php';
 require_login();
@@ -18,8 +19,8 @@ if (!$payment_id) {
     send_error('Payment ID tidak valid.');
 }
 
-// Cek data payment milik user
-$stmt = $conn->prepare("SELECT id, status, midtrans_order_id FROM payments WHERE id = ? AND user_id = ?");
+// Cek data payment milik user (gunakan kode_unik untuk cancel Midtrans)
+$stmt = $conn->prepare("SELECT id, status, kode_unik FROM payments WHERE id = ? AND user_id = ?");
 $stmt->bind_param("ii", $payment_id, $user_id);
 $stmt->execute();
 $payment = $stmt->get_result()->fetch_assoc();
@@ -33,9 +34,9 @@ if ($payment['status'] !== 'pending') {
     send_error('Hanya pembayaran dengan status pending yang dapat dibatalkan.');
 }
 
-// Coba batalkan ke Midtrans API jika server key sudah diatur
-if (!empty($payment['midtrans_order_id']) && defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')) {
-    $order_id = $payment['midtrans_order_id'];
+// Coba batalkan ke Midtrans API menggunakan kode_unik sebagai order_id
+if (!empty($payment['kode_unik']) && defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')) {
+    $order_id = $payment['kode_unik']; // kode_unik = Midtrans order_id
     $auth = base64_encode(MIDTRANS_SERVER_KEY . ':');
     $url = "https://api.sandbox.midtrans.com/v2/{$order_id}/cancel";
 
@@ -48,6 +49,7 @@ if (!empty($payment['midtrans_order_id']) && defined('MIDTRANS_SERVER_KEY') && !
         'Authorization: Basic ' . $auth
     ]);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    apply_curl_ssl_options($ch);
     curl_exec($ch);
     curl_close($ch);
 }

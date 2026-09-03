@@ -160,6 +160,11 @@
         <span id="badge-qna"
           class="ml-auto bg-error text-on-error font-label-caps text-[10px] px-2 py-0.5 rounded-sm hidden">0</span>
       </a>
+      <a href="#verify" onclick="showTab('verify')" id="nav-verify"
+        class="nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all">
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        <span class="font-label-caps text-label-caps">Verifikasi Tiket</span>
+      </a>
     </nav>
 
     <!-- Logout -->
@@ -186,6 +191,7 @@
       <div class="flex items-center gap-2">
         <a href="#payments" onclick="showTab('payments')" class="nav-link text-tertiary font-label-caps text-xs px-2.5 py-1.5 border border-tertiary bg-tertiary/10">Bayar</a>
         <a href="#qna" onclick="showTab('qna')" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Tanya</a>
+        <a href="#verify" onclick="showTab('verify')" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Verif</a>
         <button id="mobile-logout-btn" onclick="document.getElementById('logout-btn').click()" class="text-error border border-error/50 p-1 flex items-center justify-center">
           <span class="material-symbols-outlined text-[18px]">logout</span>
         </button>
@@ -289,7 +295,8 @@
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Tiket</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Jumlah</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Total Bayar</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Metode / Detail</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Referral / Metode</th>
+                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Check-in</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Status</th>
                 <th class="p-4 font-label-caps text-label-caps text-on-surface-variant text-right">Aksi</th>
               </tr>
@@ -326,6 +333,45 @@
       <div id="qna-list" class="flex flex-col gap-4 hidden max-w-3xl"></div>
       <p id="qna-empty" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Tidak ada pertanyaan
         menunggu jawaban.</p>
+    </section>
+
+    <!-- ===== TAB: Verifikasi Tiket ===== -->
+    <section id="tab-verify" class="p-6 hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-tertiary">qr_code_scanner</span>
+          Verifikasi Tiket
+        </h3>
+      </div>
+
+      <p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xl">
+        Masukkan kode unik dari tiket pembeli untuk memverifikasi. Tiket hanya dapat diverifikasi <strong class="text-on-surface">1 kali</strong>.
+      </p>
+
+      <!-- Search Box Verifikasi -->
+      <div class="max-w-lg mb-8">
+        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-3">Kode Unik Tiket</label>
+        <div class="flex gap-3">
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-tertiary text-[20px] pointer-events-none">fingerprint</span>
+            <input type="text" id="verify-input"
+              placeholder="Contoh: OSN-ABCD-EFGH"
+              class="w-full bg-surface-container border-2 border-outline-variant pl-10 pr-4 py-3 text-on-surface font-mono text-sm uppercase placeholder:normal-case placeholder:font-body-md placeholder:text-on-surface-variant/50 focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c] tracking-widest"
+              oninput="this.value = this.value.toUpperCase()" />
+          </div>
+          <button id="verify-btn" onclick="verifyTicket()"
+            class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-6 py-3
+                   shadow-[4px_4px_0px_0px_#15140c] hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_#15140c]
+                   active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_#15140c] transition-all flex items-center gap-2 whitespace-nowrap">
+            <span class="material-symbols-outlined text-[18px]">search</span>
+            Cek Tiket
+          </button>
+        </div>
+        <p class="font-label-caps text-[10px] text-on-surface-variant mt-2 uppercase">Tekan Enter atau klik Cek Tiket untuk memverifikasi</p>
+      </div>
+
+      <!-- Hasil Verifikasi -->
+      <div id="verify-result" class="hidden max-w-lg"></div>
     </section>
 
     <!-- ===================== FOOTER ===================== -->
@@ -378,9 +424,10 @@
 
     /* -------- Tab System -------- */
     function showTab(tab) {
-      ['payments', 'qna'].forEach(id => {
+      ['payments', 'qna', 'verify'].forEach(id => {
         document.getElementById(`tab-${id}`).classList.toggle('hidden', id !== tab);
         const nav = document.getElementById(`nav-${id}`);
+        if (!nav) return;
         if (id === tab) {
           nav.className = 'nav-link text-tertiary bg-tertiary-container border-r-4 border-tertiary flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high transition-all';
         } else {
@@ -637,19 +684,22 @@
               <td class="p-4 font-body-md text-on-surface-variant">${p.jumlah_tiket}x</td>
               <td class="p-4 font-body-md text-secondary font-bold">${p.total_format}</td>
               <td class="p-4">
-                ${p.midtrans_order_id ? `
-                  <div class="flex flex-col gap-1">
-                    <span class="font-label-caps text-[10px] text-tertiary bg-tertiary/10 border border-tertiary/30 px-2 py-0.5 inline-block uppercase w-fit">
-                      ${p.payment_type || p.metode_pembayaran || 'Midtrans'}
-                    </span>
-                    <span class="font-mono text-[10px] text-on-surface-variant truncate max-w-[140px]" title="${p.midtrans_order_id}">${p.midtrans_order_id}</span>
+                ${p.referral_code ? `
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-highest border border-outline-variant shadow-[1px_1px_0px_0px_#15140c]">
+                    <span class="material-symbols-outlined text-[14px] text-secondary">campaign</span>
+                    <span class="font-mono text-xs font-bold text-secondary tracking-wider">${p.referral_code}</span>
                   </div>
-                ` : p.bukti_transfer ? `
-                  <a href="${p.bukti_transfer}" target="_blank"
-                     class="w-16 h-12 border border-outline-variant group-hover:border-tertiary transition-colors block overflow-hidden flex items-center justify-center hover:opacity-100 opacity-80">
-                    <img src="${p.bukti_transfer}" alt="Bukti" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\'material-symbols-outlined text-on-surface-variant\'>receipt</span>'" />
-                  </a>
-                ` : `<span class="font-label-caps text-[11px] text-on-surface-variant">${p.metode_pembayaran || '—'}</span>`}
+                ` : `
+                  <span class="font-body-md text-xs text-on-surface-variant/40">${p.metode_pembayaran || p.payment_type || '—'}</span>
+                `}
+              </td>
+              <td class="p-4">
+                ${p.is_checked_in ? `
+                  <span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 bg-secondary/20 border border-secondary/50 text-secondary">
+                    <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+                    Diambil
+                  </span>
+                ` : `<span class="font-label-caps text-[10px] text-on-surface-variant/40">—</span>`}
               </td>
               <td class="p-4 font-label-caps text-label-caps uppercase ${statusCls}">${statusLbl}</td>
               <td class="p-4">
@@ -815,6 +865,163 @@
     document.getElementById('logout-btn').addEventListener('click', async () => {
       try { await fetch(`${API}/logout.php`); } finally { window.location.href = 'login.html'; }
     });
+
+    /* -------- Verifikasi Tiket -------- */
+    // Allow Enter key to trigger verify
+    document.addEventListener('DOMContentLoaded', () => {
+      const inp = document.getElementById('verify-input');
+      if (inp) {
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') verifyTicket();
+        });
+      }
+    });
+
+    async function verifyTicket() {
+      const input = document.getElementById('verify-input');
+      const resultEl = document.getElementById('verify-result');
+      const btn = document.getElementById('verify-btn');
+      const kode_unik = input ? input.value.trim().toUpperCase() : '';
+
+      if (!kode_unik) {
+        showToast('Masukkan kode unik tiket terlebih dahulu.', 'error');
+        input?.focus();
+        return;
+      }
+
+      // Loading state
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">refresh</span> Mengecek...';
+      resultEl.classList.add('hidden');
+      resultEl.innerHTML = '';
+
+      try {
+        const res = await fetch(`${API}/ticket_verify.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kode_unik })
+        });
+        const data = await res.json();
+
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">search</span> Cek Tiket';
+
+        resultEl.classList.remove('hidden');
+
+        if (data.success && data.scan_result === 'valid') {
+          // ✅ Tiket valid & baru saja diverifikasi
+          const t = data.tiket;
+          resultEl.innerHTML = `
+            <div class="bg-secondary-container border-2 border-secondary shadow-[6px_6px_0px_0px_#15140c] p-6">
+              <div class="flex items-center gap-3 mb-5">
+                <span class="material-symbols-outlined text-[40px] text-secondary" style="font-variation-settings:'FILL' 1">check_circle</span>
+                <div>
+                  <p class="font-headline-lg text-xl text-secondary font-bold">Tiket Valid!</p>
+                  <p class="font-label-caps text-[10px] text-on-secondary-container uppercase">Selamat datang di OSEAN · ${t.checked_in_at}</p>
+                </div>
+              </div>
+              <div class="border-t border-secondary/30 pt-4 grid grid-cols-2 gap-3">
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Nama</p>
+                  <p class="font-body-md text-on-surface font-bold">${t.nama_user}</p>
+                </div>
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Email</p>
+                  <p class="font-body-md text-on-surface text-sm">${t.email_user}</p>
+                </div>
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Tiket</p>
+                  <p class="font-body-md text-on-surface font-bold">${t.nama_tiket}</p>
+                </div>
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Jumlah</p>
+                  <p class="font-body-md text-on-surface font-bold">${t.jumlah_tiket} orang</p>
+                </div>
+                <div class="col-span-2">
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Kode Unik</p>
+                  <p class="font-mono text-tertiary font-extrabold tracking-widest">${kode_unik}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          showToast('Tiket berhasil diverifikasi! ✓', 'success');
+          input.value = '';
+
+        } else if (!data.success && data.scan_result === 'already_used') {
+          // ❌ Tiket sudah diambil
+          const t = data.tiket;
+          resultEl.innerHTML = `
+            <div class="bg-error-container border-2 border-error shadow-[6px_6px_0px_0px_#15140c] p-6">
+              <div class="flex items-center gap-3 mb-5">
+                <span class="material-symbols-outlined text-[40px] text-error" style="font-variation-settings:'FILL' 1">cancel</span>
+                <div>
+                  <p class="font-headline-lg text-xl text-error font-bold">Tiket Sudah Diambil</p>
+                  <p class="font-label-caps text-[10px] text-on-error-container uppercase">Diverifikasi pada ${t.checked_in_at}</p>
+                </div>
+              </div>
+              <div class="border-t border-error/30 pt-4 grid grid-cols-2 gap-3">
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Nama</p>
+                  <p class="font-body-md text-on-surface font-bold">${t.nama_user}</p>
+                </div>
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Tiket</p>
+                  <p class="font-body-md text-on-surface font-bold">${t.nama_tiket}</p>
+                </div>
+                <div class="col-span-2">
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Kode Unik</p>
+                  <p class="font-mono text-tertiary font-extrabold tracking-widest">${kode_unik}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          showToast('Tiket sudah diambil! Verifikasi ditolak.', 'error');
+
+        } else if (!data.success && data.scan_result === 'not_found') {
+          // ❌ Kode tidak ditemukan
+          resultEl.innerHTML = `
+            <div class="bg-surface-container border-2 border-outline-variant shadow-[6px_6px_0px_0px_#15140c] p-6">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-[36px] text-on-surface-variant">search_off</span>
+                <div>
+                  <p class="font-headline-lg text-lg text-on-surface">Tiket Tidak Ditemukan</p>
+                  <p class="font-body-md text-sm text-on-surface-variant mt-1">${data.message}</p>
+                  <p class="font-mono text-xs text-tertiary mt-2 tracking-widest">${kode_unik}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          showToast('Kode tiket tidak ditemukan.', 'error');
+
+        } else {
+          // ❌ Status tiket tidak valid (belum bayar, kedaluwarsa, dll)
+          const t = data.tiket || {};
+          resultEl.innerHTML = `
+            <div class="bg-surface-container border-2 border-error/40 shadow-[6px_6px_0px_0px_#15140c] p-6">
+              <div class="flex items-center gap-3 mb-3">
+                <span class="material-symbols-outlined text-[36px] text-error">warning</span>
+                <div>
+                  <p class="font-headline-lg text-lg text-error">Tiket Tidak Aktif</p>
+                  <p class="font-body-md text-sm text-on-surface-variant mt-1">${data.message}</p>
+                </div>
+              </div>
+              ${t.nama_user ? `
+                <div class="border-t border-outline-variant/50 pt-3 mt-3 grid grid-cols-2 gap-2">
+                  <div><p class="font-label-caps text-[10px] text-on-surface-variant uppercase">Nama</p><p class="font-body-md text-on-surface text-sm">${t.nama_user}</p></div>
+                  <div><p class="font-label-caps text-[10px] text-on-surface-variant uppercase">Tiket</p><p class="font-body-md text-on-surface text-sm">${t.nama_tiket}</p></div>
+                </div>` : ''}
+            </div>
+          `;
+          showToast(data.message || 'Tiket tidak valid.', 'error');
+        }
+
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">search</span> Cek Tiket';
+        console.error('verifyTicket error:', err);
+        showToast('Gagal menghubungi server. Coba lagi.', 'error');
+      }
+    }
   </script>
 </body>
 

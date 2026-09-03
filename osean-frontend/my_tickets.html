@@ -13,6 +13,8 @@
   <link rel="icon" type="image/png" href="assets/osean_logo.png" />
 
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Midtrans Snap SDK (Sandbox) -->
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-XXXX"></script>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
@@ -325,12 +327,28 @@
     /* -------- Badge status -------- */
     function statusBadge(status) {
       const map = {
-        verified: 'bg-secondary text-on-secondary',
-        pending:  'bg-[#402d00] text-tertiary',
-        rejected: 'bg-error-container text-error'
+        settlement: 'bg-secondary text-on-secondary',
+        capture:    'bg-secondary text-on-secondary',
+        verified:   'bg-secondary text-on-secondary',
+        pending:    'bg-[#402d00] text-tertiary',
+        expire:     'bg-surface-variant text-on-surface-variant',
+        cancel:     'bg-surface-variant text-on-surface-variant',
+        deny:       'bg-error-container text-error',
+        rejected:   'bg-error-container text-error',
+        refund:     'bg-surface-variant text-on-surface-variant'
       };
-      const label = { verified: '✓ Terverifikasi', pending: '⏳ Menunggu', rejected: '✕ Ditolak' };
-      const cls   = map[status] || 'bg-outline-variant text-on-surface';
+      const label = {
+        settlement: '✓ Terbayar',
+        capture:    '✓ Terbayar',
+        verified:   '✓ Terverifikasi',
+        pending:    '⏳ Menunggu',
+        expire:     '⏰ Kedaluwarsa',
+        cancel:     '✕ Dibatalkan',
+        deny:       '✕ Ditolak',
+        rejected:   '✕ Ditolak',
+        refund:     '↩ Refund'
+      };
+      const cls = map[status] || 'bg-outline-variant text-on-surface';
       return `<span class="inline-flex items-center gap-1 font-label-caps text-label-caps px-3 py-1 shadow-[2px_2px_0px_0px_#15140c] ${cls}">${label[status] || status}</span>`;
     }
 
@@ -341,7 +359,7 @@
         const data = await res.json();
         document.getElementById('tickets-loading').classList.add('hidden');
 
-        if (!data.success || data.tikets.length === 0) {
+        if (!data.success || !data.tikets || data.tikets.length === 0) {
           document.getElementById('tickets-empty').classList.remove('hidden');
           renderLedger([]);
           return;
@@ -358,19 +376,25 @@
 
     function renderTickets(tikets) {
       const el = document.getElementById('tickets-list');
-      el.innerHTML = tikets.map(t => `
+      el.innerHTML = tikets.map(t => {
+        const isActive = ['settlement', 'capture', 'verified'].includes(t.status);
+        const isPending = t.status === 'pending';
+        const paymentLabel = t.payment_type || t.metode_pembayaran || 'Midtrans';
+        const sideColor = isActive ? 'bg-secondary' : isPending ? 'bg-tertiary' : 'bg-error';
+
+        return `
         <div class="flex flex-col md:flex-row bg-surface-container border border-outline-variant
                     shadow-[8px_8px_0px_0px_rgba(15,14,7,1)] hover:-translate-y-1 transition-transform duration-300 relative">
 
           <!-- Sisi kiri warna sesuai status -->
-          <div class="w-full md:w-2 min-h-[4px] ${t.status === 'verified' ? 'bg-secondary' : t.status === 'pending' ? 'bg-tertiary' : 'bg-error'}"></div>
+          <div class="w-full md:w-2 min-h-[4px] ${sideColor}"></div>
 
           <!-- Detail tiket -->
           <div class="flex-1 p-6 flex flex-col gap-4">
             <div class="flex items-start justify-between gap-4">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">
-                  ${t.metode_pembayaran} • ${new Date(t.tanggal_order).toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'})}
+                  ${paymentLabel} • ${new Date(t.tanggal_order).toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'})}
                 </p>
                 <h3 class="font-headline-lg text-headline-lg text-on-surface">${t.nama_tiket}</h3>
                 <p class="font-body-md text-body-md text-on-surface-variant mt-1">${t.deskripsi ?? ''}</p>
@@ -378,23 +402,43 @@
               ${statusBadge(t.status)}
             </div>
 
-            <div class="flex items-end justify-between border-t border-dashed border-outline-variant pt-4">
-              <div>
+            <div class="border-t border-dashed border-outline-variant pt-4 flex flex-col gap-3">
+              <!-- Harga Full-Width sepanjang box -->
+              <div class="w-full">
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Jumlah × Harga</p>
-                <p class="font-headline-lg text-xl sm:text-headline-lg text-tertiary mt-1">
+                <p class="font-headline-lg text-xl sm:text-headline-lg text-tertiary mt-1 whitespace-nowrap">
                   ${t.jumlah_tiket} × ${t.harga_format} = <span class="text-secondary">${t.total_format}</span>
                 </p>
               </div>
-              ${t.status === 'verified' ?
-                `<button onclick="window.open('${t.bukti_transfer}','_blank')"
-                         class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors">
-                   Lihat Bukti
-                 </button>` : ''
-              }
+
+              <!-- Baris Bawah: ID di kiri, Tombol Batalkan & Bayar Sekarang Sebelahan di kanan -->
+              <div class="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  ${t.midtrans_order_id ? `
+                    <p class="font-label-caps text-[11px] text-on-surface-variant uppercase opacity-70">ID: ${t.midtrans_order_id}</p>
+                  ` : ''}
+                </div>
+                <div class="flex items-center gap-2 flex-nowrap">
+                  ${isPending ? `
+                    <button onclick="cancelPayment(${t.payment_id})" class="border border-error text-error hover:bg-error/10 font-label-caps text-label-caps uppercase px-3 py-2
+                      shadow-[2px_2px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1 whitespace-nowrap">
+                      <span class="material-symbols-outlined text-[16px]">cancel</span> Batalkan
+                    </button>
+                  ` : ''}
+                  ${isPending && t.snap_token ? `
+                    <button onclick="payNow('${t.snap_token}')" class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+                      shadow-[3px_3px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_#15140c]
+                      active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1 whitespace-nowrap">
+                      <span class="material-symbols-outlined text-[16px]">payments</span> Bayar Sekarang
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function renderLedger(tikets) {
@@ -403,17 +447,20 @@
         el.innerHTML = '<li class="font-body-md text-body-md text-on-surface-variant opacity-60">Belum ada pesanan.</li>';
         return;
       }
-      el.innerHTML = tikets.map(t => `
+      el.innerHTML = tikets.map(t => {
+        const isActive = ['settlement', 'capture', 'verified'].includes(t.status);
+        const isPending = t.status === 'pending';
+        const statusLabel = isActive ? 'Confirmed' : isPending ? 'Menunggu' : (['expire','cancel'].includes(t.status) ? 'Expired' : 'Ditolak');
+        const statusColor = isActive ? 'text-secondary' : isPending ? 'text-tertiary' : 'text-error';
+        return `
         <li class="flex justify-between items-center border-b border-outline-variant pb-2 gap-3">
           <div>
             <p class="font-body-md text-on-surface font-bold text-sm">${t.nama_tiket}</p>
-            <p class="font-label-caps text-[10px] ${t.status==='verified'?'text-secondary':t.status==='pending'?'text-tertiary':'text-error'} mt-0.5 uppercase">
-              ${t.status==='verified'?'Confirmed':t.status==='pending'?'Menunggu':'Ditolak'}
-            </p>
+            <p class="font-label-caps text-[10px] ${statusColor} mt-0.5 uppercase">${statusLabel}</p>
           </div>
           <span class="font-body-md text-on-surface text-sm whitespace-nowrap">${t.total_format}</span>
-        </li>
-      `).join('');
+        </li>`;
+      }).join('');
     }
 
     /* -------- Load QnA -------- */
@@ -437,6 +484,46 @@
       } catch {
         document.getElementById('qna-list').innerHTML =
           '<p class="text-error font-body-md text-sm">Gagal memuat pertanyaan.</p>';
+      }
+    }
+
+    /* -------- Pay Now (re-open Snap) -------- */
+    function payNow(snapToken) {
+      window.snap.pay(snapToken, {
+        onSuccess: function(result) {
+          showToast('Pembayaran berhasil! 🎉', 'success');
+          setTimeout(() => location.reload(), 1500);
+        },
+        onPending: function(result) {
+          showToast('Pembayaran pending. Selesaikan pembayaranmu.', 'info');
+        },
+        onError: function(result) {
+          showToast('Pembayaran gagal. Silakan coba lagi.', 'error');
+        },
+        onClose: function() {
+          showToast('Popup pembayaran ditutup.', 'info');
+        }
+      });
+    }
+
+    /* -------- Cancel Payment -------- */
+    async function cancelPayment(paymentId) {
+      if (!confirm('Apakah kamu yakin ingin membatalkan pembayaran ini?')) return;
+      try {
+        const res = await fetch(`${API}/payment_cancel.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payment_id: paymentId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, 'success');
+          loadTickets();
+        } else {
+          showToast(data.message, 'error');
+        }
+      } catch {
+        showToast('Gagal membatalkan pembayaran.', 'error');
       }
     }
 

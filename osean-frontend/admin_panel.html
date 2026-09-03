@@ -146,10 +146,15 @@
 
     <!-- Nav -->
     <nav class="flex-1 flex flex-col gap-1">
-      <a href="#payments" onclick="showTab('payments')" id="nav-payments"
+      <a href="#verify" onclick="showTab('verify')" id="nav-verify"
         class="nav-link text-tertiary bg-tertiary-container border-r-4 border-tertiary flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high transition-all">
-        <span class="material-symbols-outlined">fact_check</span>
-        <span class="font-label-caps text-label-caps">Verifikasi Bayar</span>
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        <span class="font-label-caps text-label-caps">Verifikasi Tiket</span>
+      </a>
+      <a href="#payments" onclick="showTab('payments')" id="nav-payments"
+        class="nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all">
+        <span class="material-symbols-outlined">receipt_long</span>
+        <span class="font-label-caps text-label-caps">Riwayat Transaksi</span>
         <span id="badge-pending"
           class="ml-auto bg-error text-on-error font-label-caps text-[10px] px-2 py-0.5 rounded-sm hidden">0</span>
       </a>
@@ -159,11 +164,6 @@
         <span class="font-label-caps text-label-caps">Pertanyaan</span>
         <span id="badge-qna"
           class="ml-auto bg-error text-on-error font-label-caps text-[10px] px-2 py-0.5 rounded-sm hidden">0</span>
-      </a>
-      <a href="#verify" onclick="showTab('verify')" id="nav-verify"
-        class="nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all">
-        <span class="material-symbols-outlined">qr_code_scanner</span>
-        <span class="font-label-caps text-label-caps">Verifikasi Tiket</span>
       </a>
     </nav>
 
@@ -189,9 +189,9 @@
         <span class="font-label-caps text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 border border-outline-variant">Admin</span>
       </div>
       <div class="flex items-center gap-2">
-        <a href="#payments" onclick="showTab('payments')" class="nav-link text-tertiary font-label-caps text-xs px-2.5 py-1.5 border border-tertiary bg-tertiary/10">Bayar</a>
-        <a href="#qna" onclick="showTab('qna')" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Tanya</a>
-        <a href="#verify" onclick="showTab('verify')" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Verif</a>
+        <a href="#verify" onclick="showTab('verify')" id="mob-verify" class="nav-link text-tertiary font-label-caps text-xs px-2.5 py-1.5 border border-tertiary bg-tertiary/10">Verif</a>
+        <a href="#payments" onclick="showTab('payments')" id="mob-payments" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Riwayat</a>
+        <a href="#qna" onclick="showTab('qna')" id="mob-qna" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Tanya</a>
         <button id="mobile-logout-btn" onclick="document.getElementById('logout-btn').click()" class="text-error border border-error/50 p-1 flex items-center justify-center">
           <span class="material-symbols-outlined text-[18px]">logout</span>
         </button>
@@ -217,135 +217,37 @@
       </div>
     </header>
 
-    <!-- Stats Bar (1 kolom di HP, 3 kolom di iPad & Laptop) -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 p-4 sm:p-6 border-b border-outline-variant" id="stats-bar">
-      <div class="bg-primary-container border border-outline-variant p-4 shadow-[4px_4px_0px_0px_#15140c]">
-        <p class="font-label-caps text-label-caps text-on-primary-container mb-1">Total Revenue</p>
-        <p class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary" id="stat-revenue">—</p>
+    <!-- Stats Bar (2 kolom di HP, 4 kolom di Laptop/Desktop) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-6 border-b border-outline-variant" id="stats-bar">
+      <div class="bg-primary-container border border-outline-variant p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#15140c]">
+        <p class="font-label-caps text-[11px] text-on-primary-container mb-1">Total Revenue</p>
+        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-tertiary" id="stat-revenue">—</p>
       </div>
-      <div class="bg-surface-container border border-outline-variant p-4 shadow-[4px_4px_0px_0px_#15140c]">
-        <p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Transaksi Berhasil</p>
-        <p class="font-headline-lg text-2xl sm:text-headline-lg text-on-surface" id="stat-verified">—</p>
+      <div class="bg-surface-container border border-outline-variant p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#15140c]">
+        <p class="font-label-caps text-[11px] text-on-surface-variant mb-1">Transaksi Berhasil</p>
+        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-on-surface" id="stat-verified">—</p>
       </div>
-      <div class="bg-[#2E1A47] border border-tertiary p-4 shadow-[4px_4px_0px_0px_#efc05e]">
-        <p class="font-label-caps text-label-caps text-tertiary mb-1">Menunggu Verifikasi</p>
-        <p class="font-headline-lg text-2xl sm:text-headline-lg text-on-surface" id="stat-pending">—</p>
+      <div class="bg-[#2E1A47] border border-tertiary p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#efc05e]">
+        <p class="font-label-caps text-[11px] text-tertiary mb-1">Menunggu Verifikasi</p>
+        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-on-surface" id="stat-pending">—</p>
+      </div>
+      <div class="bg-surface-container border border-secondary/50 p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#c4cd6f]">
+        <p class="font-label-caps text-[11px] text-secondary mb-1">Tiket Fisik Ditukar</p>
+        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-secondary" id="stat-checkin">—</p>
       </div>
     </div>
 
-    <!-- ===== TAB: Payments ===== -->
-    <section id="tab-payments" class="p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
-          <span class="material-symbols-outlined text-secondary">fact_check</span>
-          Verifikasi Pembayaran
-        </h3>
-        <button onclick="loadPayments()"
-          class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh
-        </button>
-      </div>
-
-      <!-- Search Bar & Status Filter Strip -->
-      <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mb-6">
-        <!-- Search Box -->
-        <div class="relative flex-1 max-w-xl">
-          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none">search</span>
-          <input type="text" id="pay-search-input" placeholder="Cari Kode Unik (OSN-XXXX), User, Referral (HIMATIF, HIFI..), Tiket..."
-            class="w-full bg-surface-container border-2 border-outline-variant pl-10 pr-10 py-2.5 text-on-surface font-body-md text-xs sm:text-sm placeholder:text-on-surface-variant/50 focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c]" />
-          <button type="button" id="pay-search-clear" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error transition-colors">
-            <span class="material-symbols-outlined text-[18px]">close</span>
-          </button>
-        </div>
-
-        <!-- Quick Filter Buttons & Counter -->
-        <div class="flex items-center gap-2 flex-wrap">
-          <div class="flex border border-outline-variant bg-surface-container p-1 shadow-[2px_2px_0px_0px_#15140c]" id="pay-status-filters">
-            <button type="button" onclick="setFilterStatus('')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-tertiary bg-tertiary-container border border-tertiary" data-status="">Semua</button>
-            <button type="button" onclick="setFilterStatus('pending')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface" data-status="pending">Pending</button>
-            <button type="button" onclick="setFilterStatus('verified')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface" data-status="verified">Verified</button>
-            <button type="button" onclick="setFilterStatus('rejected')" class="pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface" data-status="rejected">Ditolak</button>
-          </div>
-          <span id="search-count" class="font-label-caps text-[10px] text-on-surface-variant uppercase px-2.5 py-1.5 bg-surface-container border border-outline-variant shadow-[2px_2px_0px_0px_#15140c]">
-            Total: <strong id="search-count-num" class="text-secondary">0</strong>
-          </span>
-        </div>
-      </div>
-
-      <!-- Loading -->
-      <div id="pay-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
-        <span class="material-symbols-outlined animate-spin">refresh</span>
-        <span class="font-body-md text-body-md">Memuat pembayaran...</span>
-      </div>
-
-      <!-- Table -->
-      <div class="hidden overflow-hidden border border-outline-variant shadow-[8px_8px_0px_0px_rgba(21,20,12,1)]"
-        id="pay-table-wrap">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b-2 border-dashed border-outline-variant bg-surface-container-highest">
-                <th class="p-4 font-label-caps text-label-caps text-tertiary font-bold tracking-wider">
-                  <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px]">fingerprint</span>
-                    Kode Unik
-                  </div>
-                </th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">User</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Tiket</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Jumlah</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Total Bayar</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Referral / Metode</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Check-in</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant">Status</th>
-                <th class="p-4 font-label-caps text-label-caps text-on-surface-variant text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="pay-tbody" class="divide-y divide-outline-variant/30"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <p id="pay-empty" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Belum ada pembayaran.</p>
-      <p id="pay-no-search" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Tidak ada pembayaran yang cocok dengan kata kunci pencarian.</p>
-    </section>
-
-    <!-- ===== TAB: QnA ===== -->
-    <section id="tab-qna" class="p-6 hidden">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">forum</span>
-          Kelola Pertanyaan
-        </h3>
-        <button onclick="loadQnA()"
-          class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh
-        </button>
-      </div>
-
-      <!-- Loading -->
-      <div id="qna-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
-        <span class="material-symbols-outlined animate-spin">refresh</span>
-        <span class="font-body-md text-body-md">Memuat pertanyaan...</span>
-      </div>
-
-      <!-- List (injected) -->
-      <div id="qna-list" class="flex flex-col gap-4 hidden max-w-3xl"></div>
-      <p id="qna-empty" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Tidak ada pertanyaan
-        menunggu jawaban.</p>
-    </section>
-
     <!-- ===== TAB: Verifikasi Tiket ===== -->
-    <section id="tab-verify" class="p-6 hidden">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+    <section id="tab-verify" class="p-4 sm:p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-headline-lg text-xl sm:text-2xl text-on-surface flex items-center gap-2">
           <span class="material-symbols-outlined text-tertiary">qr_code_scanner</span>
-          Verifikasi Tiket
+          Verifikasi Tiket Masuk
         </h3>
       </div>
 
-      <p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xl">
-        Masukkan kode unik dari tiket pembeli untuk memverifikasi. Tiket hanya dapat diverifikasi <strong class="text-on-surface">1 kali</strong>.
+      <p class="font-body-md text-sm text-on-surface-variant mb-6 max-w-xl">
+        Masukkan kode unik dari tiket pembeli untuk memverifikasi dan menukarkan dengan tiket fisik. Tiket hanya dapat diverifikasi <strong class="text-on-surface">1 kali</strong>.
       </p>
 
       <!-- Search Box Verifikasi -->
@@ -372,6 +274,114 @@
 
       <!-- Hasil Verifikasi -->
       <div id="verify-result" class="hidden max-w-lg"></div>
+    </section>
+
+    <!-- ===== TAB: Riwayat Transaksi (Payments) ===== -->
+    <section id="tab-payments" class="p-4 sm:p-6 hidden">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-headline-lg text-xl sm:text-2xl text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">receipt_long</span>
+          Riwayat Transaksi
+        </h3>
+        <button onclick="loadPayments()"
+          class="font-label-caps text-xs text-tertiary hover:text-secondary underline underline-offset-4 transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh
+        </button>
+      </div>
+
+      <!-- Search Bar & Status Filter Strip -->
+      <div class="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3 mb-5">
+        <!-- Search Box -->
+        <div class="relative flex-1 max-w-xl">
+          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">search</span>
+          <input type="text" id="pay-search-input" placeholder="Cari Kode Unik (OSN-XXXX), Nama, Email, Referral, Tiket..."
+            class="w-full bg-surface-container border-2 border-outline-variant pl-10 pr-10 py-2 text-on-surface font-body-md text-xs sm:text-sm placeholder:text-on-surface-variant/50 focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c]" />
+          <button type="button" id="pay-search-clear" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error transition-colors">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+
+        <!-- Quick Filter Buttons & Counter -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <div class="flex border border-outline-variant bg-surface-container p-1 shadow-[2px_2px_0px_0px_#15140c] flex-wrap gap-1" id="pay-status-filters">
+            <button type="button" onclick="setFilterStatus('')" class="pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-tertiary bg-tertiary-container border border-tertiary transition-all" data-status="">Semua</button>
+            <button type="button" onclick="setFilterStatus('pending')" class="pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface transition-all" data-status="pending">Pending</button>
+            <button type="button" onclick="setFilterStatus('verified')" class="pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface transition-all" data-status="verified">Berhasil</button>
+            <button type="button" onclick="setFilterStatus('not_checked_in')" class="pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface transition-all" data-status="not_checked_in">Belum Ditukar</button>
+            <button type="button" onclick="setFilterStatus('checked_in')" class="pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface transition-all" data-status="checked_in">Sudah Ditukar</button>
+            <button type="button" onclick="setFilterStatus('rejected')" class="pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface transition-all" data-status="rejected">Ditolak/Batal</button>
+          </div>
+          <span id="search-count" class="font-label-caps text-[10px] text-on-surface-variant uppercase px-2.5 py-1.5 bg-surface-container border border-outline-variant shadow-[2px_2px_0px_0px_#15140c] whitespace-nowrap">
+            Total: <strong id="search-count-num" class="text-secondary">0</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="pay-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
+        <span class="material-symbols-outlined animate-spin">refresh</span>
+        <span class="font-body-md text-sm">Memuat pembayaran...</span>
+      </div>
+
+      <!-- Table (Ringkas & Fit Content) -->
+      <div class="hidden overflow-hidden border border-outline-variant shadow-[6px_6px_0px_0px_rgba(21,20,12,1)]"
+        id="pay-table-wrap">
+        <div class="overflow-x-auto max-w-full">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b-2 border-dashed border-outline-variant bg-surface-container-highest">
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-tertiary font-bold tracking-wider whitespace-nowrap">
+                  <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[15px]">fingerprint</span>
+                    Kode Unik
+                  </div>
+                </th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-on-surface-variant whitespace-nowrap">User</th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-on-surface-variant whitespace-nowrap">Tiket</th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-on-surface-variant whitespace-nowrap text-center">Jml</th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-on-surface-variant whitespace-nowrap">Total Bayar</th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-on-surface-variant whitespace-nowrap">Referral / Metode</th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-tertiary font-bold tracking-wider whitespace-nowrap">
+                  <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[15px]">confirmation_number</span>
+                    Check-in (Fisik)
+                  </div>
+                </th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-on-surface-variant whitespace-nowrap">Status Bayar</th>
+              </tr>
+            </thead>
+            <tbody id="pay-tbody" class="divide-y divide-outline-variant/30 text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <p id="pay-empty" class="hidden font-body-md text-sm text-on-surface-variant py-8">Belum ada pembayaran.</p>
+      <p id="pay-no-search" class="hidden font-body-md text-sm text-on-surface-variant py-8">Tidak ada pembayaran yang cocok dengan filter atau kata kunci pencarian.</p>
+    </section>
+
+    <!-- ===== TAB: QnA ===== -->
+    <section id="tab-qna" class="p-6 hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">forum</span>
+          Kelola Pertanyaan
+        </h3>
+        <button onclick="loadQnA()"
+          class="font-label-caps text-label-caps text-tertiary hover:text-secondary underline underline-offset-4 transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div id="qna-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
+        <span class="material-symbols-outlined animate-spin">refresh</span>
+        <span class="font-body-md text-body-md">Memuat pertanyaan...</span>
+      </div>
+
+      <!-- List (injected) -->
+      <div id="qna-list" class="flex flex-col gap-4 hidden max-w-3xl"></div>
+      <p id="qna-empty" class="hidden font-body-md text-body-md text-on-surface-variant py-8">Tidak ada pertanyaan
+        menunggu jawaban.</p>
     </section>
 
     <!-- ===================== FOOTER ===================== -->
@@ -424,14 +434,28 @@
 
     /* -------- Tab System -------- */
     function showTab(tab) {
-      ['payments', 'qna', 'verify'].forEach(id => {
-        document.getElementById(`tab-${id}`).classList.toggle('hidden', id !== tab);
+      ['verify', 'payments', 'qna'].forEach(id => {
+        const tabEl = document.getElementById(`tab-${id}`);
+        if (tabEl) tabEl.classList.toggle('hidden', id !== tab);
+
+        // Desktop nav link
         const nav = document.getElementById(`nav-${id}`);
-        if (!nav) return;
-        if (id === tab) {
-          nav.className = 'nav-link text-tertiary bg-tertiary-container border-r-4 border-tertiary flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high transition-all';
-        } else {
-          nav.className = 'nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all';
+        if (nav) {
+          if (id === tab) {
+            nav.className = 'nav-link text-tertiary bg-tertiary-container border-r-4 border-tertiary flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high transition-all';
+          } else {
+            nav.className = 'nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all';
+          }
+        }
+
+        // Mobile top nav link
+        const mobNav = document.getElementById(`mob-${id}`);
+        if (mobNav) {
+          if (id === tab) {
+            mobNav.className = 'nav-link text-tertiary font-label-caps text-xs px-2.5 py-1.5 border border-tertiary bg-tertiary/10';
+          } else {
+            mobNav.className = 'nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant';
+          }
         }
       });
     }
@@ -445,6 +469,9 @@
           window.location.href = 'login.html'; return;
         }
         document.getElementById('admin-nama').textContent = data.user.nama;
+        // Buka tab Verifikasi Tiket sebagai tab utama default
+        const hash = window.location.hash.replace('#', '');
+        showTab(['verify', 'payments', 'qna'].includes(hash) ? hash : 'verify');
         await Promise.all([loadPayments(), loadQnA()]);
       } catch { window.location.href = 'login.html'; }
     })();
@@ -479,9 +506,9 @@
       document.querySelectorAll('.pay-filter-btn').forEach(btn => {
         const isActive = btn.dataset.status === status;
         if (isActive) {
-          btn.className = 'pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-tertiary bg-tertiary-container border border-tertiary';
+          btn.className = 'pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-tertiary bg-tertiary-container border border-tertiary transition-all';
         } else {
-          btn.className = 'pay-filter-btn px-3 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface';
+          btn.className = 'pay-filter-btn px-2.5 py-1 font-label-caps text-[10px] uppercase font-bold text-on-surface-variant hover:text-on-surface transition-all';
         }
       });
       applyPaymentsFilter();
@@ -509,8 +536,24 @@
       if (!allPayments) return;
 
       const filtered = allPayments.filter(p => {
+        const isSuccess = ['settlement', 'capture', 'verified'].includes(p.status);
+        const isFailed = ['rejected', 'deny', 'cancel', 'expire'].includes(p.status);
+        const isCheckedIn = Number(p.is_checked_in) === 1;
+
         // Filter status
-        if (currentFilterStatus && p.status !== currentFilterStatus) return false;
+        if (currentFilterStatus) {
+          if (currentFilterStatus === 'pending') {
+            if (p.status !== 'pending') return false;
+          } else if (currentFilterStatus === 'verified') {
+            if (!isSuccess) return false;
+          } else if (currentFilterStatus === 'checked_in') {
+            if (!isSuccess || !isCheckedIn) return false;
+          } else if (currentFilterStatus === 'not_checked_in') {
+            if (!isSuccess || isCheckedIn) return false;
+          } else if (currentFilterStatus === 'rejected') {
+            if (!isFailed) return false;
+          }
+        }
 
         // Filter search keyword
         if (currentSearchQuery) {
@@ -519,7 +562,7 @@
           const matchName = (p.nama || '').toLowerCase().includes(q);
           const matchEmail = (p.email || '').toLowerCase().includes(q);
           const matchTicket = (p.nama_tiket || '').toLowerCase().includes(q);
-          const matchMethod = (p.metode_pembayaran || '').toLowerCase().includes(q);
+          const matchMethod = (p.metode_pembayaran || p.payment_type || '').toLowerCase().includes(q);
           const matchReferral = (p.referral_code || '').toLowerCase().includes(q);
           if (!matchCode && !matchName && !matchEmail && !matchTicket && !matchMethod && !matchReferral) return false;
         }
@@ -559,65 +602,113 @@
 
       tbody.innerHTML = payments.map(p => {
         const isPending = p.status === 'pending';
-        const statusCls = p.status === 'verified' ? 'text-secondary' : p.status === 'rejected' ? 'text-error' : 'text-tertiary';
-        const statusLbl = p.status === 'verified' ? '✓ Verified' : p.status === 'rejected' ? '✕ Ditolak' : '⏳ Pending';
+        const isSuccess = ['settlement', 'capture', 'verified'].includes(p.status);
+        const isFailed = ['rejected', 'deny'].includes(p.status);
+        const isExpired = ['expire', 'cancel'].includes(p.status);
+        const isCheckedIn = Number(p.is_checked_in) === 1;
+
+        // Badge Status Pembayaran
+        let statusBadge = '';
+        if (isSuccess) {
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-secondary bg-secondary/10 border border-secondary/40 whitespace-nowrap">✓ ${p.status === 'verified' ? 'Verified' : 'Settled'}</span>`;
+        } else if (isPending) {
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-tertiary bg-tertiary/10 border border-tertiary/40 whitespace-nowrap">⏳ Pending</span>`;
+        } else if (isFailed) {
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-error bg-error/10 border border-error/40 whitespace-nowrap">✕ Ditolak</span>`;
+        } else if (isExpired) {
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-on-surface-variant bg-surface-container border border-outline-variant whitespace-nowrap">✕ Batal</span>`;
+        } else {
+          statusBadge = `<span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 font-bold uppercase text-on-surface-variant bg-surface-container border border-outline-variant whitespace-nowrap">${p.status}</span>`;
+        }
+
+        // Check-in (Penukaran Tiket Fisik)
+        let checkinHtml = '';
+        if (!isSuccess) {
+          checkinHtml = `<span class="text-on-surface-variant/40 text-xs font-mono select-none" title="Tiket belum aktif">—</span>`;
+        } else if (isCheckedIn) {
+          let checkinTimeStr = '';
+          if (p.checked_in_at) {
+            try {
+              const dt = new Date(p.checked_in_at.replace(/-/g, '/'));
+              checkinTimeStr = dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+              checkinTimeStr = p.checked_in_at.substring(11, 16);
+            }
+          }
+          checkinHtml = `
+            <div class="flex items-center gap-1.5 whitespace-nowrap">
+              <span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 bg-secondary/20 border border-secondary/60 text-secondary font-bold" title="Tiket fisik sudah diserahkan (${p.checked_in_at || ''})">
+                <span class="material-symbols-outlined text-[13px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+                Ditukar ${checkinTimeStr ? `(${checkinTimeStr})` : ''}
+              </span>
+              <button type="button" onclick="toggleCheckin(${p.payment_id}, 'uncheckin', '${p.kode_unik}')"
+                      class="text-on-surface-variant/40 hover:text-error transition-colors p-0.5 flex items-center justify-center" title="Batalkan Check-in (Undo)">
+                <span class="material-symbols-outlined text-[15px]">undo</span>
+              </button>
+            </div>
+          `;
+        } else {
+          const safeName = (p.nama || '').replace(/'/g, "\\'");
+          checkinHtml = `
+            <button type="button" onclick="toggleCheckin(${p.payment_id}, 'checkin', '${p.kode_unik}', '${safeName}')"
+                    class="inline-flex items-center gap-1 bg-tertiary text-on-tertiary font-label-caps text-[10px] font-bold px-2.5 py-1 uppercase shadow-[1px_1px_0px_0px_#15140c] hover:bg-tertiary-fixed hover:translate-y-[-1px] active:translate-y-[1px] transition-all whitespace-nowrap"
+                    title="Tukar dengan tiket fisik (Check-in)">
+              <span class="material-symbols-outlined text-[13px]">confirmation_number</span>
+              Tukar Tiket
+            </button>
+          `;
+        }
+
+        const safeUserName = (p.nama || '').replace(/'/g, "\\'");
 
         return `
           <tr class="hover:bg-surface-container transition-colors group">
-            <td class="p-4">
-              <div class="flex items-center gap-2">
-                <span class="font-mono text-xs font-extrabold text-tertiary bg-surface-container-lowest border-2 border-outline-variant px-2.5 py-1 tracking-wider select-all shadow-[2px_2px_0px_0px_#15140c]">
+            <!-- 1. Kode Unik -->
+            <td class="px-3 py-2.5 whitespace-nowrap">
+              <div class="flex items-center gap-1.5">
+                <span class="font-mono text-[11px] font-bold text-tertiary bg-surface-container-lowest border border-outline-variant px-2 py-0.5 tracking-wider select-all shadow-[1px_1px_0px_0px_#15140c]">
                   ${p.kode_unik || '—'}
                 </span>
                 ${p.kode_unik ? `
-                  <button type="button" onclick="copyToClipboard('${p.kode_unik}')" class="text-on-surface-variant hover:text-tertiary transition-colors p-1" title="Salin Kode Unik">
-                    <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                  <button type="button" onclick="copyToClipboard('${p.kode_unik}')" class="text-on-surface-variant hover:text-tertiary transition-colors p-0.5" title="Salin Kode Unik">
+                    <span class="material-symbols-outlined text-[15px]">content_copy</span>
                   </button>
                 ` : ''}
               </div>
             </td>
-            <td class="p-4">
-              <p class="font-body-md text-on-surface font-bold">${p.nama}</p>
-              <p class="text-sm text-on-surface-variant">${p.email}</p>
+
+            <!-- 2. User -->
+            <td class="px-3 py-2.5 min-w-[130px] max-w-[180px]">
+              <p class="font-bold text-xs text-on-surface leading-tight truncate" title="${p.nama}">${p.nama}</p>
+              <p class="text-[11px] text-on-surface-variant leading-tight truncate mt-0.5" title="${p.email}">${p.email}</p>
             </td>
-            <td class="p-4 font-body-md text-on-surface">${p.nama_tiket}</td>
-            <td class="p-4 font-body-md text-on-surface-variant">${p.jumlah_tiket}x</td>
-            <td class="p-4 font-body-md text-secondary font-bold">${p.total_format}</td>
-            <td class="p-4">
+
+            <!-- 3. Tiket -->
+            <td class="px-3 py-2.5 text-xs text-on-surface font-medium whitespace-nowrap">${p.nama_tiket}</td>
+
+            <!-- 4. Jumlah -->
+            <td class="px-3 py-2.5 text-xs text-on-surface-variant font-bold whitespace-nowrap text-center">${p.jumlah_tiket}x</td>
+
+            <!-- 5. Total Bayar -->
+            <td class="px-3 py-2.5 text-xs text-secondary font-bold whitespace-nowrap">${p.total_format}</td>
+
+            <!-- 6. Referral / Metode -->
+            <td class="px-3 py-2.5 whitespace-nowrap">
               ${p.referral_code ? `
-                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-highest border border-outline-variant shadow-[1px_1px_0px_0px_#15140c]">
-                  <span class="material-symbols-outlined text-[14px] text-secondary">campaign</span>
-                  <span class="font-mono text-xs font-bold text-secondary tracking-wider">${p.referral_code}</span>
+                <div class="inline-flex items-center gap-1 px-2 py-0.5 bg-surface-container-highest border border-outline-variant shadow-[1px_1px_0px_0px_#15140c]">
+                  <span class="material-symbols-outlined text-[12px] text-secondary">campaign</span>
+                  <span class="font-mono text-[10px] font-bold text-secondary tracking-wider">${p.referral_code}</span>
                 </div>
               ` : `
-                <span class="font-body-md text-xs text-on-surface-variant/40">—</span>
+                <span class="text-[11px] text-on-surface-variant/60 capitalize">${p.metode_pembayaran || p.payment_type || '—'}</span>
               `}
             </td>
-            <td class="p-4 font-label-caps text-label-caps uppercase ${statusCls}">${statusLbl}</td>
-            <td class="p-4">
-              ${isPending ? `
-                <div class="flex items-center justify-end gap-2">
-                  <button onclick="verifyPayment(${p.payment_id}, 'reject')"
-                          class="p-2 border border-outline-variant text-error hover:bg-error/10 hover:border-error transition-colors" title="Tolak">
-                    <span class="material-symbols-outlined text-[18px]">close</span>
-                  </button>
-                  <button onclick="verifyPayment(${p.payment_id}, 'verify')"
-                          class="bg-tertiary text-on-tertiary px-4 py-2 font-label-caps text-label-caps shadow-[2px_2px_0px_0px_#15140c]
-                                 hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_#15140c] transition-all">
-                    Approve
-                  </button>
-                </div>
-              ` : `
-                <div class="flex items-center justify-end gap-2">
-                  <button onclick="deletePayment(${p.payment_id}, '${p.kode_unik}', '${p.nama ? p.nama.replace(/'/g, "\\'") : ''}', '${p.status}')"
-                          class="px-3 py-1.5 ${p.status === 'verified' ? 'bg-error/15 border border-error/60 text-error hover:bg-error hover:text-on-error' : 'bg-surface-container border border-outline-variant text-on-surface-variant hover:text-error hover:border-error'} font-label-caps text-[11px] uppercase font-bold flex items-center gap-1 transition-all shadow-[2px_2px_0px_0px_#15140c] active:scale-95"
-                          title="${p.status === 'verified' ? 'Hapus Tiket Terverifikasi & Kembalikan Kuota' : 'Hapus Riwayat Transaksi'}">
-                    <span class="material-symbols-outlined text-[15px]">delete_forever</span>
-                    Hapus Tiket
-                  </button>
-                </div>
-              `}
-            </td>
+
+            <!-- 7. Check-in (Fisik) -->
+            <td class="px-3 py-2.5 whitespace-nowrap">${checkinHtml}</td>
+
+            <!-- 8. Status Pembayaran -->
+            <td class="px-3 py-2.5 whitespace-nowrap">${statusBadge}</td>
           </tr>
         `;
       }).join('');
@@ -635,95 +726,64 @@
         const data = await res.json();
         document.getElementById('pay-loading').classList.add('hidden');
 
+        allPayments = (data.success && data.payments) ? data.payments : [];
+
         // Update stats
         const s = data.stats || {};
         document.getElementById('stat-revenue').textContent = s.revenue_format || 'Rp 0';
         document.getElementById('stat-verified').textContent = s.settled ?? s.verified ?? 0;
         document.getElementById('stat-pending').textContent = s.pending || 0;
 
-        // Badge
-        const badge = document.getElementById('badge-pending');
-        if (s.pending > 0) { badge.textContent = s.pending; badge.classList.remove('hidden'); }
-        else badge.classList.add('hidden');
-
-        if (!data.success || data.payments.length === 0) {
-          document.getElementById('pay-empty').classList.remove('hidden'); return;
+        // Checkin counter: berapa tiket sah yang sudah ditukar fisik
+        const validPayments = allPayments.filter(p => ['settlement', 'capture', 'verified'].includes(p.status));
+        const checkedInCount = validPayments.filter(p => Number(p.is_checked_in) === 1).length;
+        const statCheckinEl = document.getElementById('stat-checkin');
+        if (statCheckinEl) {
+          statCheckinEl.textContent = `${checkedInCount} / ${validPayments.length}`;
         }
 
-        document.getElementById('pay-table-wrap').classList.remove('hidden');
-        const tbody = document.getElementById('pay-tbody');
-        tbody.innerHTML = data.payments.map(p => {
-          const isPending = p.status === 'pending';
-          const isSuccess = ['settlement', 'capture', 'verified'].includes(p.status);
-          const isFailed = ['rejected', 'deny'].includes(p.status);
-          const isExpired = ['expire', 'cancel'].includes(p.status);
+        // Badge pending di navigasi
+        const badge = document.getElementById('badge-pending');
+        if (badge) {
+          if (s.pending > 0) { badge.textContent = s.pending; badge.classList.remove('hidden'); }
+          else badge.classList.add('hidden');
+        }
 
-          let statusCls = 'text-tertiary';
-          let statusLbl = '⏳ Pending';
-          if (isSuccess) {
-            statusCls = 'text-secondary';
-            statusLbl = p.status === 'verified' ? '✓ Verified' : '✓ Settled';
-          } else if (isFailed) {
-            statusCls = 'text-error';
-            statusLbl = '✕ Ditolak';
-          } else if (isExpired) {
-            statusCls = 'text-on-surface-variant opacity-75';
-            statusLbl = p.status === 'expire' ? '⏰ Expired' : '✕ Batal';
-          } else if (p.status === 'refund') {
-            statusCls = 'text-on-surface-variant opacity-75';
-            statusLbl = '↩ Refund';
-          }
+        applyPaymentsFilter();
 
-          return `
-            <tr class="hover:bg-surface-container transition-colors group">
-              <td class="p-4">
-                <p class="font-body-md text-on-surface font-bold">${p.nama}</p>
-                <p class="text-sm text-on-surface-variant">${p.email}</p>
-              </td>
-              <td class="p-4 font-body-md text-on-surface">${p.nama_tiket}</td>
-              <td class="p-4 font-body-md text-on-surface-variant">${p.jumlah_tiket}x</td>
-              <td class="p-4 font-body-md text-secondary font-bold">${p.total_format}</td>
-              <td class="p-4">
-                ${p.referral_code ? `
-                  <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-highest border border-outline-variant shadow-[1px_1px_0px_0px_#15140c]">
-                    <span class="material-symbols-outlined text-[14px] text-secondary">campaign</span>
-                    <span class="font-mono text-xs font-bold text-secondary tracking-wider">${p.referral_code}</span>
-                  </div>
-                ` : `
-                  <span class="font-body-md text-xs text-on-surface-variant/40">${p.metode_pembayaran || p.payment_type || '—'}</span>
-                `}
-              </td>
-              <td class="p-4">
-                ${p.is_checked_in ? `
-                  <span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 bg-secondary/20 border border-secondary/50 text-secondary">
-                    <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">check_circle</span>
-                    Diambil
-                  </span>
-                ` : `<span class="font-label-caps text-[10px] text-on-surface-variant/40">—</span>`}
-              </td>
-              <td class="p-4 font-label-caps text-label-caps uppercase ${statusCls}">${statusLbl}</td>
-              <td class="p-4">
-                ${isPending ? `
-                  <div class="flex items-center justify-end gap-2">
-                    <button onclick="verifyPayment(${p.payment_id}, 'reject')"
-                            class="p-2 border border-outline-variant text-error hover:bg-error/10 hover:border-error transition-colors" title="Tolak">
-                      <span class="material-symbols-outlined text-[18px]">close</span>
-                    </button>
-                    <button onclick="verifyPayment(${p.payment_id}, 'verify')"
-                            class="bg-tertiary text-on-tertiary px-4 py-2 font-label-caps text-label-caps shadow-[2px_2px_0px_0px_#15140c]
-                                   hover:translate-y-[1px] hover:translate-x-[1px] hover:shadow-[1px_1px_0px_0px_#15140c] transition-all">
-                      Approve
-                    </button>
-                  </div>
-                ` : `<span class="font-label-caps text-[10px] text-on-surface-variant opacity-60">—</span>`}
-              </td>
-            </tr>
-          `;
-        }).join('');
-
-      } catch {
+      } catch (err) {
+        console.error('loadPayments error:', err);
         document.getElementById('pay-loading').innerHTML =
-          '<p class="text-error font-body-md">Gagal memuat data. Pastikan server aktif.</p>';
+          '<p class="text-error font-body-md text-sm">Gagal memuat data. Pastikan server aktif.</p>';
+      }
+    }
+
+    /* -------- Toggle Check-in (Tukar Tiket Fisik) -------- */
+    async function toggleCheckin(paymentId, action, kodeUnik, namaUser = '') {
+      const isCheckin = action === 'checkin';
+      const promptMsg = isCheckin
+        ? `Konfirmasi penukaran tiket fisik untuk "${namaUser}" (${kodeUnik})?\n\nPastikan tiket fisik sudah diserahkan ke pengunjung.`
+        : `Batalkan status penukaran tiket fisik untuk (${kodeUnik})?`;
+
+      if (!confirm(promptMsg)) return;
+
+      try {
+        const res = await fetch(`${API}/admin_ticket_checkin.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payment_id: paymentId, action })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message || 'Status check-in berhasil diperbarui!', 'success');
+          await loadPayments();
+        } else {
+          showToast(data.message || 'Gagal memproses check-in.', 'error');
+        }
+      } catch (err) {
+        console.error('toggleCheckin error:', err);
+        showToast('Terjadi kesalahan koneksi saat memproses check-in.', 'error');
       }
     }
 
@@ -747,34 +807,6 @@
       }
     }
 
-    /* -------- Hapus Tiket / Pembayaran (Termasuk yang Verified) -------- */
-    async function deletePayment(paymentId, kodeUnik, namaUser, status) {
-      const isVerified = (status === 'verified');
-      const confirmMsg = isVerified
-        ? `⚠️ KONFIRMASI PENGHAPUSAN TIKET TERVERIFIKASI:\n\nTiket dengan kode "${kodeUnik}" atas nama "${namaUser}" sudah berstatus VERIFIED (Sah).\n\nJika dihapus:\n1. Tiket akan dicabut dari akun user ("Tiket Saya").\n2. Kuota tiket akan otomatis dikembalikan ke stok tiket.\n3. Data transaksi akan dihapus permanen.\n\nApakah Anda yakin ingin menghapus tiket ini?`
-        : `Apakah Anda yakin ingin menghapus data pembayaran "${kodeUnik}" milik "${namaUser}"?`;
-
-      if (!confirm(confirmMsg)) return;
-
-      try {
-        const res = await fetch(`${API}/admin_payment_delete.php`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ payment_id: paymentId })
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          showToast(data.message || 'Tiket berhasil dihapus!', 'success');
-          loadPayments();
-        } else {
-          showToast(data.message || 'Gagal menghapus tiket.', 'error');
-        }
-      } catch (err) {
-        console.error('Error deletePayment:', err);
-        showToast('Terjadi kesalahan koneksi saat menghapus tiket.', 'error');
-      }
-    }
 
     /* -------- Load QnA -------- */
     async function loadQnA() {
@@ -946,6 +978,7 @@
           `;
           showToast('Tiket berhasil diverifikasi! ✓', 'success');
           input.value = '';
+          loadPayments();
 
         } else if (!data.success && data.scan_result === 'already_used') {
           // ❌ Tiket sudah diambil

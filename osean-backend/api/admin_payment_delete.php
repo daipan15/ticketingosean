@@ -39,8 +39,8 @@ $stmt->close();
 $conn->begin_transaction();
 
 try {
-    // 1. Jika statusnya 'verified' atau 'pending', kembalikan kuota tiket
-    if ($payment['status'] === 'verified' || $payment['status'] === 'pending') {
+    // 1. Jika statusnya lunas ('verified', 'settlement', 'capture') atau 'pending', kembalikan kuota tiket
+    if (in_array($payment['status'], ['verified', 'settlement', 'capture', 'pending'])) {
         $stmt_kuota = $conn->prepare("UPDATE tickets SET kuota_terjual = GREATEST(0, kuota_terjual - ?) WHERE id = ?");
         $stmt_kuota->bind_param("ii", $payment['jumlah_tiket'], $payment['ticket_id']);
         $stmt_kuota->execute();

@@ -704,12 +704,17 @@
               <!-- Baris Bawah: ID di kiri, Tombol Batalkan & Bayar Sekarang Sebelahan di kanan -->
               <div class="flex items-center justify-between gap-3 flex-wrap">
                 <div>
-                  ${t.is_checked_in ? `
-                    <span class="inline-flex items-center gap-1 font-label-caps text-[10px] px-2 py-0.5 bg-secondary/20 border border-secondary/50 text-secondary">
-                      <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">check_circle</span>
-                      Sudah Diambil
+                  ${isActive ? (t.is_checked_in ? `
+                    <span class="inline-flex items-center gap-1 font-label-caps text-[11px] px-2.5 py-1 bg-secondary/20 border border-secondary/60 text-secondary font-bold" title="Tiket fisik sudah diambil">
+                      <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+                      Tiket Fisik Sudah Ditukar
                     </span>
-                  ` : ''}
+                  ` : `
+                    <span class="inline-flex items-center gap-1 font-label-caps text-[11px] px-2.5 py-1 bg-tertiary/15 border border-tertiary/50 text-tertiary font-bold" title="Tunjukkan kode unik saat registrasi di venue untuk mengambil tiket fisik">
+                      <span class="material-symbols-outlined text-[14px]">confirmation_number</span>
+                      Belum Ditukar Fisik
+                    </span>
+                  `) : ''}
                 </div>
                 <div class="flex items-center gap-2 flex-nowrap">
                   ${isPending ? `

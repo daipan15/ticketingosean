@@ -409,7 +409,7 @@
           localStorage.setItem('isLoggedIn', 'true');
           showToast(data.message, 'success');
           setTimeout(() => {
-            window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'my_tickets.html';
+            window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'landing_page.html';
           }, 800);
         } else {
           showToast(data.message || 'Pendaftaran via Google gagal.', 'error');

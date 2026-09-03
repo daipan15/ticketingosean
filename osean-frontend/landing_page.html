@@ -942,7 +942,7 @@
               </div>
               <div class="flex items-center gap-2.5 text-on-surface-variant">
                 <span class="material-symbols-outlined text-secondary text-[18px]">stadium</span>
-                <span class="font-body-md text-xs">Konser Akbar, Artis Nasional & Spectacular Lightshow</span>
+                <span class="font-body-md text-xs">Konser Closing Ceremony Osean 2026</span>
               </div>
             </div>
 
@@ -969,6 +969,14 @@
     <!-- Ambient & Glow Effects -->
     <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-tertiary/10 rounded-full blur-[100px] pointer-events-none -z-0"></div>
     <div class="absolute bottom-10 -right-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl pointer-events-none -z-0"></div>
+    <img src="assets/ambient_glow.png" alt=""
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[800px] md:w-[1000px] opacity-30 pointer-events-none select-none filter blur-3xl -z-0" />
+    <img src="assets/prism_starburst.png" alt=""
+      class="hidden lg:block absolute top-12 right-12 w-20 h-auto opacity-40 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_15px_rgba(239,192,94,0.3)]" />
+    <img src="assets/drum.png" alt=""
+      class="hidden xl:block absolute top-1/3 -left-6 w-28 h-auto opacity-25 rotate-12 pointer-events-none select-none animate-float-2" />
+    <img src="assets/clapboard.png" alt=""
+      class="hidden xl:block absolute bottom-24 -right-6 w-28 h-auto opacity-25 -rotate-12 pointer-events-none select-none animate-float-1" />
     
     <div class="max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
       
@@ -982,7 +990,7 @@
           DUKUNG HIMPUNANMU DI <span class="text-secondary italic">OSEAN 2026</span>
         </h2>
         <p class="font-body-md text-xs sm:text-sm md:text-base text-on-surface-variant mt-3 max-w-2xl mx-auto">
-          Setiap pembelian tiket menggunakan kode referral himpunan akan menambah poin secara otomatis. Siapakah Himpunan paling solid yang akan memuncaki podium?
+          Setiap pembelian tiket menggunakan kode referral himpunan akan menambah poin secara otomatis. Dapatkan cashback biaya pendaftaran OSEAN hingga 100% untuk Himpunan!
         </p>
       </div>
 
@@ -1065,8 +1073,14 @@
     <!-- Ambient & Decorative Festival Accents -->
     <div class="absolute -top-24 -right-24 w-96 h-96 bg-tertiary/5 rounded-full blur-3xl pointer-events-none -z-0"></div>
     <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-secondary/5 rounded-full blur-3xl pointer-events-none -z-0"></div>
+    <img src="assets/ambient_glow.png" alt=""
+      class="absolute top-1/3 left-1/4 w-[600px] md:w-[800px] opacity-25 pointer-events-none select-none filter blur-3xl -z-0" />
     <img src="assets/starburst.png" alt=""
-    class="hidden lg:block absolute top-12 right-12 w-28 h-auto opacity-30 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_20px_rgba(239,192,94,0.3)]" />
+      class="hidden lg:block absolute top-12 right-12 w-28 h-auto opacity-30 pointer-events-none select-none animate-spin-slow filter drop-shadow-[0_0_20px_rgba(239,192,94,0.3)]" />
+    <img src="assets/camera.png" alt=""
+      class="hidden xl:block absolute bottom-20 left-8 w-24 h-auto opacity-25 -rotate-6 pointer-events-none select-none animate-float-3" />
+    <img src="assets/prism_starburst.png" alt=""
+      class="hidden lg:block absolute bottom-12 right-16 w-16 h-auto opacity-35 pointer-events-none select-none animate-pulse-glow" />
 
     <div class="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
       
@@ -1171,7 +1185,11 @@
   
   <!-- ===================== FOOTER ===================== -->
   <footer
-    class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-8 sm:py-10 w-full flex flex-col items-center justify-center gap-3.5">
+    class="bg-primary-container dark:bg-primary-container border-t-2 border-dashed border-outline-variant py-8 sm:py-10 w-full flex flex-col items-center justify-center gap-3.5 relative overflow-hidden">
+    <!-- Audience Hand Silhouette at Bottom -->
+    <div class="absolute -bottom-4 right-4 sm:right-16 w-[200px] sm:w-[300px] pointer-events-none select-none opacity-25 -z-0">
+      <img src="assets/hand.png" alt="" class="w-full h-auto animate-float-gentle-slow" />
+    </div>
     <div class="flex items-center gap-2">
       <span class="font-label-caps text-xs sm:text-sm text-secondary uppercase tracking-widest font-bold">✦ Follow Us On</span>
     </div>
@@ -1735,6 +1753,22 @@
         question: 'Bagaimana jika pembayaran saya ditolak atau salah upload bukti?',
         answer: 'Jika pembayaran Anda ditolak oleh admin (misal bukti transfer buram atau nominal tidak cocok), status tiket di menu <strong>Tiket Saya</strong> akan bertuliskan <strong>Ditolak</strong>. Anda dapat melakukan pemesanan ulang dengan mengunggah bukti pembayaran yang valid dan sah.',
         keywords: 'salah bukti tolak rejected gagal upload buram transfer ulang rejected'
+      },
+      {
+        id: 10,
+        topic: 'venue',
+        topicLabel: 'Tata Tertib',
+        question: 'Apa saja tata tertib dan larangan penting bagi supporter/pengunjung di arena OSEAN 2026?',
+        answer: 'Pengunjung wajib: (1) Mengisi presensi open gate & form daftar hadir, (2) Membawa KTM aktif (fisik/digital), (3) Tidak membawa barang sitaan (sajam, miras, narkoba, flare, smoke bomb, laser pointer), (4) Dilarang anarki, kekerasan, melempar barang, atau merusak fasilitas, (5) Dilarang masuk area bermain (playing area) saat pertandingan berlangsung, (6) Dilarang menyinggung SARA, dan (7) Wajib menjaga kebersihan serta keamanan arena.',
+        keywords: 'tata tertib aturan larangan ktm presensi open gate anarki playing area sara supporter barang disita'
+      },
+      {
+        id: 11,
+        topic: 'kebijakan',
+        topicLabel: 'Asuransi',
+        question: 'Apakah tiket sudah termasuk asuransi kecelakaan diri dan bagaimana proses klaimnya?',
+        answer: 'Ya, seluruh pemegang tiket OSEAN 2026 dilindungi oleh <strong>asuransi kecelakaan diri (personal accident)</strong> dari penyedia asuransi rekanan resmi. Pembeli wajib mengisi data diri sah (Nama KTP/KIA/Paspor, NIK, nomor telepon, dan email). Klaim kecelakaan fisik dapat diajukan dengan dokumen identitas asli yang valid. Ketidaksesuaian data diri saat pemesanan tiket dapat menggugurkan hak klaim asuransi.',
+        keywords: 'asuransi kecelakaan klaim polis data diri nik ktp perlindungan personal accident biaya medis tnc'
       }
     ];
 

@@ -287,7 +287,7 @@
         const res  = await fetch(`${API}/session_check.php`);
         const data = await res.json();
         if (data.logged_in) {
-          window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'my_tickets.html';
+          window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'landing_page.html';
         }
       } catch (e) { /* tidak ada session, lanjut */ }
     })();
@@ -316,7 +316,7 @@
           localStorage.setItem('isLoggedIn', 'true');
           showToast(data.message, 'success');
           setTimeout(() => {
-            window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'my_tickets.html';
+            window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'landing_page.html';
           }, 800);
         } else {
           showToast(data.message || 'Login gagal.', 'error');
@@ -391,7 +391,7 @@
           localStorage.setItem('isLoggedIn', 'true');
           showToast(data.message, 'success');
           setTimeout(() => {
-            window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'my_tickets.html';
+            window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'landing_page.html';
           }, 800);
         } else {
           showToast(data.message || 'Login via Google gagal.', 'error');

@@ -101,7 +101,7 @@ if ((int)$payment['is_checked_in'] === 1) {
     exit;
 }
 
-// ✅ Tiket valid & belum di-scan — lakukan check-in
+// Tiket valid & belum di-scan — lakukan check-in
 $checked_in_at = date('Y-m-d H:i:s');
 $up = $conn->prepare("
     UPDATE payments

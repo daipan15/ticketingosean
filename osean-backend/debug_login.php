@@ -13,20 +13,20 @@ echo "=== OSEAN DEBUG LOGIN ===\n\n";
 // 1. Cek koneksi DB
 echo "1. Koneksi DB : ";
 if ($conn->connect_error) {
-    echo "❌ GAGAL — " . $conn->connect_error . "\n";
+    echo "[GAGAL] — " . $conn->connect_error . "\n";
     exit;
 } else {
-    echo "✓ OK (osean_db)\n";
+    echo "[OK] (osean_db)\n";
 }
 
 // 2. Cek tabel users ada
 $tbl = $conn->query("SHOW TABLES LIKE 'users'");
 echo "2. Tabel users: ";
 if ($tbl->num_rows === 0) {
-    echo "❌ TIDAK ADA — Import osean_db.sql dulu!\n";
+    echo "[TIDAK ADA] — Import osean_db.sql dulu!\n";
     exit;
 } else {
-    echo "✓ Ada\n";
+    echo "[OK] Ada\n";
 }
 
 // 3. Cek user admin di DB
@@ -37,13 +37,13 @@ $result = $stmt->get_result();
 
 echo "3. Cari email  : {$email}\n";
 if ($result->num_rows === 0) {
-    echo "   Status      : ❌ EMAIL TIDAK DITEMUKAN di database!\n";
+    echo "   Status      : [TIDAK DITEMUKAN] Email tidak ditemukan di database!\n";
     echo "\n   → Jalankan reset_admin.php dulu!\n";
     exit;
 }
 
 $user = $result->fetch_assoc();
-echo "   Status       : ✓ Ditemukan\n";
+echo "   Status       : [OK] Ditemukan\n";
 echo "   ID           : " . $user['id']   . "\n";
 echo "   Nama         : " . $user['nama'] . "\n";
 echo "   Role         : " . $user['role'] . "\n";
@@ -52,7 +52,7 @@ echo "   Hash (DB)    : " . substr($user['password_hash'], 0, 30) . "...\n";
 // 4. Verifikasi password
 $cocok = password_verify($password, $user['password_hash']);
 echo "\n4. Test password '{$password}':\n";
-echo "   Cocok?       : " . ($cocok ? "✓ YA — Login seharusnya berhasil!" : "❌ TIDAK COCOK") . "\n";
+echo "   Cocok?       : " . ($cocok ? "[OK] YA — Login seharusnya berhasil!" : "[GAGAL] TIDAK COCOK") . "\n";
 
 if (!$cocok) {
     // Auto-fix
@@ -60,7 +60,7 @@ if (!$cocok) {
     $upd = $conn->prepare("UPDATE users SET password_hash = ? WHERE email = ?");
     $upd->bind_param("ss", $new_hash, $email);
     $upd->execute();
-    echo "\n   ✓ AUTO-FIX: Password direset ke 'admin123'!\n";
+    echo "\n   [OK] AUTO-FIX: Password direset ke 'admin123'!\n";
     echo "   Hash baru    : " . substr($new_hash, 0, 30) . "...\n";
 }
 

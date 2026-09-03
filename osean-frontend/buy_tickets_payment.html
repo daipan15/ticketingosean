@@ -11,6 +11,7 @@
   </script>
   <meta name="description" content="OSEAN - Beli tiket dan upload bukti pembayaran." />
   <title>OSEAN - Beli Tiket</title>
+  <link rel="icon" type="image/png" href="assets/osean_logo.png" />
 
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap"
@@ -104,27 +105,76 @@
 
     /* Floating & Decorative PNG Animations */
     @keyframes float-gentle {
-      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
-      50% { transform: translateY(-14px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(var(--rot, 0deg));
+      }
+
+      50% {
+        transform: translateY(-14px) rotate(calc(var(--rot, 0deg) + 3deg));
+      }
     }
+
     @keyframes float-reverse {
-      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
-      50% { transform: translateY(14px) rotate(calc(var(--rot, 0deg) - 3deg)); }
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(var(--rot, 0deg));
+      }
+
+      50% {
+        transform: translateY(14px) rotate(calc(var(--rot, 0deg) - 3deg));
+      }
     }
+
     @keyframes pulse-glow {
-      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
-      50% { transform: scale(1.08) rotate(4deg); opacity: 1; }
+
+      0%,
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.08) rotate(4deg);
+        opacity: 1;
+      }
     }
+
     @keyframes spin-ultra-slow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
-    .animate-float-1 { animation: float-gentle 5s ease-in-out infinite; }
-    .animate-float-2 { animation: float-reverse 6.5s ease-in-out infinite; }
-    .animate-float-3 { animation: float-gentle 7s ease-in-out infinite; }
-    .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
-    .animate-spin-slow { animation: spin-ultra-slow 45s linear infinite; }
-    .animate-float-gentle-slow { animation: float-gentle 8s ease-in-out infinite; }
+
+    .animate-float-1 {
+      animation: float-gentle 5s ease-in-out infinite;
+    }
+
+    .animate-float-2 {
+      animation: float-reverse 6.5s ease-in-out infinite;
+    }
+
+    .animate-float-3 {
+      animation: float-gentle 7s ease-in-out infinite;
+    }
+
+    .animate-pulse-glow {
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    .animate-spin-slow {
+      animation: spin-ultra-slow 45s linear infinite;
+    }
+
+    .animate-float-gentle-slow {
+      animation: float-gentle 8s ease-in-out infinite;
+    }
   </style>
 </head>
 
@@ -158,7 +208,8 @@
           class="hidden sm:block font-label-caps text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Venue</a>
         <span class="font-label-caps text-xs sm:text-label-caps text-secondary">Beli Tiket</span>
         <a href="my_tickets.html"
-          class="font-label-caps text-xs sm:text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Tiket Saya</a>
+          class="font-label-caps text-xs sm:text-label-caps text-on-primary-container hover:text-tertiary transition-colors">Tiket
+          Saya</a>
         <button id="logout-btn"
           class="font-label-caps text-xs sm:text-label-caps text-error hover:text-on-surface transition-colors flex items-center gap-1">
           <span class="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>

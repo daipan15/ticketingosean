@@ -448,11 +448,15 @@
             class="absolute inset-0 -bottom-4 -right-4 bg-[#D6A94A] -z-10 transition-all duration-300 group-hover:-bottom-2 group-hover:-right-2">
           </div>
           <div
-            class="relative bg-surface-container-high border-2 border-tertiary p-6 transition-transform duration-300 flex-1 flex flex-col justify-between">
-            <!-- Popular badge -->
-            <div
-              class="absolute -top-4 right-4 bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-3 py-1">
-              ★ Populer
+            class="relative bg-surface-container-high border-2 border-outline-variant p-6 transition-transform duration-300 flex-1 flex flex-col justify-between">
+            <!-- Right Now badge (Hanya tampil real-time saat ada kategori tiket yang sedang aktif) -->
+            <div id="badge-right-now"
+              class="hidden absolute -top-3.5 right-4 bg-secondary text-on-secondary font-label-caps text-[11px] uppercase px-3 py-1 flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#15140c] tracking-wider font-bold z-20">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-secondary opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-on-secondary"></span>
+              </span>
+              <span>RIGHT NOW</span>
             </div>
             <div>
               <div class="flex items-center justify-between mb-3 mt-2">
@@ -467,7 +471,7 @@
                 Pilihan favorit! Harga terjangkau dengan kuota yang lebih besar.
               </p>
             </div>
-            <div class="border-t border-dashed border-tertiary pt-4 flex items-end justify-between">
+            <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
                 <p id="price-presale-1" class="font-headline-lg text-headline-lg text-tertiary">Rp 48.000</p>
@@ -693,13 +697,21 @@
 
     function applyTicketSchedule() {
       const now = new Date();
+      let activeItem = null;
 
       TICKET_SCHEDULE.forEach(item => {
         const priceEl = document.getElementById(`price-${item.id}`);
         const btnContainer = document.getElementById(`btn-container-${item.id}`);
         const cardEl = document.getElementById(`card-${item.id}`);
+        const cardInner = cardEl ? cardEl.querySelector(':scope > div:nth-child(2)') : null;
 
         if (!priceEl || !btnContainer) return;
+
+        // Reset highlight border
+        if (cardInner) {
+          cardInner.classList.remove('border-tertiary', 'border-secondary');
+          cardInner.classList.add('border-outline-variant');
+        }
 
         if (now < item.startDate) {
           // KONDISI 1: Belum masuk tanggal rilis -> Harga tersembunyi (Rp XXX)
@@ -710,8 +722,13 @@
             </span>
           `;
         } else if (now >= item.startDate && now <= item.endDate) {
-          // KONDISI 2: Sedang aktif berlangsung -> Reveal harga asli dan tombol Beli
+          // KONDISI 2: Sedang aktif berlangsung -> Reveal harga asli, tombol Beli, dan highlight
+          activeItem = item;
           priceEl.textContent = item.price;
+          if (cardInner) {
+            cardInner.classList.remove('border-outline-variant');
+            cardInner.classList.add('border-tertiary');
+          }
           btnContainer.innerHTML = `
             <a href="buy_tickets_payment.html" onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
                class="${item.btnClass} font-label-caps text-label-caps uppercase px-4 py-2 hover:translate-y-[-2px] transition-transform duration-200 active:scale-95 inline-block">
@@ -731,6 +748,24 @@
           `;
         }
       });
+
+      // Kontrol visibilitas & posisi badge RIGHT NOW secara real-time
+      const badge = document.getElementById('badge-right-now');
+      if (badge) {
+        if (activeItem) {
+          // Tampilkan badge RIGHT NOW hanya jika sedang ada kategori yang aktif
+          const activeCardInner = document.querySelector(`#card-${activeItem.id} > div:nth-child(2)`);
+          if (activeCardInner) {
+            if (!activeCardInner.contains(badge)) {
+              activeCardInner.appendChild(badge);
+            }
+            badge.classList.remove('hidden');
+          }
+        } else {
+          // Jika saat ini di luar rentang tanggal semua tiket, sembunyikan badge
+          badge.classList.add('hidden');
+        }
+      }
     }
 
     // Jalankan pengecekan tanggal saat halaman dimuat

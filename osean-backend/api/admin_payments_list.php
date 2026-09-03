@@ -38,19 +38,31 @@ if (!empty($params)) {
 $stmt->execute();
 $result = $stmt->get_result();
 
-$payments  = [];
-$pending   = 0;
-$settled   = 0;
-$rejected  = 0;
-$expired   = 0;
-$revenue   = 0;
+$payments           = [];
+$pending            = 0;
+$settled            = 0;
+$rejected           = 0;
+$expired            = 0;
+$revenue            = 0;
+$total_tickets_sold = 0;
 
 while ($row = $result->fetch_assoc()) {
     $st = $row['status'];
-    if ($st === 'pending')                                  $pending++;
-    if (in_array($st, ['settlement', 'capture', 'verified'])) { $settled++; $revenue += $row['total_bayar']; }
-    if (in_array($st, ['rejected', 'deny']))                $rejected++;
-    if (in_array($st, ['expire', 'cancel']))                $expired++;
+    if ($st === 'pending') $pending++;
+    if (in_array($st, ['settlement', 'capture', 'verified'])) {
+        $settled++;
+        $revenue += $row['total_bayar'];
+        $multiplier = 1;
+        $tName = strtolower($row['nama_tiket'] ?? '');
+        if (strpos($tName, 'trio') !== false) {
+            $multiplier = 3;
+        } elseif (strpos($tName, 'duo') !== false) {
+            $multiplier = 2;
+        }
+        $total_tickets_sold += ((int)$row['jumlah_tiket'] * $multiplier);
+    }
+    if (in_array($st, ['rejected', 'deny'])) $rejected++;
+    if (in_array($st, ['expire', 'cancel'])) $expired++;
 
     $payments[] = [
         'payment_id'        => (int)$row['payment_id'],
@@ -81,11 +93,12 @@ send_success([
     'payments' => $payments,
     'total'    => count($payments),
     'stats'    => [
-        'pending'        => $pending,
-        'settled'        => $settled,
-        'rejected'       => $rejected,
-        'expired'        => $expired,
-        'total_revenue'  => $revenue,
-        'revenue_format' => format_rupiah($revenue)
+        'pending'            => $pending,
+        'settled'            => $settled,
+        'rejected'           => $rejected,
+        'expired'            => $expired,
+        'total_revenue'      => $revenue,
+        'revenue_format'     => format_rupiah($revenue),
+        'total_tickets_sold' => $total_tickets_sold
     ]
 ], 'Berhasil mengambil daftar pembayaran.');

@@ -181,20 +181,88 @@
   <!-- ===================== MAIN CONTENT ===================== -->
   <main class="flex-1 md:ml-64 bg-background relative min-w-0">
 
-    <!-- Mobile Top Navigation Bar (Tampil di HP & Tablet kecil) -->
-    <div class="md:hidden sticky top-0 z-50 bg-surface-container-low border-b border-outline-variant px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <img src="assets/osean_logo.png" alt="OSEAN" class="w-8 h-8 object-contain drop-shadow-[0_2px_6px_rgba(239,192,94,0.3)]" />
-        <span class="font-headline-lg text-xl text-tertiary italic">OSEAN</span>
-        <span class="font-label-caps text-[10px] text-on-surface-variant bg-surface-container px-2 py-0.5 border border-outline-variant">Admin</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <a href="#verify" onclick="showTab('verify')" id="mob-verify" class="nav-link text-tertiary font-label-caps text-xs px-2.5 py-1.5 border border-tertiary bg-tertiary/10">Verif</a>
-        <a href="#payments" onclick="showTab('payments')" id="mob-payments" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Riwayat</a>
-        <a href="#qna" onclick="showTab('qna')" id="mob-qna" class="nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant">Tanya</a>
-        <button id="mobile-logout-btn" onclick="document.getElementById('logout-btn').click()" class="text-error border border-error/50 p-1 flex items-center justify-center">
-          <span class="material-symbols-outlined text-[18px]">logout</span>
+    <!-- Mobile Top Navigation Bar dengan Burger Menu (Tampil di HP & Tablet) -->
+    <div class="md:hidden sticky top-0 z-50 bg-surface-container-low border-b-2 border-outline-variant px-4 py-3 shadow-[0_4px_0px_0px_#15140c]">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <img src="assets/osean_logo.png" alt="OSEAN" class="w-8 h-8 object-contain drop-shadow-[0_2px_6px_rgba(239,192,94,0.3)]" />
+          <span class="font-headline-lg text-xl text-tertiary italic leading-none">OSEAN</span>
+          <span class="font-label-caps text-[9px] text-tertiary bg-tertiary-container px-2 py-0.5 border border-tertiary/60 font-bold uppercase tracking-wider">Admin</span>
+        </div>
+
+        <!-- Burger Toggle Button -->
+        <button id="admin-burger-btn" type="button" aria-label="Toggle Menu Admin"
+          class="w-10 h-10 border-2 border-outline-variant bg-surface-container flex items-center justify-center text-on-surface hover:text-tertiary hover:border-tertiary active:translate-y-0.5 transition-all shadow-[2px_2px_0px_0px_#15140c] cursor-pointer">
+          <span id="admin-burger-icon" class="material-symbols-outlined text-[24px]">menu</span>
         </button>
+      </div>
+
+      <!-- Collapsible Mobile Drawer Menu -->
+      <div id="admin-mobile-drawer" class="hidden pt-4 pb-2 border-t-2 border-dashed border-outline-variant mt-3 space-y-3 transition-all duration-200">
+        
+        <!-- Admin Info Strip -->
+        <div class="flex items-center gap-3 p-3 bg-surface-container border border-outline-variant">
+          <div class="w-8 h-8 bg-primary-container border border-tertiary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-tertiary text-[18px]">admin_panel_settings</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="font-label-caps text-[11px] text-on-surface font-bold truncate" id="admin-nama-mobile">Admin OSEAN</p>
+            <p class="font-label-caps text-[9px] text-secondary flex items-center gap-1 font-bold">
+              <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse inline-block"></span>
+              Online / Active
+            </p>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-col gap-2">
+          <!-- 1. Verifikasi Tiket -->
+          <a href="#verify" onclick="showTab('verify'); closeAdminDrawer();" id="mob-verify"
+            class="flex items-center justify-between p-3 border-2 border-outline-variant bg-surface-container font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c]">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+              <span>Verifikasi Tiket</span>
+            </div>
+            <span class="material-symbols-outlined text-[16px] text-on-surface-variant">chevron_right</span>
+          </a>
+
+          <!-- 2. Riwayat Transaksi -->
+          <a href="#payments" onclick="showTab('payments'); closeAdminDrawer();" id="mob-payments"
+            class="flex items-center justify-between p-3 border-2 border-outline-variant bg-surface-container font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c]">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+              <span>Riwayat Transaksi</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="mob-badge-pending" class="bg-error text-on-error font-label-caps text-[9px] px-1.5 py-0.2 rounded-none font-bold hidden">0</span>
+              <span class="material-symbols-outlined text-[16px] text-on-surface-variant">chevron_right</span>
+            </div>
+          </a>
+
+          <!-- 3. Kelola Pertanyaan -->
+          <a href="#qna" onclick="showTab('qna'); closeAdminDrawer();" id="mob-qna"
+            class="flex items-center justify-between p-3 border-2 border-outline-variant bg-surface-container font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c]">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[20px]">forum</span>
+              <span>Kelola Pertanyaan</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="mob-badge-qna" class="bg-error text-on-error font-label-caps text-[9px] px-1.5 py-0.2 rounded-none font-bold hidden">0</span>
+              <span class="material-symbols-outlined text-[16px] text-on-surface-variant">chevron_right</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Tombol Logout Mobile -->
+        <div class="pt-2">
+          <button type="button" onclick="document.getElementById('logout-btn').click()"
+            class="w-full bg-error-container text-error font-label-caps text-xs uppercase font-bold py-2.5 px-4
+                   border-2 border-error hover:bg-error hover:text-on-error transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0px_0px_#15140c]">
+            <span class="material-symbols-outlined text-[18px]">logout</span>
+            <span>Keluar dari Admin</span>
+          </button>
+        </div>
+
       </div>
     </div>
 
@@ -217,23 +285,45 @@
       </div>
     </header>
 
-    <!-- Stats Bar (2 kolom di HP, 4 kolom di Laptop/Desktop) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-4 sm:p-6 border-b border-outline-variant" id="stats-bar">
-      <div class="bg-primary-container border border-outline-variant p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#15140c]">
+    <!-- Stats Bar (2 kolom di HP, 3 kolom di Tablet, 5 kolom di Laptop/Desktop) -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 p-4 sm:p-6 border-b border-outline-variant" id="stats-bar">
+      <!-- 1. Total Revenue -->
+      <div class="bg-primary-container border border-outline-variant p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#15140c] flex flex-col justify-between">
         <p class="font-label-caps text-[11px] text-on-primary-container mb-1">Total Revenue</p>
-        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-tertiary" id="stat-revenue">—</p>
+        <p class="font-headline-lg text-xl sm:text-2xl text-tertiary font-bold" id="stat-revenue">—</p>
       </div>
-      <div class="bg-surface-container border border-outline-variant p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#15140c]">
+
+      <!-- 2. Total Tiket Terjual (BOX BARU) -->
+      <div class="bg-surface-container-high border-2 border-tertiary p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#efc05e] flex flex-col justify-between relative overflow-hidden group">
+        <div class="flex items-center justify-between mb-1">
+          <p class="font-label-caps text-[11px] text-tertiary uppercase font-bold tracking-wider">Tiket Terjual</p>
+          <span class="material-symbols-outlined text-tertiary text-[18px]">confirmation_number</span>
+        </div>
+        <div>
+          <div class="flex items-baseline gap-1.5">
+            <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-tertiary font-extrabold font-mono" id="stat-tickets-sold">0</p>
+            <span class="font-label-caps text-[10px] text-on-surface-variant uppercase font-bold">Tiket</span>
+          </div>
+          <p class="font-body-md text-[10px] text-on-surface-variant mt-0.5">Total tiket masuk sah</p>
+        </div>
+      </div>
+
+      <!-- 3. Transaksi Berhasil -->
+      <div class="bg-surface-container border border-outline-variant p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#15140c] flex flex-col justify-between">
         <p class="font-label-caps text-[11px] text-on-surface-variant mb-1">Transaksi Berhasil</p>
-        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-on-surface" id="stat-verified">—</p>
+        <p class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold" id="stat-verified">—</p>
       </div>
-      <div class="bg-[#2E1A47] border border-tertiary p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#efc05e]">
-        <p class="font-label-caps text-[11px] text-tertiary mb-1">Menunggu Verifikasi</p>
-        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-on-surface" id="stat-pending">—</p>
+
+      <!-- 4. Menunggu Verifikasi -->
+      <div class="bg-[#2E1A47] border border-outline-variant p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#15140c] flex flex-col justify-between">
+        <p class="font-label-caps text-[11px] text-tertiary mb-1">Menunggu Bayar</p>
+        <p class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold" id="stat-pending">—</p>
       </div>
-      <div class="bg-surface-container border border-secondary/50 p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#c4cd6f]">
+
+      <!-- 5. Tiket Fisik Ditukar -->
+      <div class="col-span-2 md:col-span-1 bg-surface-container border border-secondary/50 p-3.5 sm:p-4 shadow-[4px_4px_0px_0px_#c4cd6f] flex flex-col justify-between">
         <p class="font-label-caps text-[11px] text-secondary mb-1">Tiket Fisik Ditukar</p>
-        <p class="font-headline-lg text-xl sm:text-2xl lg:text-3xl text-secondary" id="stat-checkin">—</p>
+        <p class="font-headline-lg text-xl sm:text-2xl text-secondary font-bold" id="stat-checkin">—</p>
       </div>
     </div>
 
@@ -348,6 +438,7 @@
                   </div>
                 </th>
                 <th class="px-3 py-2.5 font-label-caps text-[11px] text-on-surface-variant whitespace-nowrap">Status Bayar</th>
+                <th class="px-3 py-2.5 font-label-caps text-[11px] text-error font-bold tracking-wider whitespace-nowrap text-center">Aksi</th>
               </tr>
             </thead>
             <tbody id="pay-tbody" class="divide-y divide-outline-variant/30 text-xs"></tbody>
@@ -448,17 +539,42 @@
           }
         }
 
-        // Mobile top nav link
+        // Mobile drawer nav link
         const mobNav = document.getElementById(`mob-${id}`);
         if (mobNav) {
           if (id === tab) {
-            mobNav.className = 'nav-link text-tertiary font-label-caps text-xs px-2.5 py-1.5 border border-tertiary bg-tertiary/10';
+            mobNav.className = 'flex items-center justify-between p-3 border-2 border-tertiary bg-tertiary-container text-tertiary font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c]';
           } else {
-            mobNav.className = 'nav-link text-on-surface-variant font-label-caps text-xs px-2.5 py-1.5 border border-outline-variant';
+            mobNav.className = 'flex items-center justify-between p-3 border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c]';
           }
         }
       });
     }
+
+    /* -------- Mobile Admin Burger Menu Handler -------- */
+    const adminBurgerBtn = document.getElementById('admin-burger-btn');
+    const adminMobileDrawer = document.getElementById('admin-mobile-drawer');
+    const adminBurgerIcon = document.getElementById('admin-burger-icon');
+
+    function toggleAdminDrawer() {
+      if (!adminMobileDrawer) return;
+      const isHidden = adminMobileDrawer.classList.contains('hidden');
+      if (isHidden) {
+        adminMobileDrawer.classList.remove('hidden');
+        if (adminBurgerIcon) adminBurgerIcon.textContent = 'close';
+      } else {
+        adminMobileDrawer.classList.add('hidden');
+        if (adminBurgerIcon) adminBurgerIcon.textContent = 'menu';
+      }
+    }
+
+    function closeAdminDrawer() {
+      if (!adminMobileDrawer) return;
+      adminMobileDrawer.classList.add('hidden');
+      if (adminBurgerIcon) adminBurgerIcon.textContent = 'menu';
+    }
+
+    adminBurgerBtn?.addEventListener('click', toggleAdminDrawer);
 
     /* -------- Session -------- */
     (async () => {
@@ -469,6 +585,9 @@
           window.location.href = 'login.html'; return;
         }
         document.getElementById('admin-nama').textContent = data.user.nama;
+        const mobAdminNama = document.getElementById('admin-nama-mobile');
+        if (mobAdminNama) mobAdminNama.textContent = data.user.nama;
+
         // Buka tab Verifikasi Tiket sebagai tab utama default
         const hash = window.location.hash.replace('#', '');
         showTab(['verify', 'payments', 'qna'].includes(hash) ? hash : 'verify');
@@ -709,6 +828,16 @@
 
             <!-- 8. Status Pembayaran -->
             <td class="px-3 py-2.5 whitespace-nowrap">${statusBadge}</td>
+
+            <!-- 9. Aksi: Hapus Tiket -->
+            <td class="px-3 py-2.5 whitespace-nowrap text-center">
+              <button type="button" onclick="deleteTicketPayment(${p.payment_id}, '${p.kode_unik}', '${safeUserName}')"
+                class="inline-flex items-center gap-1 px-2.5 py-1 bg-error-container/30 border border-error/50 text-error hover:bg-error hover:text-on-error hover:border-error font-label-caps text-[10px] uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 active:shadow-none cursor-pointer"
+                title="Hapus Tiket & Kembalikan Kuota">
+                <span class="material-symbols-outlined text-[13px]">delete</span>
+                Hapus
+              </button>
+            </td>
           </tr>
         `;
       }).join('');
@@ -734,19 +863,41 @@
         document.getElementById('stat-verified').textContent = s.settled ?? s.verified ?? 0;
         document.getElementById('stat-pending').textContent = s.pending || 0;
 
-        // Checkin counter: berapa tiket sah yang sudah ditukar fisik
+        // Valid payments (settlement, capture, verified)
         const validPayments = allPayments.filter(p => ['settlement', 'capture', 'verified'].includes(p.status));
+
+        // Hitung total tiket masuk sah (termasuk paket Duo=2, Trio=3)
+        let totalSoldTickets = 0;
+        validPayments.forEach(p => {
+          let multiplier = 1;
+          const tName = (p.nama_tiket || '').toLowerCase();
+          if (tName.includes('trio')) multiplier = 3;
+          else if (tName.includes('duo')) multiplier = 2;
+          totalSoldTickets += (Number(p.jumlah_tiket) || 1) * multiplier;
+        });
+
+        const statTicketsSoldEl = document.getElementById('stat-tickets-sold');
+        if (statTicketsSoldEl) {
+          const finalCount = s.total_tickets_sold !== undefined ? s.total_tickets_sold : totalSoldTickets;
+          statTicketsSoldEl.textContent = finalCount;
+        }
+
+        // Checkin counter: berapa tiket sah yang sudah ditukar fisik
         const checkedInCount = validPayments.filter(p => Number(p.is_checked_in) === 1).length;
         const statCheckinEl = document.getElementById('stat-checkin');
         if (statCheckinEl) {
           statCheckinEl.textContent = `${checkedInCount} / ${validPayments.length}`;
         }
 
-        // Badge pending di navigasi
+        // Badge pending di navigasi (Desktop & Mobile Drawer)
         const badge = document.getElementById('badge-pending');
-        if (badge) {
-          if (s.pending > 0) { badge.textContent = s.pending; badge.classList.remove('hidden'); }
-          else badge.classList.add('hidden');
+        const mobBadge = document.getElementById('mob-badge-pending');
+        if (s.pending > 0) {
+          if (badge) { badge.textContent = s.pending; badge.classList.remove('hidden'); }
+          if (mobBadge) { mobBadge.textContent = s.pending; mobBadge.classList.remove('hidden'); }
+        } else {
+          if (badge) badge.classList.add('hidden');
+          if (mobBadge) mobBadge.classList.add('hidden');
         }
 
         applyPaymentsFilter();
@@ -807,6 +958,41 @@
       }
     }
 
+    /* -------- Delete Purchased Ticket (Hapus Tiket) -------- */
+    async function deleteTicketPayment(paymentId, kodeUnik, userName = '') {
+      const userText = userName ? ` milik "${userName}"` : '';
+      const promptMsg = `YAKIN INGIN MENGHAPUS TIKET INI?\n\nKode: ${kodeUnik}${userText}\n\nPERINGATAN:\n- Data pesanan & tiket ini akan dihapus permanen dari database.\n- Kuota tiket akan otomatis dikembalikan ke sistem.`;
+
+      if (!confirm(promptMsg)) return;
+
+      try {
+        const res = await fetch(`${API}/admin_payment_delete.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payment_id: paymentId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(data.message || `Tiket ${kodeUnik} berhasil dihapus dan kuota dikembalikan!`, 'success');
+          // Refresh data riwayat transaksi & stats
+          await loadPayments();
+
+          // Jika tiket yang dihapus sedang tampil di tab verifikasi, bersihkan
+          const verifyResult = document.getElementById('verify-result');
+          if (verifyResult && verifyResult.innerHTML.includes(kodeUnik)) {
+            verifyResult.classList.add('hidden');
+            verifyResult.innerHTML = '';
+          }
+        } else {
+          showToast(data.message || 'Gagal menghapus tiket.', 'error');
+        }
+      } catch (err) {
+        console.error('deleteTicketPayment error:', err);
+        showToast('Terjadi kesalahan koneksi saat menghapus tiket.', 'error');
+      }
+    }
+
 
     /* -------- Load QnA -------- */
     async function loadQnA() {
@@ -819,10 +1005,16 @@
         const data = await res.json();
         document.getElementById('qna-loading').classList.add('hidden');
 
-        // Badge
+        // Badge (Desktop & Mobile Drawer)
         const badge = document.getElementById('badge-qna');
-        if (data.total_menunggu > 0) { badge.textContent = data.total_menunggu; badge.classList.remove('hidden'); }
-        else badge.classList.add('hidden');
+        const mobBadge = document.getElementById('mob-badge-qna');
+        if (data.total_menunggu > 0) {
+          if (badge) { badge.textContent = data.total_menunggu; badge.classList.remove('hidden'); }
+          if (mobBadge) { mobBadge.textContent = data.total_menunggu; mobBadge.classList.remove('hidden'); }
+        } else {
+          if (badge) badge.classList.add('hidden');
+          if (mobBadge) mobBadge.classList.add('hidden');
+        }
 
         if (!data.success || data.pertanyaan.length === 0) {
           document.getElementById('qna-empty').classList.remove('hidden'); return;
@@ -974,6 +1166,13 @@
                   <p class="font-mono text-tertiary font-extrabold tracking-widest">${kode_unik}</p>
                 </div>
               </div>
+              <div class="mt-4 pt-3 border-t border-dashed border-secondary/30 flex justify-end">
+                <button type="button" onclick="deleteTicketPayment(${t.payment_id}, '${kode_unik}', '${t.nama_user}')"
+                  class="px-3 py-1.5 bg-error/20 border border-error text-error hover:bg-error hover:text-on-error font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c] flex items-center gap-1.5 cursor-pointer">
+                  <span class="material-symbols-outlined text-[15px]">delete</span>
+                  Hapus Tiket Ini
+                </button>
+              </div>
             </div>
           `;
           showToast('Tiket berhasil diverifikasi!', 'success');
@@ -1005,6 +1204,13 @@
                   <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Kode Unik</p>
                   <p class="font-mono text-tertiary font-extrabold tracking-widest">${kode_unik}</p>
                 </div>
+              </div>
+              <div class="mt-4 pt-3 border-t border-dashed border-error/30 flex justify-end">
+                <button type="button" onclick="deleteTicketPayment(${t.payment_id}, '${kode_unik}', '${t.nama_user}')"
+                  class="px-3 py-1.5 bg-error border border-error text-on-error hover:bg-error/80 font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c] flex items-center gap-1.5 cursor-pointer">
+                  <span class="material-symbols-outlined text-[15px]">delete</span>
+                  Hapus Tiket Ini
+                </button>
               </div>
             </div>
           `;

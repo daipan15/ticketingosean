@@ -1006,13 +1006,13 @@
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b-2 border-dashed border-outline-variant">
           <div>
             <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-tertiary text-[22px]">bar_chart</span>
+              <span class="material-symbols-outlined text-tertiary text-[22px]">pie_chart</span>
               <h3 class="font-headline-lg text-lg sm:text-xl text-on-surface uppercase font-bold tracking-wide">
-                Grafik Batang Perolehan Tiket
+                Grafik Persentase Dukungan
               </h3>
             </div>
             <p class="font-body-md text-xs text-on-surface-variant mt-0.5">
-              Akumulasi tiket sah (<span class="text-secondary font-bold">Verified</span>) dari 9 Himpunan Mahasiswa FMIPA UNPAD.
+              Distribusi referral terbanyak dari 9 Himpunan Mahasiswa FMIPA UNPAD.
             </p>
           </div>
 
@@ -1051,8 +1051,8 @@
         <!-- Chart Footer Legend & Total Info -->
         <div class="mt-8 pt-5 border-t border-dashed border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <div class="flex items-center gap-2 text-on-surface-variant font-label-caps text-[11px]">
-            <span class="material-symbols-outlined text-[16px] text-tertiary">info</span>
-            <span>Total Dukungan Tiket Masuk: <strong id="total-referral-tickets-count" class="text-secondary font-bold font-mono text-sm">0</strong> tiket</span>
+            <span class="material-symbols-outlined text-[16px] text-tertiary">how_to_vote</span>
+            <span>Distribusi: <strong id="total-referral-tickets-count" class="text-secondary font-bold font-mono text-sm">100%</strong></span> 
           </div>
 
           <a href="buy_tickets_payment.html" onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
@@ -1119,9 +1119,6 @@
           </button>
           <button type="button" onclick="filterFaqTopic('kode')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="kode">
             Kode Unik
-          </button>
-          <button type="button" onclick="filterFaqTopic('kebijakan')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="kebijakan">
-            Refund & T&C
           </button>
           <button type="button" onclick="filterFaqTopic('venue')" class="faq-chip-btn px-3 py-1 font-label-caps text-[10px] sm:text-[11px] uppercase font-bold border-2 border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-tertiary transition-all shadow-[2px_2px_0px_0px_#15140c]" data-topic="venue">
             Venue & Wristband
@@ -1219,7 +1216,7 @@
   </footer>
 
   <!-- ===================== POP-UP TIKET AKTIF (AUTO POPUP) ===================== -->
-  <div id="active-tickets-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-md transition-all duration-300 opacity-0 select-none">
+  <div id="active-tickets-modal" onclick="if(event.target === this) closeActiveTicketsModal()" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-md transition-all duration-300 opacity-0 select-none">
     <div class="relative w-full max-w-lg bg-surface-container border-2 border-tertiary shadow-[10px_10px_0px_0px_#15140c] overflow-hidden transform scale-95 transition-all duration-300" id="active-tickets-modal-card">
       
       <!-- Ambient Glow Decor inside modal -->
@@ -1836,46 +1833,67 @@
     // =================================================================
     // ACTIVE TICKETS AUTO-POPUP & QUICK PREVIEW
     // =================================================================
+    const FALLBACK_TICKETS = [
+      { id: 1, kategori: 'Early Bird', nama_tiket: 'Early Bird - Spectrum Single', deskripsi: 'Akses tiket masuk area festival untuk 1 orang', harga: 38000, harga_format: 'Rp 38.000', sisa_kuota: 100 },
+      { id: 2, kategori: 'Early Bird', nama_tiket: 'Early Bird - Spectrum Duo', deskripsi: 'Paket hemat tiket masuk festival untuk 2 orang (Duo)', harga: 68000, harga_format: 'Rp 68.000', sisa_kuota: 50 },
+      { id: 3, kategori: 'Pre Sale 1', nama_tiket: 'Pre Sale 1 - Spectrum Single', deskripsi: 'Akses tiket masuk area festival untuk 1 orang', harga: 48000, harga_format: 'Rp 48.000', sisa_kuota: 200 },
+      { id: 4, kategori: 'Pre Sale 1', nama_tiket: 'Pre Sale 1 - Spectrum Duo', deskripsi: 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', harga: 88000, harga_format: 'Rp 88.000', sisa_kuota: 100 },
+      { id: 5, kategori: 'Pre Sale 1', nama_tiket: 'Pre Sale 1 - Spectrum Trio', deskripsi: 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', harga: 123000, harga_format: 'Rp 123.000', sisa_kuota: 50 },
+      { id: 6, kategori: 'Pre Sale 2', nama_tiket: 'Pre Sale 2 - Spectrum Single', deskripsi: 'Akses tiket masuk area festival untuk 1 orang', harga: 58000, harga_format: 'Rp 58.000', sisa_kuota: 200 },
+      { id: 7, kategori: 'Pre Sale 2', nama_tiket: 'Pre Sale 2 - Spectrum Duo', deskripsi: 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', harga: 108000, harga_format: 'Rp 108.000', sisa_kuota: 100 },
+      { id: 8, kategori: 'Pre Sale 2', nama_tiket: 'Pre Sale 2 - Spectrum Trio', deskripsi: 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', harga: 153000, harga_format: 'Rp 153.000', sisa_kuota: 50 },
+      { id: 9, kategori: 'On The Spot', nama_tiket: 'On The Spot - Spectrum Single', deskripsi: 'Akses tiket masuk langsung di venue hari H untuk 1 orang', harga: 68000, harga_format: 'Rp 68.000', sisa_kuota: 100 },
+      { id: 10, kategori: 'On The Spot', nama_tiket: 'On The Spot - Spectrum Duo', deskripsi: 'Akses tiket masuk langsung di venue hari H untuk 2 orang (Duo)', harga: 128000, harga_format: 'Rp 128.000', sisa_kuota: 50 }
+    ];
+
     let activeTicketsData = [];
     let currentActiveCategory = null;
 
     async function initActiveTicketsPopup() {
+      let tickets = [];
       try {
         const res = await fetch(`${API}/tickets_list.php`);
         const data = await res.json();
-        if (!data.success || !data.tickets || data.tickets.length === 0) return;
-
-        const now = new Date();
-        // Cek kategori yang sedang aktif berdasarkan rentang jadwal
-        currentActiveCategory = TICKET_SCHEDULE.find(item => now >= item.startDate && now <= item.endDate);
-
-        // Fallback: Jika di luar tanggal jadwal, default gunakan kategori Early Bird
-        if (!currentActiveCategory) {
-          currentActiveCategory = TICKET_SCHEDULE[0];
-        }
-
-        const catTitleLower = currentActiveCategory.title.toLowerCase();
-        activeTicketsData = data.tickets.filter(t => 
-          (t.kategori || '').toLowerCase().includes(catTitleLower) || 
-          t.nama_tiket.toLowerCase().includes(catTitleLower)
-        );
-
-        // Jika tidak ada tiket untuk kategori aktif, tampilkan 3 tiket teratas
-        if (activeTicketsData.length === 0) {
-          activeTicketsData = data.tickets.slice(0, 3);
-        }
-
-        renderActiveTicketsPopupContent();
-
-        // Tampilkan pop-up otomatis setelah delay 850ms jika user belum mencentang "jangan tampilkan lagi"
-        const isDismissed = sessionStorage.getItem('hideActiveTicketsPopup') === 'true';
-        if (!isDismissed) {
-          setTimeout(() => {
-            openActiveTicketsModal(false);
-          }, 850);
+        if (data.success && Array.isArray(data.tickets) && data.tickets.length > 0) {
+          tickets = data.tickets;
         }
       } catch (err) {
-        console.warn('Gagal memuat info tiket pop-up:', err);
+        console.warn('Backend API tidak terjangkau, menggunakan fallback data tiket:', err);
+      }
+
+      // Gunakan fallback jika backend offline / data kosong
+      if (!tickets || tickets.length === 0) {
+        tickets = FALLBACK_TICKETS;
+      }
+
+      const now = new Date();
+      // Cek kategori yang sedang aktif berdasarkan rentang jadwal
+      currentActiveCategory = TICKET_SCHEDULE.find(item => now >= item.startDate && now <= item.endDate);
+
+      // Fallback: Jika di luar tanggal jadwal (misal masa pengujian), gunakan kategori terdekat atau Early Bird
+      if (!currentActiveCategory) {
+        currentActiveCategory = TICKET_SCHEDULE[0];
+      }
+
+      const catTitleLower = currentActiveCategory.title.toLowerCase();
+      activeTicketsData = tickets.filter(t => 
+        (t.kategori || '').toLowerCase().includes(catTitleLower) || 
+        t.nama_tiket.toLowerCase().includes(catTitleLower)
+      );
+
+      // Jika tidak ada tiket untuk kategori aktif, tampilkan tiket yang tersedia
+      if (activeTicketsData.length === 0) {
+        activeTicketsData = tickets.slice(0, 3);
+      }
+
+      renderActiveTicketsPopupContent();
+
+      // Tampilkan pop-up otomatis setelah delay 850ms jika user belum mencentang "jangan tampilkan lagi"
+      const isDismissed = sessionStorage.getItem('hideActiveTicketsPopup') === 'true';
+      if (!isDismissed) {
+        setTimeout(() => {
+          openActiveTicketsModal(false);
+        }, 850);
       }
     }
 
@@ -1948,7 +1966,9 @@
               <div class="flex items-center gap-2 mt-1">
                 ${isSoldOut 
                   ? '<span class="font-label-caps text-[9px] text-error uppercase font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">block</span> Habis Terjual</span>' 
-                  : `<span class="font-label-caps text-[9px] text-tertiary uppercase font-bold">Sisa Kuota: ${t.sisa_kuota}</span>`}
+                  : ((t.sisa_kuota || 0) > 0 && (t.sisa_kuota || 0) < 10)
+                    ? '<span class="inline-flex items-center gap-1 font-label-caps text-[9px] uppercase font-bold text-error bg-error-container/40 border border-error/60 px-1.5 py-0.5 animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-error inline-block"></span> Hampir Habis!</span>'
+                    : '<span class="font-label-caps text-[9px] text-secondary uppercase font-bold">Tersedia</span>'}
               </div>
             </div>
             <div class="text-right flex-shrink-0">
@@ -2010,7 +2030,7 @@
         if (data.success && Array.isArray(data.leaderboard)) {
           rawLeaderboardData = data.leaderboard;
           const countEl = document.getElementById('total-referral-tickets-count');
-          if (countEl) countEl.textContent = data.total_tiket_referral || 0;
+          if (countEl) countEl.textContent = (data.total_tiket_referral > 0) ? '100%' : '0%';
           renderLeaderboard();
         }
       } catch (err) {
@@ -2040,17 +2060,17 @@
         list.sort((a, b) => a.name.localeCompare(b.name));
       } else {
         list.sort((a, b) => {
-          if (b.tiket === a.tiket) return a.name.localeCompare(b.name);
-          return b.tiket - a.tiket;
+          if (b.persentase === a.persentase) return a.name.localeCompare(b.name);
+          return b.persentase - a.persentase;
         });
       }
 
-      const maxTickets = Math.max(1, ...rawLeaderboardData.map(d => d.tiket));
+      const maxPersen = Math.max(1, ...rawLeaderboardData.map(d => d.persentase || 0));
 
       // 1. Render Top 3 Podium
       const top3Sorted = [...rawLeaderboardData].sort((a, b) => {
-        if (b.tiket === a.tiket) return a.name.localeCompare(b.name);
-        return b.tiket - a.tiket;
+        if (b.persentase === a.persentase) return a.name.localeCompare(b.name);
+        return b.persentase - a.persentase;
       });
       renderPodiumCards(top3Sorted.slice(0, 3));
 
@@ -2058,10 +2078,12 @@
       const desktopContainer = document.getElementById('desktop-bars-container');
       if (desktopContainer) {
         desktopContainer.innerHTML = list.map(item => {
-          const heightPct = Math.max(14, Math.round((item.tiket / maxTickets) * 100));
-          const isTop1 = item.rank === 1 && item.tiket > 0;
-          const isTop2 = item.rank === 2 && item.tiket > 0;
-          const isTop3 = item.rank === 3 && item.tiket > 0;
+          const heightPct = (item.persentase > 0)
+            ? Math.max(16, Math.round((item.persentase / maxPersen) * 100))
+            : 12;
+          const isTop1 = item.rank === 1 && item.persentase > 0;
+          const isTop2 = item.rank === 2 && item.persentase > 0;
+          const isTop3 = item.rank === 3 && item.persentase > 0;
 
           let rankBadge = `<span class="font-label-caps text-[10px] text-on-surface-variant font-bold">#${item.rank}</span>`;
           if (isTop1) rankBadge = `<span class="font-mono text-xs font-bold text-tertiary border border-tertiary/60 bg-tertiary/10 px-1.5 py-0.5">#1</span>`;
@@ -2069,15 +2091,15 @@
           else if (isTop3) rankBadge = `<span class="font-mono text-xs font-bold text-on-surface border border-outline-variant bg-surface-container px-1.5 py-0.5">#3</span>`;
 
           return `
-            <div class="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer" title="${item.name} (${item.prodi}): ${item.tiket} tiket (${item.persentase}%)">
+            <div class="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer" title="${item.name} (${item.prodi}): Pangsa Dukungan ${item.persentase}%">
               
-              <!-- Value on top of bar -->
+              <!-- Value on top of bar (Persentase Murni) -->
               <div class="mb-2 flex flex-col items-center">
-                <span class="font-mono text-xs sm:text-sm font-extrabold text-on-surface group-hover:text-secondary transition-colors">
-                  ${item.tiket}
-                </span>
-                <span class="font-label-caps text-[9px] text-on-surface-variant opacity-80 uppercase">
+                <span class="font-mono text-xs sm:text-sm font-extrabold text-tertiary group-hover:text-secondary transition-colors">
                   ${item.persentase}%
+                </span>
+                <span class="font-label-caps text-[8px] text-on-surface-variant opacity-75 uppercase tracking-tighter">
+                  Dukungan
                 </span>
               </div>
 
@@ -2110,10 +2132,12 @@
       const mobileContainer = document.getElementById('mobile-bars-container');
       if (mobileContainer) {
         mobileContainer.innerHTML = list.map(item => {
-          const widthPct = Math.max(10, Math.round((item.tiket / maxTickets) * 100));
-          const isTop1 = item.rank === 1 && item.tiket > 0;
-          const isTop2 = item.rank === 2 && item.tiket > 0;
-          const isTop3 = item.rank === 3 && item.tiket > 0;
+          const widthPct = (item.persentase > 0)
+            ? Math.max(14, Math.round((item.persentase / maxPersen) * 100))
+            : 10;
+          const isTop1 = item.rank === 1 && item.persentase > 0;
+          const isTop2 = item.rank === 2 && item.persentase > 0;
+          const isTop3 = item.rank === 3 && item.persentase > 0;
 
           let rankBadge = `#${item.rank}`;
 
@@ -2128,8 +2152,8 @@
                   </div>
                 </div>
                 <div class="text-right">
-                  <span class="font-mono text-xs font-bold text-tertiary">${item.tiket} Tiket</span>
-                  <span class="font-label-caps text-[9px] text-on-surface-variant ml-1">(${item.persentase}%)</span>
+                  <span class="font-mono text-xs sm:text-sm font-bold text-tertiary">${item.persentase}%</span>
+                  <span class="font-label-caps text-[9px] text-on-surface-variant ml-1 uppercase">Pangsa</span>
                 </div>
               </div>
 
@@ -2188,12 +2212,12 @@
 
             <div class="mt-4 pt-3 border-t border-dashed border-outline-variant flex items-center justify-between">
               <div>
-                <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Total Tiket</span>
-                <span class="font-headline-lg text-lg text-secondary font-bold font-mono">${d.tiket}</span>
+                <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Pangsa Suara</span>
+                <span class="font-headline-lg text-lg sm:text-xl text-secondary font-bold font-mono">${d.persentase}%</span>
               </div>
               <div class="text-right">
-                <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Kontribusi</span>
-                <span class="font-headline-lg text-lg text-tertiary font-bold font-mono">${d.persentase}%</span>
+                <span class="font-label-caps text-[9px] text-on-surface-variant uppercase block">Status</span>
+                <span class="font-headline-lg text-xs sm:text-sm text-tertiary font-bold uppercase tracking-wider">${p.title}</span>
               </div>
             </div>
           </div>

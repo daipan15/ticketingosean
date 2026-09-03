@@ -955,7 +955,8 @@
             if (item.sisa_kuota <= 0) {
               return `<option value="${item.id}" disabled>${cleanSubName} — Habis (Sold Out)</option>`;
             }
-            return `<option value="${item.id}">${cleanSubName} — ${status === 'upcoming' ? 'Rp XXX (Segera)' : item.harga_format}</option>`;
+            const lowStockNote = (item.sisa_kuota > 0 && item.sisa_kuota < 10) ? ' [HAMPIR HABIS]' : '';
+            return `<option value="${item.id}">${cleanSubName} — ${status === 'upcoming' ? 'Rp XXX (Segera)' : item.harga_format}${lowStockNote}</option>`;
           }).join('');
 
           // Buat card jenis-jenis tiket di dalam dropdown
@@ -1064,7 +1065,11 @@
                     </div>
                     <div class="text-right flex-shrink-0">
                       <p class="font-display-md text-tertiary text-sm sm:text-base font-bold">${item.harga_format}</p>
-                      <span class="font-label-caps text-[9px] text-on-surface-variant uppercase">${item.sisa_kuota} sisa</span>
+                      ${(item.sisa_kuota > 0 && item.sisa_kuota < 10) 
+                        ? `<span class="inline-flex items-center gap-1 font-label-caps text-[9px] uppercase font-bold text-error bg-error-container/40 border border-error/60 px-1.5 py-0.5 mt-0.5 animate-pulse shadow-[1px_1px_0px_0px_#15140c]">
+                             <span class="w-1.5 h-1.5 rounded-full bg-error inline-block"></span> Hampir Habis!
+                           </span>`
+                        : `<span class="font-label-caps text-[9px] text-secondary/80 uppercase font-semibold">Tersedia</span>`}
                     </div>
                   </div>
                 </div>
@@ -1252,7 +1257,7 @@
     document.getElementById('qty-plus').addEventListener('click', () => {
       const max = selectedTicket ? selectedTicket.sisa : 10;
       if (qty < max) { qty++; updateTotal(); }
-      else showToast(`Maksimal ${max} tiket tersedia.`, 'info');
+      else showToast('Jumlah pemesanan telah mencapai batas maksimal tiket yang tersedia.', 'info');
     });
 
     /* -------- T&C Modal Handlers -------- */

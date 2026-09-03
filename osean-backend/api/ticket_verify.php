@@ -97,6 +97,7 @@ if ((int)$payment['is_checked_in'] === 1) {
         'scan_result' => 'already_used',
         'message'     => 'Tiket sudah diambil',
         'tiket'       => [
+            'payment_id'    => (int)$payment['payment_id'],
             'kode_unik'     => $payment['kode_unik'],
             'nama_user'     => $payment['nama_user'],
             'email_user'    => $payment['email_user'],
@@ -130,6 +131,7 @@ echo json_encode([
     'scan_result' => 'valid',
     'message'     => 'Tiket valid! Selamat datang di OSEAN.',
     'tiket'       => [
+        'payment_id'    => (int)$payment['payment_id'],
         'kode_unik'     => $payment['kode_unik'],
         'nama_user'     => $payment['nama_user'],
         'email_user'    => $payment['email_user'],

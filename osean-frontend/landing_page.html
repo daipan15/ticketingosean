@@ -489,7 +489,7 @@
             <div class="flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-[10px] xl:text-label-caps text-on-surface-variant uppercase mb-0.5">Mulai dari</p>
-                <p class="font-headline-lg text-xl xl:text-2xl text-tertiary">Rp 38.000</p>
+                <p id="price-hero-min" class="font-headline-lg text-xl xl:text-2xl text-tertiary">—</p>
               </div>
               <span
                 class="font-label-caps text-[10px] xl:text-xs text-secondary uppercase tracking-widest border border-secondary px-2 py-0.5">
@@ -576,8 +576,7 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-early-bird" class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary">Rp 38.000
-                </p>
+                <p id="price-early-bird" class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary">—</p>
               </div>
               <div id="btn-container-early-bird">
                 <a href="buy_tickets_payment.html"
@@ -623,8 +622,7 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-presale-1" class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary">Rp 48.000
-                </p>
+                <p id="price-presale-1" class="font-headline-lg text-2xl sm:text-headline-lg text-tertiary">—</p>
               </div>
               <div id="btn-container-presale-1">
                 <a href="buy_tickets_payment.html"
@@ -659,7 +657,7 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-presale-2" class="font-headline-lg text-2xl sm:text-headline-lg text-primary">Rp 58.000</p>
+                <p id="price-presale-2" class="font-headline-lg text-2xl sm:text-headline-lg text-primary">—</p>
               </div>
               <div id="btn-container-presale-2">
                 <a href="buy_tickets_payment.html"
@@ -695,7 +693,7 @@
             <div class="border-t border-dashed border-outline-variant pt-4 flex items-end justify-between">
               <div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">Harga</p>
-                <p id="price-ots" class="font-headline-lg text-2xl sm:text-headline-lg text-secondary">Rp 68.000</p>
+                <p id="price-ots" class="font-headline-lg text-2xl sm:text-headline-lg text-secondary">—</p>
               </div>
               <div id="btn-container-ots">
                 <a href="buy_tickets_payment.html"
@@ -1423,11 +1421,11 @@
     })();
 
     /* -------- JADWAL REVEAL TIKET REAL-TIME -------- */
+    // Harga tidak di-hardcode di sini — diambil dari database via API tickets_list.php
     const TICKET_SCHEDULE = [
       {
         id: 'early-bird',
         title: 'Early Bird',
-        price: 'Rp 38.000',
         startDate: new Date('2026-09-04T00:00:00+07:00'),
         endDate: new Date('2026-09-08T23:59:59+07:00'),
         btnClass: 'bg-tertiary text-on-tertiary'
@@ -1435,7 +1433,6 @@
       {
         id: 'presale-1',
         title: 'Pre Sale 1',
-        price: 'Rp 48.000',
         startDate: new Date('2026-09-09T00:00:00+07:00'),
         endDate: new Date('2026-09-16T23:59:59+07:00'),
         btnClass: 'bg-tertiary text-on-tertiary'
@@ -1443,15 +1440,13 @@
       {
         id: 'presale-2',
         title: 'Pre Sale 2',
-        price: 'Rp 58.000',
         startDate: new Date('2026-09-17T00:00:00+07:00'),
         endDate: new Date('2026-09-24T23:59:59+07:00'),
         btnClass: 'bg-primary text-on-primary'
       },
       {
         id: 'ots',
-        title: 'Normal',
-        price: 'Rp 68.000',
+        title: 'On The Spot',
         startDate: new Date('2026-09-25T00:00:00+07:00'),
         endDate: new Date('2026-09-27T23:59:59+07:00'),
         btnClass: 'bg-secondary text-on-secondary'
@@ -1462,7 +1457,7 @@
       const now = new Date();
       let activeItem = null;
 
-      // 1. Ambil data real-time sisa kuota tiket langsung dari database
+      // Ambil data tiket (harga + kuota) dari database — satu-satunya sumber kebenaran
       let dbTickets = [];
       try {
         const res = await fetch(`${API}/tickets_list.php`);
@@ -1471,14 +1466,44 @@
           dbTickets = data.tickets;
         }
       } catch (e) {
-        console.warn('Gagal memuat status kuota real-time dari database:', e);
+        console.warn('Gagal memuat data tiket dari database:', e);
+      }
+
+      // Helper: ambil harga terendah dari tiket DB untuk kategori tertentu
+      function getCategoryPrice(catKey) {
+        const catTickets = dbTickets.filter(t => {
+          const tCat = (t.kategori || '').toLowerCase().trim();
+          return tCat.includes(catKey);
+        });
+        if (catTickets.length === 0) return null;
+        const cheapest = catTickets.reduce((a, b) => a.harga < b.harga ? a : b);
+        return cheapest.harga_format;
+      }
+
+      // Helper: hitung sisa kuota total untuk kategori tertentu dari DB
+      function getCategoryStock(catKey) {
+        const catTickets = dbTickets.filter(t => {
+          const tCat = (t.kategori || '').toLowerCase().trim();
+          return tCat.includes(catKey);
+        });
+        if (catTickets.length === 0) return null;
+        return catTickets.reduce((acc, curr) => acc + (curr.sisa_kuota || 0), 0);
+      }
+
+      // Isi hero "Mulai dari" dengan harga terendah dari semua tiket di DB
+      if (dbTickets.length > 0) {
+        const heroEl = document.getElementById('price-hero-min');
+        if (heroEl) {
+          const cheapestAll = dbTickets.reduce((a, b) => a.harga < b.harga ? a : b);
+          heroEl.textContent = cheapestAll.harga_format;
+        }
       }
 
       TICKET_SCHEDULE.forEach(item => {
-        const priceEl = document.getElementById(`price-${item.id}`);
+        const priceEl      = document.getElementById(`price-${item.id}`);
         const btnContainer = document.getElementById(`btn-container-${item.id}`);
-        const cardEl = document.getElementById(`card-${item.id}`);
-        const cardInner = cardEl ? cardEl.querySelector(':scope > div:nth-child(2)') : null;
+        const cardEl       = document.getElementById(`card-${item.id}`);
+        const cardInner    = cardEl ? cardEl.querySelector(':scope > div:nth-child(2)') : null;
 
         if (!priceEl || !btnContainer) return;
 
@@ -1487,27 +1512,15 @@
           cardInner.classList.remove('border-tertiary', 'border-secondary', 'border-error');
           cardInner.classList.add('border-outline-variant');
         }
-        if (cardEl) {
-          cardEl.classList.remove('opacity-55', 'opacity-70', 'grayscale-[40%]');
-        }
+        if (cardEl) cardEl.classList.remove('opacity-55', 'opacity-70', 'grayscale-[40%]');
 
-        // Hitung sisa kuota database untuk kategori ini
-        const catKey = item.title.toLowerCase().trim();
-        const catTickets = dbTickets.filter(t => {
-          const tCat = (t.kategori || '').toLowerCase().trim();
-          const tName = t.nama_tiket.toLowerCase().trim();
-          return tCat.includes(catKey) || tName.includes(catKey);
-        });
-
-        // Kategori dianggap Sold Out jika ada tiketnya di DB dan seluruh sisa kuotanya <= 0
-        const totalRemaining = catTickets.length > 0
-          ? catTickets.reduce((acc, curr) => acc + (curr.sisa_kuota || 0), 0)
-          : null;
-        
-        const isSoldOut = (catTickets.length > 0 && totalRemaining <= 0);
+        const catKey      = item.title.toLowerCase().trim();
+        const priceFormat = getCategoryPrice(catKey) ?? '—'; // harga dari DB, bukan hardcode
+        const totalStock  = getCategoryStock(catKey);
+        const isSoldOut   = (totalStock !== null && totalStock <= 0);
 
         if (now < item.startDate) {
-          // KONDISI 1: Belum masuk tanggal rilis -> Harga tersembunyi (Rp XXX)
+          // Belum rilis → tampilkan Rp XXX
           priceEl.innerHTML = '<span class="tracking-widest font-mono text-outline-variant opacity-80">Rp XXX</span>';
           btnContainer.innerHTML = `
             <span class="border border-outline-variant text-on-surface-variant font-label-caps text-[11px] uppercase px-3 py-1.5 cursor-not-allowed select-none opacity-60 flex items-center gap-1">
@@ -1515,65 +1528,55 @@
             </span>
           `;
         } else if (now > item.endDate) {
-          // KONDISI 3: Periode penjualan sudah lewat -> PASSED / Berakhir
-          priceEl.innerHTML = `<span class="line-through text-outline-variant opacity-70">${item.price}</span>`;
-          if (cardEl) {
-            cardEl.classList.add('opacity-55', 'grayscale-[40%]');
-          }
+          // Periode lewat → PASSED
+          priceEl.innerHTML = `<span class="line-through text-outline-variant opacity-70">${priceFormat}</span>`;
+          if (cardEl) cardEl.classList.add('opacity-55', 'grayscale-[40%]');
           btnContainer.innerHTML = `
             <span class="bg-error-container/40 border border-error/50 text-error font-label-caps text-[11px] uppercase px-3 py-1.5 cursor-not-allowed select-none flex items-center gap-1 font-bold tracking-wider">
               <span class="material-symbols-outlined text-[14px]">event_busy</span> PASSED
             </span>
           `;
-        } else {
-          // KONDISI 2: Sedang dalam jadwal aktif
-          if (isSoldOut) {
-            // HABIS TERJUAL (SOLD OUT)
-            priceEl.innerHTML = `<span class="line-through text-outline-variant opacity-70">${item.price}</span>`;
-            if (cardEl) {
-              cardEl.classList.add('opacity-70');
-            }
-            if (cardInner) {
-              cardInner.classList.remove('border-outline-variant');
-              cardInner.classList.add('border-error/70');
-            }
-            btnContainer.innerHTML = `
-              <span class="bg-error-container/60 border-2 border-error text-error font-label-caps text-[11px] uppercase px-3 py-1.5 cursor-not-allowed select-none flex items-center gap-1 font-bold tracking-wider shadow-[2px_2px_0px_0px_#15140c]">
-                <span class="material-symbols-outlined text-[14px]">block</span> SOLD OUT
-              </span>
-            `;
-          } else {
-            // TERSEDIA & SIAP DIBELI
-            activeItem = item;
-            priceEl.textContent = item.price;
-            if (cardInner) {
-              cardInner.classList.remove('border-outline-variant');
-              cardInner.classList.add('border-tertiary');
-            }
-            btnContainer.innerHTML = `
-              <a href="buy_tickets_payment.html" onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
-                 class="${item.btnClass} font-label-caps text-label-caps uppercase px-4 py-2 hover:translate-y-[-2px] transition-transform duration-200 active:scale-95 inline-block">
-                Beli
-              </a>
-            `;
+        } else if (isSoldOut) {
+          // Sedang aktif tapi habis → SOLD OUT
+          priceEl.innerHTML = `<span class="line-through text-outline-variant opacity-70">${priceFormat}</span>`;
+          if (cardEl) cardEl.classList.add('opacity-70');
+          if (cardInner) {
+            cardInner.classList.remove('border-outline-variant');
+            cardInner.classList.add('border-error/70');
           }
+          btnContainer.innerHTML = `
+            <span class="bg-error-container/60 border-2 border-error text-error font-label-caps text-[11px] uppercase px-3 py-1.5 cursor-not-allowed select-none flex items-center gap-1 font-bold tracking-wider shadow-[2px_2px_0px_0px_#15140c]">
+              <span class="material-symbols-outlined text-[14px]">block</span> SOLD OUT
+            </span>
+          `;
+        } else {
+          // Sedang aktif & tersedia → tampilkan harga dari DB dan tombol beli
+          activeItem = item;
+          priceEl.textContent = priceFormat;
+          if (cardInner) {
+            cardInner.classList.remove('border-outline-variant');
+            cardInner.classList.add('border-tertiary');
+          }
+          btnContainer.innerHTML = `
+            <a href="buy_tickets_payment.html"
+               onclick="if(localStorage.getItem('isLoggedIn') !== 'true'){event.preventDefault(); window.location.href='login.html';}"
+               class="${item.btnClass} font-label-caps text-label-caps uppercase px-4 py-2 hover:translate-y-[-2px] transition-transform duration-200 active:scale-95 inline-block">
+              Beli
+            </a>
+          `;
         }
       });
 
-      // Kontrol visibilitas & posisi badge RIGHT NOW secara real-time
+      // Kontrol visibilitas & posisi badge RIGHT NOW
       const badge = document.getElementById('badge-right-now');
       if (badge) {
         if (activeItem) {
-          // Tampilkan badge RIGHT NOW hanya jika sedang ada kategori yang aktif dan kuota belum habis
           const activeCardInner = document.querySelector(`#card-${activeItem.id} > div:nth-child(2)`);
           if (activeCardInner) {
-            if (!activeCardInner.contains(badge)) {
-              activeCardInner.appendChild(badge);
-            }
+            if (!activeCardInner.contains(badge)) activeCardInner.appendChild(badge);
             badge.classList.remove('hidden');
           }
         } else {
-          // Sembunyikan badge jika tidak ada kategori aktif atau sedang Sold Out
           badge.classList.add('hidden');
         }
       }
@@ -1873,20 +1876,8 @@
 
     // =================================================================
     // ACTIVE TICKETS AUTO-POPUP & QUICK PREVIEW
+    // Data tiket diambil 100% dari database via API — tidak ada hardcode.
     // =================================================================
-    const FALLBACK_TICKETS = [
-      { id: 1, kategori: 'Early Bird', nama_tiket: 'Early Bird - Spectrum Single', deskripsi: 'Akses tiket masuk area festival untuk 1 orang', harga: 38000, harga_format: 'Rp 38.000', sisa_kuota: 100 },
-      { id: 2, kategori: 'Early Bird', nama_tiket: 'Early Bird - Spectrum Duo', deskripsi: 'Paket hemat tiket masuk festival untuk 2 orang (Duo)', harga: 68000, harga_format: 'Rp 68.000', sisa_kuota: 50 },
-      { id: 3, kategori: 'Pre Sale 1', nama_tiket: 'Pre Sale 1 - Spectrum Single', deskripsi: 'Akses tiket masuk area festival untuk 1 orang', harga: 48000, harga_format: 'Rp 48.000', sisa_kuota: 200 },
-      { id: 4, kategori: 'Pre Sale 1', nama_tiket: 'Pre Sale 1 - Spectrum Duo', deskripsi: 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', harga: 88000, harga_format: 'Rp 88.000', sisa_kuota: 100 },
-      { id: 5, kategori: 'Pre Sale 1', nama_tiket: 'Pre Sale 1 - Spectrum Trio', deskripsi: 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', harga: 123000, harga_format: 'Rp 123.000', sisa_kuota: 50 },
-      { id: 6, kategori: 'Pre Sale 2', nama_tiket: 'Pre Sale 2 - Spectrum Single', deskripsi: 'Akses tiket masuk area festival untuk 1 orang', harga: 58000, harga_format: 'Rp 58.000', sisa_kuota: 200 },
-      { id: 7, kategori: 'Pre Sale 2', nama_tiket: 'Pre Sale 2 - Spectrum Duo', deskripsi: 'Paket hemat tiket masuk area festival untuk 2 orang (Duo)', harga: 108000, harga_format: 'Rp 108.000', sisa_kuota: 100 },
-      { id: 8, kategori: 'Pre Sale 2', nama_tiket: 'Pre Sale 2 - Spectrum Trio', deskripsi: 'Paket bundling tiket masuk area festival untuk 3 orang (Trio)', harga: 153000, harga_format: 'Rp 153.000', sisa_kuota: 50 },
-      { id: 9, kategori: 'On The Spot', nama_tiket: 'On The Spot - Spectrum Single', deskripsi: 'Akses tiket masuk langsung di venue hari H untuk 1 orang', harga: 68000, harga_format: 'Rp 68.000', sisa_kuota: 100 },
-      { id: 10, kategori: 'On The Spot', nama_tiket: 'On The Spot - Spectrum Duo', deskripsi: 'Akses tiket masuk langsung di venue hari H untuk 2 orang (Duo)', harga: 128000, harga_format: 'Rp 128.000', sisa_kuota: 50 }
-    ];
-
     let activeTicketsData = [];
     let currentActiveCategory = null;
 
@@ -1899,12 +1890,12 @@
           tickets = data.tickets;
         }
       } catch (err) {
-        console.warn('Backend API tidak terjangkau, menggunakan fallback data tiket:', err);
+        console.warn('Backend API tidak terjangkau, popup tiket tidak ditampilkan:', err);
       }
 
-      // Gunakan fallback jika backend offline / data kosong
+      // Jika API gagal atau data kosong, jangan tampilkan popup
       if (!tickets || tickets.length === 0) {
-        tickets = FALLBACK_TICKETS;
+        return;
       }
 
       const now = new Date();

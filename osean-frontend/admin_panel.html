@@ -165,6 +165,11 @@
         <span id="badge-qna"
           class="ml-auto bg-error text-on-error font-label-caps text-[10px] px-2 py-0.5 rounded-sm hidden">0</span>
       </a>
+      <a href="#tickets" onclick="showTab('tickets')" id="nav-tickets"
+        class="nav-link text-on-surface-variant flex items-center gap-3 px-6 py-4 hover:bg-surface-container-high hover:text-tertiary transition-all">
+        <span class="material-symbols-outlined">confirmation_number</span>
+        <span class="font-label-caps text-label-caps">Kelola Tiket</span>
+      </a>
     </nav>
 
     <!-- Logout -->
@@ -250,6 +255,16 @@
               <span id="mob-badge-qna" class="bg-error text-on-error font-label-caps text-[9px] px-1.5 py-0.2 rounded-none font-bold hidden">0</span>
               <span class="material-symbols-outlined text-[16px] text-on-surface-variant">chevron_right</span>
             </div>
+          </a>
+
+          <!-- 4. Kelola Tiket -->
+          <a href="#tickets" onclick="showTab('tickets'); closeAdminDrawer();" id="mob-tickets"
+            class="flex items-center justify-between p-3 border-2 border-outline-variant bg-surface-container font-label-caps text-xs uppercase font-bold transition-all shadow-[2px_2px_0px_0px_#15140c]">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-[20px]">confirmation_number</span>
+              <span>Kelola Tiket</span>
+            </div>
+            <span class="material-symbols-outlined text-[16px] text-on-surface-variant">chevron_right</span>
           </a>
         </div>
 
@@ -475,6 +490,106 @@
         menunggu jawaban.</p>
     </section>
 
+    <!-- ===== TAB: Kelola Tiket ===== -->
+    <section id="tab-tickets" class="p-4 sm:p-6 hidden">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-headline-lg text-xl sm:text-2xl text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-tertiary">confirmation_number</span>
+          Kelola Tiket
+        </h3>
+        <button onclick="loadTickets()"
+          class="font-label-caps text-xs text-tertiary hover:text-secondary underline underline-offset-4 transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">refresh</span> Refresh
+        </button>
+      </div>
+
+      <p class="font-body-md text-sm text-on-surface-variant mb-6 max-w-xl">
+        Ubah <strong class="text-on-surface">nama</strong>, <strong class="text-on-surface">stok (kuota)</strong>,
+        dan <strong class="text-on-surface">harga</strong> tiket. Kuota tidak bisa dikurangi di bawah jumlah tiket yang sudah terjual.
+      </p>
+
+      <!-- Loading -->
+      <div id="tickets-loading" class="flex items-center gap-3 text-on-surface-variant py-4">
+        <span class="material-symbols-outlined animate-spin">refresh</span>
+        <span class="font-body-md text-sm">Memuat data tiket...</span>
+      </div>
+
+      <!-- Grid Tiket -->
+      <div id="tickets-grid" class="hidden grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+      <p id="tickets-empty" class="hidden font-body-md text-sm text-on-surface-variant py-8">Tidak ada tiket ditemukan.</p>
+
+      <!-- Modal Edit Tiket (Overlay) -->
+      <div id="ticket-edit-modal" class="fixed inset-0 z-[9998] hidden" aria-modal="true" role="dialog">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeEditModal()"></div>
+        <!-- Panel -->
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+          <div class="relative w-full max-w-md bg-surface-container border-2 border-tertiary shadow-[8px_8px_0px_0px_#15140c] p-6">
+            <!-- Header Modal -->
+            <div class="flex items-center justify-between mb-5">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-tertiary">edit</span>
+                <h4 class="font-headline-lg text-lg text-on-surface">Edit Tiket</h4>
+              </div>
+              <button type="button" onclick="closeEditModal()" class="text-on-surface-variant hover:text-error transition-colors">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            <!-- Kategori info (read-only) -->
+            <div class="mb-4 px-3 py-2 bg-surface-container-high border border-outline-variant">
+              <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Kategori Tiket</p>
+              <p id="modal-kategori" class="font-body-md text-sm text-secondary font-bold">—</p>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="flex flex-col gap-4">
+              <!-- Nama Tiket -->
+              <div>
+                <label for="modal-nama" class="font-label-caps text-[11px] text-on-surface-variant uppercase block mb-1.5">Nama Tiket</label>
+                <input type="text" id="modal-nama" maxlength="100"
+                  class="w-full bg-surface-container-high border-2 border-outline-variant px-3 py-2.5 text-on-surface font-body-md text-sm focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c]"
+                  placeholder="Nama tiket..." />
+              </div>
+
+              <!-- Harga -->
+              <div>
+                <label for="modal-harga" class="font-label-caps text-[11px] text-on-surface-variant uppercase block mb-1.5">Harga (Rp)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 font-label-caps text-[11px] text-on-surface-variant pointer-events-none select-none">Rp</span>
+                  <input type="number" id="modal-harga" min="0" step="100"
+                    class="w-full bg-surface-container-high border-2 border-outline-variant pl-9 pr-3 py-2.5 text-on-surface font-body-md text-sm focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c]"
+                    placeholder="0" />
+                </div>
+              </div>
+
+              <!-- Kuota -->
+              <div>
+                <label for="modal-kuota" class="font-label-caps text-[11px] text-on-surface-variant uppercase block mb-1.5">Stok / Kuota</label>
+                <input type="number" id="modal-kuota" min="0" step="1"
+                  class="w-full bg-surface-container-high border-2 border-outline-variant px-3 py-2.5 text-on-surface font-body-md text-sm focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c]"
+                  placeholder="0" />
+                <p id="modal-kuota-hint" class="font-label-caps text-[10px] text-on-surface-variant mt-1 uppercase"></p>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3 mt-6">
+              <button type="button" onclick="closeEditModal()"
+                class="flex-1 bg-surface-container-high border-2 border-outline-variant text-on-surface-variant font-label-caps text-xs uppercase py-2.5 hover:border-error hover:text-error transition-all shadow-[2px_2px_0px_0px_#15140c]">
+                Batal
+              </button>
+              <button type="button" id="modal-save-btn" onclick="saveTicket()"
+                class="flex-1 bg-tertiary text-on-tertiary font-label-caps text-xs uppercase py-2.5 shadow-[4px_4px_0px_0px_#15140c] hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_#15140c] active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_#15140c] transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">save</span>
+                Simpan Perubahan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== FOOTER ===================== -->
     <footer
       class="border-t-2 border-dashed border-outline-variant py-8 w-full flex items-center justify-center mt-16">
@@ -525,7 +640,7 @@
 
     /* -------- Tab System -------- */
     function showTab(tab) {
-      ['verify', 'payments', 'qna'].forEach(id => {
+      ['verify', 'payments', 'qna', 'tickets'].forEach(id => {
         const tabEl = document.getElementById(`tab-${id}`);
         if (tabEl) tabEl.classList.toggle('hidden', id !== tab);
 
@@ -549,6 +664,9 @@
           }
         }
       });
+
+      // Auto-load tiket saat tab dibuka
+      if (tab === 'tickets') loadTickets();
     }
 
     /* -------- Mobile Admin Burger Menu Handler -------- */
@@ -588,9 +706,9 @@
         const mobAdminNama = document.getElementById('admin-nama-mobile');
         if (mobAdminNama) mobAdminNama.textContent = data.user.nama;
 
-        // Buka tab Verifikasi Tiket sebagai tab utama default
+        // Buka tab sesuai hash atau default ke Verifikasi Tiket
         const hash = window.location.hash.replace('#', '');
-        showTab(['verify', 'payments', 'qna'].includes(hash) ? hash : 'verify');
+        showTab(['verify', 'payments', 'qna', 'tickets'].includes(hash) ? hash : 'verify');
         await Promise.all([loadPayments(), loadQnA()]);
       } catch { window.location.href = 'login.html'; }
     })();
@@ -1082,6 +1200,166 @@
         else { showToast(data.message, 'error'); }
       } catch {
         showToast('Gagal mengirim jawaban.', 'error');
+      }
+    }
+
+    /* -------- Kelola Tiket -------- */
+    let allTickets = [];
+    let editingTicketId = null;
+
+    async function loadTickets() {
+      const grid    = document.getElementById('tickets-grid');
+      const loading = document.getElementById('tickets-loading');
+      const empty   = document.getElementById('tickets-empty');
+
+      loading.classList.remove('hidden');
+      grid.classList.add('hidden');
+      empty.classList.add('hidden');
+
+      try {
+        const res  = await fetch(`${API}/admin_tickets_list.php`);
+        const data = await res.json();
+        loading.classList.add('hidden');
+
+        if (!data.success || !data.tickets || data.tickets.length === 0) {
+          empty.classList.remove('hidden'); return;
+        }
+
+        allTickets = data.tickets;
+        renderTicketsGrid(allTickets);
+      } catch (err) {
+        console.error('loadTickets error:', err);
+        loading.innerHTML = '<p class="text-error font-body-md text-sm">Gagal memuat tiket. Pastikan server aktif.</p>';
+      }
+    }
+
+    function renderTicketsGrid(tickets) {
+      const grid  = document.getElementById('tickets-grid');
+      const empty = document.getElementById('tickets-empty');
+
+      if (!tickets || tickets.length === 0) {
+        grid.classList.add('hidden');
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      grid.classList.remove('hidden');
+      empty.classList.add('hidden');
+
+      grid.innerHTML = tickets.map(t => {
+        const pct   = t.kuota > 0 ? Math.round((t.kuota_terjual / t.kuota) * 100) : 0;
+        const sold  = t.kuota_terjual;
+        const sisa  = t.sisa_kuota;
+        const total = t.kuota;
+
+        // Progress bar color
+        const barColor = pct >= 90 ? 'bg-error' : pct >= 60 ? 'bg-tertiary' : 'bg-secondary';
+
+        return `
+          <div class="bg-surface-container border border-outline-variant shadow-[4px_4px_0px_0px_#15140c] flex flex-col p-5 gap-4 group hover:border-tertiary transition-colors">
+            <!-- Header -->
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <span class="inline-block font-label-caps text-[10px] text-secondary bg-secondary-container px-2 py-0.5 mb-2 uppercase font-bold tracking-wider">${t.kategori}</span>
+                <p class="font-body-md text-sm font-bold text-on-surface leading-snug">${t.nama_tiket}</p>
+              </div>
+              <button type="button" onclick="openEditModal(${t.id})"
+                class="shrink-0 w-9 h-9 flex items-center justify-center border-2 border-outline-variant bg-surface-container-high text-on-surface-variant
+                       hover:border-tertiary hover:text-tertiary hover:bg-tertiary-container shadow-[2px_2px_0px_0px_#15140c] active:translate-y-0.5 active:shadow-none transition-all"
+                title="Edit Tiket">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+              </button>
+            </div>
+
+            <!-- Harga -->
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-tertiary">payments</span>
+              <span class="font-headline-lg text-lg text-tertiary font-extrabold">${t.harga_format}</span>
+            </div>
+
+            <!-- Progress Stok -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Stok Terjual</span>
+                <span class="font-label-caps text-[10px] font-bold ${pct >= 90 ? 'text-error' : 'text-on-surface'}">${pct}%</span>
+              </div>
+              <div class="h-1.5 bg-surface-container-high border border-outline-variant/50 overflow-hidden">
+                <div class="h-full ${barColor} transition-all duration-500" style="width:${pct}%"></div>
+              </div>
+              <div class="flex justify-between mt-1.5">
+                <span class="font-label-caps text-[10px] text-on-surface-variant">Terjual: <strong class="text-on-surface">${sold}</strong></span>
+                <span class="font-label-caps text-[10px] text-on-surface-variant">Sisa: <strong class="${sisa <= 0 ? 'text-error' : 'text-secondary'}">${sisa <= 0 ? 'HABIS' : sisa}</strong></span>
+              </div>
+              <p class="font-label-caps text-[9px] text-on-surface-variant mt-0.5">Total kuota: ${total}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openEditModal(ticketId) {
+      const t = allTickets.find(x => x.id === ticketId);
+      if (!t) return;
+
+      editingTicketId = ticketId;
+
+      document.getElementById('modal-kategori').textContent  = t.kategori;
+      document.getElementById('modal-nama').value            = t.nama_tiket;
+      document.getElementById('modal-harga').value           = t.harga;
+      document.getElementById('modal-kuota').value           = t.kuota;
+      document.getElementById('modal-kuota-hint').textContent =
+        `Minimal ${t.kuota_terjual} (sudah terjual ${t.kuota_terjual} tiket)`;
+
+      document.getElementById('ticket-edit-modal').classList.remove('hidden');
+      document.getElementById('modal-nama').focus();
+    }
+
+    function closeEditModal() {
+      document.getElementById('ticket-edit-modal').classList.add('hidden');
+      editingTicketId = null;
+    }
+
+    // Tutup modal dengan Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeEditModal();
+    });
+
+    async function saveTicket() {
+      if (!editingTicketId) return;
+
+      const nama  = document.getElementById('modal-nama').value.trim();
+      const harga = parseInt(document.getElementById('modal-harga').value, 10);
+      const kuota = parseInt(document.getElementById('modal-kuota').value, 10);
+
+      if (!nama)             { showToast('Nama tiket tidak boleh kosong.', 'error'); return; }
+      if (isNaN(harga) || harga < 0) { showToast('Masukkan harga yang valid.', 'error'); return; }
+      if (isNaN(kuota) || kuota < 0) { showToast('Masukkan kuota yang valid.', 'error'); return; }
+
+      const saveBtn = document.getElementById('modal-save-btn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[16px]">refresh</span> Menyimpan...';
+
+      try {
+        const res  = await fetch(`${API}/admin_ticket_update.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ticket_id: editingTicketId, nama_tiket: nama, harga, kuota })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(`Tiket berhasil diperbarui!`, 'success');
+          closeEditModal();
+          loadTickets();
+        } else {
+          showToast(data.message || 'Gagal menyimpan perubahan.', 'error');
+        }
+      } catch (err) {
+        console.error('saveTicket error:', err);
+        showToast('Terjadi kesalahan koneksi. Coba lagi.', 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">save</span> Simpan Perubahan';
       }
     }
 

@@ -135,14 +135,15 @@ define('SMTP_FROM_NAME', 'OSEAN Ticketing');
 define('GOOGLE_CLIENT_ID', '99428380960-o7d0f18mo56lg5hgt5aa5krnl7otpv03.apps.googleusercontent.com');
 
 // =============================================
-// KONFIGURASI MIDTRANS SANDBOX
+// KONFIGURASI MIDTRANS
 // =============================================
-// Dapatkan key di: https://dashboard.sandbox.midtrans.com → Settings → Access Keys
-// Merchant ID G555422421
-define('MIDTRANS_SERVER_KEY', 'Mid-server-J0HPyeWORq_fAnMbGG7mC5gR');  // Ganti dengan Server Key kamu
-define('MIDTRANS_CLIENT_KEY', 'Mid-client-6lfZVo63M0TC-YI5');  // Ganti dengan Client Key kamu
-define('MIDTRANS_IS_PRODUCTION', false);
-define('MIDTRANS_SNAP_URL', 'https://app.sandbox.midtrans.com/snap/v1/transactions');
+//Key punya diklink:
+// Client Key : Mid-client-RbY7VHtGg38VoEzY
+// Server Key : Mid-server-iuccEGkpNzYpm_GB1mW8RbMx
+define('MIDTRANS_SERVER_KEY', 'Mid-server-J0HPyeWORq_fAnMbGG7mC5gR');
+define('MIDTRANS_CLIENT_KEY', 'Mid-client-6lfZVo63M0TC-YI5');
+define('MIDTRANS_IS_PRODUCTION', false); //jgn lupa ganti true nanti
+define('MIDTRANS_SNAP_URL', 'https://app.sandbox.midtrans.com/snap/v1/transactions'); // ini juga ganti prod
 
 require_once __DIR__ . '/phpmailer/PHPMailer.php';
 require_once __DIR__ . '/phpmailer/SMTP.php';

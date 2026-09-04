@@ -37,7 +37,11 @@ CREATE TABLE `payments` (
   `metode_pembayaran` varchar(50) DEFAULT NULL,
   `referral_code` varchar(20) DEFAULT NULL,
   `bukti_transfer` varchar(255) DEFAULT NULL,
-  `status` enum('pending','verified','rejected') NOT NULL DEFAULT 'pending',
+  `snap_token` varchar(255) DEFAULT NULL,
+  `midtrans_order_id` varchar(100) DEFAULT NULL,
+  `midtrans_transaction_id` varchar(255) DEFAULT NULL,
+  `payment_type` varchar(50) DEFAULT NULL,
+  `status` enum('pending','settlement','capture','expire','cancel','deny','refund','verified','rejected') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `verified_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -128,6 +132,7 @@ INSERT INTO `users` (`id`, `nama`, `email`, `no_telepon`, `password_hash`, `role
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `kode_unik` (`kode_unik`),
+  ADD UNIQUE KEY `uk_midtrans_order_id` (`midtrans_order_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `ticket_id` (`ticket_id`);
 

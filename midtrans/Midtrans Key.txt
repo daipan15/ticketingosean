@@ -1,0 +1,12 @@
+Config::$serverKey = 'Mid-server-iuccEGkpNzYpm_GB1mW8RbMx';
+Config::$isProduction = true;
+Config::$isSanitized  = true;
+Config::$is3ds        = true;
+<script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-SI9lG7V5vG5D2qDK"></script>
+
+Client Key
+Mid-client-RbY7VHtGg38VoEzY
+
+Server Key
+Mid-server-iuccEGkpNzYpm_GB1mW8RbMx
+

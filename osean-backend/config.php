@@ -5,6 +5,9 @@
 // Versi: Production-Ready
 // =============================================
 
+// Set default timezone ke Waktu Indonesia Barat (WIB)
+date_default_timezone_set('Asia/Jakarta');
+
 // =============================================
 // LOAD ENVIRONMENT VARIABLES dari .env
 // =============================================
@@ -96,6 +99,7 @@ define('DB_CHARSET', 'utf8mb4');
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $conn->set_charset(DB_CHARSET);
+$conn->query("SET time_zone = '+07:00'");
 
 if ($conn->connect_error) {
     error_log('[OSEAN DB] Koneksi gagal: ' . $conn->connect_error);

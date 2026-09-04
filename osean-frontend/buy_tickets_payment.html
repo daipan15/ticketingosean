@@ -1497,12 +1497,21 @@
         btn.innerHTML = '<span class="material-symbols-outlined">payments</span> Menunggu pembayaran...';
 
         window.snap.pay(data.snap_token, {
-          onSuccess: function(result) {
-            showToast('Pembayaran berhasil!', 'success');
+          onSuccess: async function(result) {
+            showToast('Pembayaran berhasil! Memperbarui status...', 'success');
+            // Trigger auto-sync ke Midtrans API sebelum redirect
+            // payment_status.php akan query Midtrans langsung dan update DB
+            try {
+              await fetch(`${API}/payment_status.php?payment_id=${data.payment_id}`, { credentials: 'include' });
+            } catch (e) { /* abaikan error, tetap redirect */ }
             setTimeout(() => { window.location.href = 'my_tickets.html'; }, 1500);
           },
-          onPending: function(result) {
-            showToast('Pembayaran pending. Selesaikan pembayaranmu.', 'info');
+          onPending: async function(result) {
+            showToast('Pembayaran pending. Memperbarui status...', 'info');
+            // Trigger auto-sync juga untuk pending (misal transfer bank yang sudah dibayar)
+            try {
+              await fetch(`${API}/payment_status.php?payment_id=${data.payment_id}`, { credentials: 'include' });
+            } catch (e) { /* abaikan error, tetap redirect */ }
             setTimeout(() => { window.location.href = 'my_tickets.html'; }, 2000);
           },
           onError: function(result) {

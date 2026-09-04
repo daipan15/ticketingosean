@@ -110,16 +110,16 @@ CREATE TABLE `payments` (
 -- DATA AWAL: Tiket
 -- =============================================
 INSERT INTO `tickets` (`id`, `kategori`, `nama_tiket`, `deskripsi`, `harga`, `kuota`, `kuota_terjual`, `created_at`) VALUES
-(1,  'Early Bird',  'Early Bird - Spectrum Single',  'Akses tiket masuk area festival untuk 1 orang',                              38000,  100, 0, '2026-09-02 18:11:42'),
-(2,  'Early Bird',  'Early Bird - Spectrum Duo',     'Paket hemat tiket masuk festival untuk 2 orang (Duo)',                      68000,   50, 0, '2026-09-02 18:11:42'),
-(3,  'Pre Sale 1',  'Pre Sale 1 - Spectrum Single',  'Akses tiket masuk area festival untuk 1 orang',                              48000,  200, 0, '2026-09-02 18:11:42'),
-(4,  'Pre Sale 1',  'Pre Sale 1 - Spectrum Duo',     'Paket hemat tiket masuk area festival untuk 2 orang (Duo)',                  88000,  100, 0, '2026-09-02 18:11:42'),
-(5,  'Pre Sale 1',  'Pre Sale 1 - Spectrum Trio',    'Paket bundling tiket masuk area festival untuk 3 orang (Trio)',             123000,   50, 0, '2026-09-02 18:11:42'),
-(6,  'Pre Sale 2',  'Pre Sale 2 - Spectrum Single',  'Akses tiket masuk area festival untuk 1 orang',                              58000,  200, 0, '2026-09-02 18:11:42'),
-(7,  'Pre Sale 2',  'Pre Sale 2 - Spectrum Duo',     'Paket hemat tiket masuk area festival untuk 2 orang (Duo)',                 108000,  100, 0, '2026-09-02 18:11:42'),
-(8,  'Pre Sale 2',  'Pre Sale 2 - Spectrum Trio',    'Paket bundling tiket masuk area festival untuk 3 orang (Trio)',             153000,   50, 0, '2026-09-02 18:11:42'),
-(9,  'On The Spot', 'On The Spot - Spectrum Single', 'Akses tiket masuk langsung di venue hari H untuk 1 orang',                  68000,  100, 0, '2026-09-02 18:11:42'),
-(10, 'On The Spot', 'On The Spot - Spectrum Duo',    'Akses tiket masuk langsung di venue hari H untuk 2 orang (Duo)',            128000,   50, 0, '2026-09-02 18:11:42');
+(1,  'Early Bird',  'Early Bird - Spectrum Single',  'Akses tiket masuk area festival untuk 1 orang',                              39900,  100, 0, '2026-09-02 18:11:42'),
+(2,  'Early Bird',  'Early Bird - Spectrum Duo',     'Paket hemat tiket masuk festival untuk 2 orang (Duo)',                      71400,   50, 0, '2026-09-02 18:11:42'),
+(3,  'Pre Sale 1',  'Pre Sale 1 - Spectrum Single',  'Akses tiket masuk area festival untuk 1 orang',                              50400,  200, 0, '2026-09-02 18:11:42'),
+(4,  'Pre Sale 1',  'Pre Sale 1 - Spectrum Duo',     'Paket hemat tiket masuk area festival untuk 2 orang (Duo)',                  92400,  100, 0, '2026-09-02 18:11:42'),
+(5,  'Pre Sale 1',  'Pre Sale 1 - Spectrum Trio',    'Paket bundling tiket masuk area festival untuk 3 orang (Trio)',             129150,   50, 0, '2026-09-02 18:11:42'),
+(6,  'Pre Sale 2',  'Pre Sale 2 - Spectrum Single',  'Akses tiket masuk area festival untuk 1 orang',                              60900,  200, 0, '2026-09-02 18:11:42'),
+(7,  'Pre Sale 2',  'Pre Sale 2 - Spectrum Duo',     'Paket hemat tiket masuk area festival untuk 2 orang (Duo)',                 113400,  100, 0, '2026-09-02 18:11:42'),
+(8,  'Pre Sale 2',  'Pre Sale 2 - Spectrum Trio',    'Paket bundling tiket masuk area festival untuk 3 orang (Trio)',             160650,   50, 0, '2026-09-02 18:11:42'),
+(9,  'On The Spot', 'On The Spot - Spectrum Single', 'Akses tiket masuk langsung di venue hari H untuk 1 orang',                  71400,  100, 0, '2026-09-02 18:11:42'),
+(10, 'On The Spot', 'On The Spot - Spectrum Duo',    'Akses tiket masuk langsung di venue hari H untuk 2 orang (Duo)',            134400,   50, 0, '2026-09-02 18:11:42');
 
 INSERT INTO `users` (`id`, `nama`, `email`, `no_telepon`, `password_hash`, `role`, `is_verified`, `verification_token`, `created_at`) VALUES
 (1, 'Admin OSEAN', 'admin@osean.com', NULL, '$2y$12$CnRlbQYA5I5pI8suZGkNkuBdCzy93F0DzrvDQd438ay3GIzn90aJq', 'admin', 1, NULL, '2026-09-02 18:11:42');

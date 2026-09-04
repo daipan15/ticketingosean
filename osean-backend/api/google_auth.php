@@ -30,8 +30,8 @@ if (!empty($accessToken)) {
     $ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo');
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $accessToken]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    apply_curl_ssl_options($ch);
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
@@ -49,8 +49,8 @@ if (!empty($accessToken)) {
 if (empty($email) && !empty($credential)) {
     $ch = curl_init('https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($credential));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    apply_curl_ssl_options($ch);
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
@@ -130,7 +130,8 @@ if ($result->num_rows > 0) {
     $isNew = true;
 }
 
-// Set session pengguna
+// Set session pengguna — regenerate ID untuk mencegah session fixation
+session_regenerate_id(true);
 $_SESSION['user_id']    = $user['id'];
 $_SESSION['nama']       = $user['nama'];
 $_SESSION['email']      = $user['email'];

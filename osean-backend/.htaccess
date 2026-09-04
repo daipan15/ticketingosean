@@ -1,0 +1,35 @@
+# =============================================
+# osean-backend/.htaccess
+# Keamanan backend PHP
+# =============================================
+
+# --- Blokir akses langsung ke file konfigurasi ---
+<FilesMatch "^(config\.php|\.env)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# --- Blokir akses ke file yang tidak perlu ---
+<FilesMatch "\.(log|txt|sql|md|json|lock|yml|yaml|ini|bak|swp|tmp)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# --- Nonaktifkan directory listing ---
+Options -Indexes
+
+# --- Security Headers ---
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always unset X-Powered-By
+    Header always unset Server
+</IfModule>
+
+# --- Pastikan PHP dieksekusi (bukan diunduh) ---
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

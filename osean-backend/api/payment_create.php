@@ -152,7 +152,10 @@ curl_close($ch);
 
 if ($curl_error) {
     // Hapus record payment jika gagal request ke Midtrans
-    $conn->prepare("DELETE FROM payments WHERE id = ?")->bind_param("i", $payment_id);
+    $del_stmt = $conn->prepare("DELETE FROM payments WHERE id = ?");
+    $del_stmt->bind_param("i", $payment_id);
+    $del_stmt->execute();
+    $del_stmt->close();
     send_error('Gagal terhubung ke Midtrans: ' . $curl_error, 500);
 }
 

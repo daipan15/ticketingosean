@@ -34,24 +34,33 @@ $stmt->close();
 
 // Auto-sync ke Midtrans jika masih pending
 // kode_unik digunakan sebagai order_id saat request status ke Midtrans
-if ($payment['status'] === 'pending' && !empty($payment['kode_unik']) && defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')) {
-    $order_id = $payment['kode_unik']; // kode_unik = Midtrans order_id
-    $auth = base64_encode(MIDTRANS_SERVER_KEY . ':');
-    $ch = curl_init("https://api.sandbox.midtrans.com/v2/{$order_id}/status");
+if ($payment['status'] === 'pending'
+    && !empty($payment['kode_unik'])
+    && defined('MIDTRANS_SERVER_KEY')
+    && MIDTRANS_SERVER_KEY !== ''
+    && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')
+) {
+    $order_id = $payment['kode_unik'];
+    $auth     = base64_encode(MIDTRANS_SERVER_KEY . ':');
+
+    // Gunakan URL yang sesuai environment (production atau sandbox)
+    $status_url = MIDTRANS_API_URL . "/{$order_id}/status";
+
+    $ch = curl_init($status_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic ' . $auth]);
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     apply_curl_ssl_options($ch);
-    $res = curl_exec($ch);
+    $res       = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
     if ($http_code === 200 && $res) {
-        $mid_data = json_decode($res, true);
-        $tx_status = $mid_data['transaction_status'] ?? '';
+        $mid_data     = json_decode($res, true);
+        $tx_status    = $mid_data['transaction_status'] ?? '';
         $fraud_status = $mid_data['fraud_status'] ?? '';
-        $tx_id = $mid_data['transaction_id'] ?? '';
-        $p_type = $mid_data['payment_type'] ?? '';
+        $tx_id        = $mid_data['transaction_id'] ?? '';
+        $p_type       = $mid_data['payment_type'] ?? '';
 
         $new_status = null;
         if ($tx_status === 'settlement') {
@@ -64,21 +73,34 @@ if ($payment['status'] === 'pending' && !empty($payment['kode_unik']) && defined
 
         if ($new_status && $new_status !== 'pending') {
             $v_at = in_array($new_status, ['settlement', 'capture']) ? date('Y-m-d H:i:s') : null;
-            $up = $conn->prepare("UPDATE payments SET status = ?, midtrans_transaction_id = ?, payment_type = ?, metode_pembayaran = ?, verified_at = COALESCE(?, verified_at) WHERE id = ?");
-            $up->bind_param("sssssi", $new_status, $tx_id, $p_type, $p_type, $v_at, $payment_id);
+
+            // Update status payment
+            $up = $conn->prepare("
+                UPDATE payments
+                SET status = ?, midtrans_transaction_id = ?, payment_type = ?,
+                    metode_pembayaran = ?, verified_at = COALESCE(?, verified_at)
+                WHERE id = ? AND status = 'pending'
+            ");
+            $up->bind_param('sssssi', $new_status, $tx_id, $p_type, $p_type, $v_at, $payment_id);
             $up->execute();
+            $rows_affected = $up->affected_rows;
             $up->close();
 
-            if (in_array($new_status, ['settlement', 'capture'])) {
-                $u_t = $conn->prepare("UPDATE tickets SET kuota_terjual = kuota_terjual + ? WHERE id = (SELECT ticket_id FROM payments WHERE id = ?)");
-                $u_t->bind_param("ii", $payment['jumlah_tiket'], $payment_id);
+            // Increment kuota hanya jika update berhasil (rows_affected > 0)
+            // Ini mencegah race condition dengan webhook Midtrans
+            if ($rows_affected > 0 && in_array($new_status, ['settlement', 'capture'])) {
+                $u_t = $conn->prepare("
+                    UPDATE tickets SET kuota_terjual = kuota_terjual + ?
+                    WHERE id = (SELECT ticket_id FROM payments WHERE id = ?)
+                ");
+                $u_t->bind_param('ii', $payment['jumlah_tiket'], $payment_id);
                 $u_t->execute();
                 $u_t->close();
             }
 
-            $payment['status'] = $new_status;
+            $payment['status']       = $new_status;
             $payment['payment_type'] = $p_type;
-            $payment['verified_at'] = $v_at ?? $payment['verified_at'];
+            $payment['verified_at']  = $v_at ?? $payment['verified_at'];
         }
     }
 }

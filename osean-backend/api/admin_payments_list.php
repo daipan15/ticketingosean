@@ -12,11 +12,38 @@ require_admin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') send_error('Method tidak diizinkan.', 405);
 
+// Pagination
+$page     = max(1, (int)($_GET['page']  ?? 1));
+$limit    = min(200, max(10, (int)($_GET['limit'] ?? 100))); // 10–200 per page
+$offset   = ($page - 1) * $limit;
+
+// Filter opsional per status
+$status_filter = isset($_GET['status']) ? sanitize($_GET['status']) : '';
+
 $where_clauses = [];
 $params        = [];
 $types         = '';
 
-$where_sql = count($where_clauses) > 0 ? "WHERE " . implode(" AND ", $where_clauses) : "";
+if (!empty($status_filter)) {
+    $valid_statuses = ['pending','settlement','capture','expire','cancel','deny','refund','verified','rejected'];
+    if (in_array($status_filter, $valid_statuses, true)) {
+        $where_clauses[] = 'p.status = ?';
+        $params[]        = $status_filter;
+        $types          .= 's';
+    }
+}
+
+$where_sql = count($where_clauses) > 0 ? 'WHERE ' . implode(' AND ', $where_clauses) : '';
+
+// Hitung total untuk metadata pagination
+$count_sql  = "SELECT COUNT(*) AS total FROM payments p {$where_sql}";
+$count_stmt = $conn->prepare($count_sql);
+if (!empty($params)) {
+    $count_stmt->bind_param($types, ...$params);
+}
+$count_stmt->execute();
+$total_count = (int)($count_stmt->get_result()->fetch_assoc()['total'] ?? 0);
+$count_stmt->close();
 
 $sql = "
     SELECT p.id AS payment_id, p.kode_unik, p.jumlah_tiket, p.total_bayar, p.metode_pembayaran,
@@ -29,12 +56,14 @@ $sql = "
     JOIN users u ON p.user_id = u.id
     {$where_sql}
     ORDER BY p.created_at DESC
+    LIMIT ? OFFSET ?
 ";
 
 $stmt = $conn->prepare($sql);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
+$params[] = $limit;
+$params[] = $offset;
+$types   .= 'ii';
+$stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -90,8 +119,15 @@ while ($row = $result->fetch_assoc()) {
 
 $stmt->close();
 send_success([
-    'payments' => $payments,
-    'total'    => count($payments),
+    'payments'   => $payments,
+    'total'      => count($payments),
+    'pagination' => [
+        'page'        => $page,
+        'limit'       => $limit,
+        'total_count' => $total_count,
+        'total_pages' => (int)ceil($total_count / $limit),
+        'has_next'    => ($page * $limit) < $total_count,
+    ],
     'stats'    => [
         'pending'            => $pending,
         'settled'            => $settled,

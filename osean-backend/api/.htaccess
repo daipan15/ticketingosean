@@ -1,0 +1,19 @@
+# =============================================
+# osean-backend/api/.htaccess
+# Hanya file PHP yang boleh diakses
+# =============================================
+
+# Nonaktifkan directory listing
+Options -Indexes
+
+# Blokir semua kecuali .php
+<FilesMatch "^(?!.*\.php$).*$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Izinkan .php
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

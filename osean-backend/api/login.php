@@ -29,7 +29,8 @@ if ($user['role'] !== 'admin' && isset($user['is_verified']) && (int)$user['is_v
     send_error('Akun belum aktif! Silakan buka email Anda dan klik link verifikasi terlebih dahulu.', 403);
 }
 
-// Set session
+// Set session — regenerate ID untuk mencegah session fixation
+session_regenerate_id(true);
 $_SESSION['user_id']    = $user['id'];
 $_SESSION['nama']       = $user['nama'];
 $_SESSION['email']      = $user['email'];

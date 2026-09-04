@@ -1,0 +1,22 @@
+# =============================================
+# osean-frontend/.htaccess
+# Security headers untuk frontend
+# =============================================
+
+# Nonaktifkan directory listing
+Options -Indexes
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always unset X-Powered-By
+</IfModule>
+
+# Blokir akses ke file sensitif jika ada
+<FilesMatch "\.(env|log|sql|bak|json|md)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

@@ -308,3 +308,68 @@ function send_verification_email(string $toEmail, string $toName, string $token)
         return false;
     }
 }
+
+function send_password_reset_email(string $toEmail, string $toName, string $token): bool {
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443)
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    $protocol = $isHttps ? 'https://' : 'http://';
+    $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+    $isLocal = str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
+    if ($isLocal) {
+        $resetLink = $protocol . $host . '/ticketingosean/osean-frontend/reset_password.html?token=' . urlencode($token);
+    } else {
+        $resetLink = $protocol . $host . '/ticketingosean/osean-frontend/reset_password.html?token=' . urlencode($token);
+    }
+
+    if (empty(SMTP_USER) || empty(SMTP_PASS)
+        || SMTP_USER === 'your_email@gmail.com'
+        || SMTP_PASS === 'your_16_digit_app_password') {
+        error_log("[OSEAN SMTP] Warning: Kredensial SMTP belum diisi. Reset Link untuk $toEmail: $resetLink");
+        return false;
+    }
+
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+
+        $mail->setFrom(SMTP_USER, SMTP_FROM_NAME);
+        $mail->addAddress($toEmail, $toName);
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Reset Password Akun OSEAN 2026';
+        $mail->Body    = "
+            <div style='background: #15140c; color: #e7e2d5; padding: 30px; font-family: sans-serif;'>
+                <div style='max-width: 500px; margin: 0 auto; background: #212017; border: 2px solid #efc05e; padding: 24px;'>
+                    <h2 style='color: #efc05e; margin-top: 0;'>Halo, " . htmlspecialchars($toName) . "!</h2>
+                    <p>Kami menerima permintaan untuk mengatur ulang (reset) kata sandi akun <b>OSEAN</b> kamu.</p>
+                    <p>Klik tombol di bawah ini untuk membuat kata sandi baru (tautan berlaku selama 1 jam):</p>
+                    <div style='margin: 30px 0; text-align: center;'>
+                        <a href='{$resetLink}' style='background: #efc05e; color: #15140c; padding: 12px 24px; text-decoration: none; font-weight: bold; text-transform: uppercase; display: inline-block;'>
+                            Reset Password Saya
+                        </a>
+                    </div>
+                    <p style='font-size: 12px; color: #ccc4cf;'>Atau salin tautan ini di browser kamu:<br><a href='{$resetLink}' style='color: #c4cd6f;'>{$resetLink}</a></p>
+                    <hr style='border: 0; border-top: 1px dashed #4a454e; margin: 20px 0;'>
+                    <p style='font-size: 11px; color: #958e99;'>Jika kamu tidak merasa meminta reset password, abaikan email ini. Akunmu tetap aman.</p>
+                </div>
+            </div>
+        ";
+        $mail->AltBody = "Halo {$toName},\n\nPermintaan reset password akun OSEAN diterima. Silakan klik tautan berikut untuk membuat password baru:\n{$resetLink}\n\nTautan ini berlaku selama 1 jam.\n\nTerima kasih,\nTim OSEAN";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log('[OSEAN SMTP Error] ' . $mail->ErrorInfo);
+        return false;
+    }
+}
+

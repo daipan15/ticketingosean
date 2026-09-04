@@ -49,10 +49,13 @@ CREATE TABLE `users` (
   `role`                enum('user','admin') NOT NULL DEFAULT 'user',
   `is_verified`         tinyint(1)    NOT NULL DEFAULT 0,
   `verification_token`  varchar(255)  DEFAULT NULL,
+  `reset_token`         varchar(255)  DEFAULT NULL,
+  `reset_expires`       datetime      DEFAULT NULL,
   `created_at`          timestamp     NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
-  KEY `idx_users_verification_token` (`verification_token`(64))
+  KEY `idx_users_verification_token` (`verification_token`(64)),
+  KEY `idx_users_reset_token` (`reset_token`(64))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -122,7 +125,7 @@ INSERT INTO `tickets` (`id`, `kategori`, `nama_tiket`, `deskripsi`, `harga`, `ku
 (10, 'On The Spot', 'On The Spot - Spectrum Duo',    'Akses tiket masuk langsung di venue hari H untuk 2 orang (Duo)',            134400,   50, 0, '2026-09-02 18:11:42');
 
 INSERT INTO `users` (`id`, `nama`, `email`, `no_telepon`, `password_hash`, `role`, `is_verified`, `verification_token`, `created_at`) VALUES
-(1, 'Admin OSEAN', 'admin@osean.com', NULL, '$2y$12$CnRlbQYA5I5pI8suZGkNkuBdCzy93F0DzrvDQd438ay3GIzn90aJq', 'admin', 1, NULL, '2026-09-02 18:11:42');
+(1, 'Admin OSEAN', 'admin@osean.com', NULL, '$2y$10$HLcdwfC32H/03nWTwgCmDOJX5gkRLA48KcKN2z2zXXXyrS5/AHhNe', 'admin', 1, NULL, '2026-09-02 18:11:42');
 
 COMMIT;
 

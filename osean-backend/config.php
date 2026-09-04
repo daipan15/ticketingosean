@@ -132,7 +132,7 @@ define('SMTP_FROM_NAME', 'OSEAN Ticketing');
 // =============================================
 // KONFIGURASI GOOGLE SIGN-IN / OAUTH
 // =============================================
-define('GOOGLE_CLIENT_ID', '869569142796-m45gvcj7mn25re40m3upel2f8lpp3ruj.apps.googleusercontent.com');
+define('GOOGLE_CLIENT_ID', '99428380960-o7d0f18mo56lg5hgt5aa5krnl7otpv03.apps.googleusercontent.com');
 
 // =============================================
 // KONFIGURASI MIDTRANS SANDBOX

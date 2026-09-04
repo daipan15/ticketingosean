@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OSEAN - Lengkapi nomor telepon akun Anda." />
+  <title>OSEAN - Lengkapi Profil</title>
+  <link rel="icon" type="image/png" href="assets/osean_logo.png" />
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: { extend: {
+        colors: {
+          "on-surface-variant": "#ccc4cf", "tertiary": "#efc05e", "surface-variant": "#37352c",
+          "on-primary-container": "#9981b5", "surface-container": "#212017",
+          "surface-container-low": "#1d1c13", "surface-container-high": "#2c2a21",
+          "secondary-container": "#4d5500", "on-background": "#e7e2d5",
+          "inverse-on-surface": "#323127", "on-tertiary": "#402d00",
+          "surface-bright": "#3b3930", "tertiary-container": "#312200",
+          "on-secondary-container": "#c0c96c", "error": "#ffb4ab", "surface": "#15140c",
+          "on-secondary": "#2e3300", "background": "#15140c", "secondary": "#c4cd6f",
+          "on-primary-fixed-variant": "#523d6c", "surface-container-highest": "#37352c",
+          "on-tertiary-fixed": "#261900", "on-surface": "#e7e2d5",
+          "on-tertiary-container": "#ae8529", "error-container": "#93000a",
+          "surface-dim": "#15140c", "on-tertiary-fixed-variant": "#5c4200",
+          "primary-fixed": "#eedbff", "secondary-fixed": "#e0ea88", "on-primary": "#3b2754",
+          "inverse-surface": "#e7e2d5", "outline": "#958e99", "tertiary-fixed-dim": "#efc05e",
+          "on-secondary-fixed-variant": "#444b00", "surface-container-lowest": "#0f0e07",
+          "on-secondary-fixed": "#1a1e00", "tertiary-fixed": "#ffdea2",
+          "inverse-primary": "#6b5585", "on-primary-fixed": "#25113e",
+          "primary-fixed-dim": "#d6bcf4", "primary": "#d6bcf4", "surface-tint": "#d6bcf4",
+          "primary-container": "#2e1a47", "on-error-container": "#ffdad6",
+          "on-error": "#690005", "secondary-fixed-dim": "#c4cd6f", "outline-variant": "#4a454e"
+        },
+        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+        spacing: { "margin-mobile": "20px", "unit": "8px", "asymmetric-offset": "12px",
+                   "margin-desktop": "64px", "gutter": "24px" },
+        fontFamily: {
+          "body-lg": ["Manrope"], "body-md": ["Manrope"],
+          "headline-lg-mobile": ["Syne"], "display-lg": ["Syne"], "display-md": ["Syne"],
+          "label-caps": ["Manrope"], "headline-lg": ["Syne"]
+        },
+        fontSize: {
+          "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+          "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+          "headline-lg-mobile": ["28px", { lineHeight: "1.2", fontWeight: "700" }],
+          "display-lg": ["64px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" }],
+          "display-md": ["48px", { lineHeight: "1.1", fontWeight: "800" }],
+          "label-caps": ["12px", { lineHeight: "1.0", letterSpacing: "0.1em", fontWeight: "700" }],
+          "headline-lg": ["32px", { lineHeight: "1.2", fontWeight: "700" }]
+        }
+      }}
+    }
+  </script>
+
+  <style>
+    html, body { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0px; height: 0px; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50%       { transform: translateY(-12px) rotate(calc(var(--rot, 0deg) + 3deg)); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,192,94,0); }
+      50%       { box-shadow: 0 0 24px 4px rgba(239,192,94,0.18); }
+    }
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes badge-in {
+      from { opacity: 0; transform: scale(0.8) rotate(-6deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .float-anim { animation: float-gentle 4s ease-in-out infinite; }
+    .float-anim-slow { animation: float-gentle 6s ease-in-out infinite; }
+    .pulse-glow-anim { animation: pulse-glow 2.5s ease-in-out infinite; }
+    .slide-up { animation: slide-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .badge-in { animation: badge-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both; }
+    .shake { animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+    input:focus { outline: none; }
+    input::placeholder { opacity: 0.45; }
+
+    .step-glow {
+      box-shadow: 0 0 0 2px rgba(239,192,94,0.25), 6px 6px 0px 0px #0f0e07;
+    }
+  </style>
+</head>
+
+<body class="bg-background text-on-surface min-h-screen flex flex-col items-center justify-center px-5 py-10 relative overflow-x-hidden">
+
+  <!-- Dekoratif floating elements -->
+  <div class="fixed top-16 left-8 opacity-15 pointer-events-none float-anim" style="--rot: -12deg;">
+    <span class="material-symbols-outlined text-[64px] text-tertiary">phone_android</span>
+  </div>
+  <div class="fixed bottom-24 right-8 opacity-10 pointer-events-none float-anim-slow" style="--rot: 15deg;">
+    <span class="material-symbols-outlined text-[48px] text-secondary">verified_user</span>
+  </div>
+  <div class="fixed top-1/2 left-4 opacity-8 pointer-events-none float-anim" style="--rot: 8deg; animation-delay: 1.5s;">
+    <span class="material-symbols-outlined text-[36px] text-primary">lock</span>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden transition-opacity duration-400" style="opacity:0;">
+    <div id="toast-inner" class="flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase">
+      <span id="toast-icon" class="material-symbols-outlined text-[20px]">info</span>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- Card utama -->
+  <div class="w-full max-w-md slide-up">
+
+    <!-- Header logo -->
+    <div class="text-center mb-8">
+      <a href="landing_page.html" class="inline-flex items-center gap-2 group">
+        <img src="assets/osean_logo.png" alt="OSEAN Logo" class="h-9 w-auto" onerror="this.style.display='none'" />
+        <span class="font-headline-lg text-2xl text-tertiary uppercase tracking-widest group-hover:text-secondary transition-colors">OSEAN</span>
+      </a>
+    </div>
+
+    <!-- Card form -->
+    <div class="bg-surface-container border-2 border-outline-variant pulse-glow-anim step-glow p-7 sm:p-9">
+
+      <!-- Badge step wajib -->
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="material-symbols-outlined text-tertiary text-[22px]">smartphone</span>
+            <span class="font-label-caps text-label-caps text-tertiary uppercase tracking-widest">Satu Langkah Lagi</span>
+          </div>
+          <h1 class="font-headline-lg text-headline-lg-mobile text-on-surface leading-tight">
+            Lengkapi<br/>Nomor Telepon
+          </h1>
+        </div>
+        <div class="badge-in shrink-0 bg-tertiary text-on-tertiary px-2.5 py-1 border-2 border-[#15140c] shadow-[3px_3px_0px_0px_#15140c]">
+          <span class="font-label-caps text-[10px] uppercase font-bold tracking-widest">Wajib</span>
+        </div>
+      </div>
+
+      <!-- Info user (nama) -->
+      <div id="user-info" class="hidden bg-surface-container-high border border-outline-variant px-4 py-3 mb-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-secondary text-[20px]">account_circle</span>
+        <div>
+          <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Akun Google Anda</p>
+          <p id="user-name-display" class="font-body-md text-sm text-on-surface font-bold"></p>
+          <p id="user-email-display" class="font-body-md text-[11px] text-on-surface-variant"></p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form id="phone-form" novalidate class="flex flex-col gap-5">
+
+        <div>
+          <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="no_telepon">
+            Nomor Telepon <span class="text-error">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-[20px] text-on-surface-variant pointer-events-none">phone</span>
+            <input
+              id="no_telepon"
+              name="no_telepon"
+              type="tel"
+              required
+              autocomplete="tel"
+              placeholder="Contoh: 081234567890"
+              class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-sm pl-11 pr-4 py-3.5 focus:border-tertiary transition-colors"
+            />
+          </div>
+          <p class="font-body-md text-[11px] text-on-surface-variant mt-1.5">
+            Format: 08xxx atau +62xxx (10–15 digit angka)
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          id="submit-btn"
+          class="w-full bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase py-4 shadow-[6px_6px_0px_0px_#15140c] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#15140c] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          Simpan & Lanjutkan
+        </button>
+
+        <!-- Peringatan tidak bisa skip -->
+        <div class="flex items-center justify-center gap-1.5 text-on-surface-variant">
+          <span class="material-symbols-outlined text-[14px]">lock</span>
+          <p class="font-label-caps text-[10px] uppercase tracking-wide">Langkah ini wajib diselesaikan</p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer kecil -->
+    <p class="text-center font-body-md text-[11px] text-on-surface-variant mt-6 opacity-60">
+      &copy; 2026 OSEAN — Festival Sains Universitas Padjadjaran
+    </p>
+  </div>
+
+  <script>
+    const API = '../osean-backend/api';
+
+    function showToast(msg, type = 'info') {
+      const colors = {
+        success: 'bg-secondary text-on-secondary border-[#15140c]',
+        error:   'bg-error text-on-error border-[#15140c]',
+        info:    'bg-surface-container text-on-surface border-outline-variant'
+      };
+      const icons = { success: 'check_circle', error: 'error', info: 'info' };
+      const t  = document.getElementById('toast');
+      const ti = document.getElementById('toast-inner');
+      ti.className = `flex items-center gap-3 px-5 py-3 border-2 shadow-[4px_4px_0px_0px_#15140c] font-label-caps text-label-caps uppercase ${colors[type]}`;
+      document.getElementById('toast-icon').textContent = icons[type];
+      document.getElementById('toast-msg').textContent  = msg;
+      t.classList.remove('hidden');
+      t.style.opacity = '1';
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.classList.add('hidden'), 400); }, 3500);
+    }
+
+    // Cek sesi — pastikan user sudah login dan butuh isi nomor telepon
+    let redirectTarget = 'landing_page.html';
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('redirect')) {
+      redirectTarget = decodeURIComponent(urlParams.get('redirect'));
+    }
+
+    (async () => {
+      try {
+        const res  = await fetch(`${API}/session_check.php`);
+        const data = await res.json();
+
+        if (!data.logged_in) {
+          // Belum login -> ke halaman login
+          localStorage.removeItem('isLoggedIn');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        if (data.user.role === 'admin') {
+          window.location.href = 'admin_panel.html';
+          return;
+        }
+
+        // Jika nomor telepon sudah ada, tidak perlu halaman ini
+        if (data.user.has_phone) {
+          window.location.href = redirectTarget;
+          return;
+        }
+
+        // Tampilkan info user
+        localStorage.setItem('isLoggedIn', 'true');
+        const userInfoEl = document.getElementById('user-info');
+        document.getElementById('user-name-display').textContent = data.user.nama || '';
+        document.getElementById('user-email-display').textContent = data.user.email || '';
+        userInfoEl.classList.remove('hidden');
+        userInfoEl.classList.add('flex');
+
+      } catch (e) {
+        console.warn('Session check error:', e);
+        showToast('Gagal memverifikasi sesi. Pastikan Anda sudah login.', 'error');
+        setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+      }
+    })();
+
+    // Handle submit form
+    document.getElementById('phone-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const input    = document.getElementById('no_telepon');
+      const btn      = document.getElementById('submit-btn');
+      const phone    = input.value.trim();
+
+      // Validasi ringan di sisi klien
+      const cleaned = phone.replace(/[\s\-]/g, '');
+      if (!cleaned) {
+        showToast('Nomor telepon wajib diisi.', 'error');
+        input.classList.add('border-error');
+        input.classList.remove('border-outline-variant', 'border-tertiary');
+        input.closest('.relative').classList.add('shake');
+        setTimeout(() => input.closest('.relative').classList.remove('shake'), 500);
+        return;
+      }
+      if (!/^(\+62|0)[0-9]{9,13}$/.test(cleaned)) {
+        showToast('Format tidak valid. Gunakan 08xxx atau +62xxx.', 'error');
+        input.classList.add('border-error');
+        input.classList.remove('border-outline-variant', 'border-tertiary');
+        input.closest('.relative').classList.add('shake');
+        setTimeout(() => input.closest('.relative').classList.remove('shake'), 500);
+        return;
+      }
+
+      input.classList.remove('border-error');
+      input.classList.add('border-tertiary');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">refresh</span> Menyimpan...';
+
+      try {
+        const res  = await fetch(`${API}/update_phone.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ no_telepon: cleaned })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showToast('Nomor telepon berhasil disimpan!', 'success');
+          btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check_circle</span> Tersimpan!';
+          setTimeout(() => { window.location.href = redirectTarget; }, 1200);
+        } else {
+          showToast(data.message || 'Gagal menyimpan nomor telepon.', 'error');
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">arrow_forward</span> Simpan & Lanjutkan';
+          input.classList.add('border-error');
+        }
+      } catch (err) {
+        console.error('Update phone error:', err);
+        showToast('Tidak dapat terhubung ke server.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">arrow_forward</span> Simpan & Lanjutkan';
+      }
+    });
+
+    // Realtime validasi border
+    document.getElementById('no_telepon').addEventListener('input', (e) => {
+      const cleaned = e.target.value.replace(/[\s\-]/g, '');
+      if (cleaned && /^(\+62|0)[0-9]{9,13}$/.test(cleaned)) {
+        e.target.classList.remove('border-error', 'border-outline-variant');
+        e.target.classList.add('border-tertiary');
+      } else if (cleaned) {
+        e.target.classList.remove('border-tertiary', 'border-outline-variant');
+        e.target.classList.add('border-error');
+      } else {
+        e.target.classList.remove('border-error', 'border-tertiary');
+        e.target.classList.add('border-outline-variant');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -250,7 +250,7 @@
 
     // --- Konfigurasi Google Client ID ---
     // Masukkan Client ID dari Google Cloud Console kamu:
-    const GOOGLE_CLIENT_ID = '869569142796-m45gvcj7mn25re40m3upel2f8lpp3ruj.apps.googleusercontent.com';
+    const GOOGLE_CLIENT_ID = '99428380960-o7d0f18mo56lg5hgt5aa5krnl7otpv03.apps.googleusercontent.com';
 
     // --- Toast Helper ---
     function showToast(msg, type = 'info') {
@@ -391,7 +391,14 @@
           localStorage.setItem('isLoggedIn', 'true');
           showToast(data.message, 'success');
           setTimeout(() => {
-            window.location.href = data.user.role === 'admin' ? 'admin_panel.html' : 'landing_page.html';
+            if (data.user.role === 'admin') {
+              window.location.href = 'admin_panel.html';
+            } else if (data.needs_phone) {
+              // User belum mengisi nomor telepon -> wajib isi terlebih dahulu
+              window.location.href = 'complete_phone.html';
+            } else {
+              window.location.href = 'landing_page.html';
+            }
           }, 800);
         } else {
           showToast(data.message || 'Login via Google gagal.', 'error');

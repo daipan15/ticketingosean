@@ -711,9 +711,62 @@
     </div>
   </div>
 
+  <!-- ===================== PHONE MODAL ===================== -->
+  <div id="phone-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-background/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+    <div class="relative w-full max-w-md bg-surface-container border-2 border-outline-variant shadow-[8px_8px_0px_0px_#15140c] overflow-hidden transform scale-95 transition-all duration-300" id="phone-modal-card">
+      <!-- Header -->
+      <div class="bg-surface-container-high border-b-2 border-outline-variant p-4 sm:p-5 flex items-center gap-3">
+        <div class="w-9 h-9 bg-tertiary-container border border-tertiary flex items-center justify-center text-tertiary shrink-0">
+          <span class="material-symbols-outlined text-[20px]">smartphone</span>
+        </div>
+        <div>
+          <h3 class="font-headline-lg text-base text-on-surface uppercase">Nomor Telepon Diperlukan</h3>
+          <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Wajib diisi sebelum membeli tiket</p>
+        </div>
+      </div>
+      <!-- Body -->
+      <div class="p-5 sm:p-6 flex flex-col gap-4">
+        <div class="flex items-start gap-3 bg-tertiary-container border border-outline-variant p-3.5">
+          <span class="material-symbols-outlined text-tertiary text-[18px] shrink-0 mt-0.5">info</span>
+          <p class="font-body-md text-sm text-on-surface-variant leading-relaxed">
+            Nomor telepon diperlukan untuk konfirmasi tiket. Isi sekali, tidak perlu diisi lagi.
+          </p>
+        </div>
+        <div>
+          <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="modal-no-telepon">
+            Nomor Telepon <span class="text-error">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-on-surface-variant pointer-events-none">phone</span>
+            <input
+              id="modal-no-telepon"
+              type="tel"
+              autocomplete="tel"
+              placeholder="Contoh: 081234567890"
+              class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-sm pl-11 pr-4 py-3.5 focus:border-tertiary focus:outline-none transition-colors"
+            />
+          </div>
+          <p class="font-body-md text-[11px] text-on-surface-variant mt-1.5">Format: 08xxx atau +62xxx (10–15 digit)</p>
+        </div>
+        <div class="flex items-center gap-3 pt-1">
+          <button type="button" id="phone-modal-save-btn"
+            class="flex-1 bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase py-3.5 shadow-[4px_4px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_#15140c] active:translate-x-0 active:translate-y-0 active:shadow-none transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50">
+            <span class="material-symbols-outlined text-[18px]">save</span>
+            Simpan & Lanjut Bayar
+          </button>
+        </div>
+        <div class="flex items-center justify-center gap-1.5 text-on-surface-variant">
+          <span class="material-symbols-outlined text-[13px]">lock</span>
+          <p class="font-label-caps text-[10px] uppercase tracking-wide">Wajib diisi untuk melanjutkan</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API = '../osean-backend/api';
     let selectedTicket = null;
+    let currentUser    = null; // Menyimpan data user dari session_check
     let qty = 1;
 
     /* Helper untuk sinkronisasi tampilan auth/guest di Desktop dan Mobile */
@@ -809,6 +862,7 @@
           window.location.href = 'admin_panel.html';
           return;
         }
+        currentUser = data.user;
         localStorage.setItem('isLoggedIn', 'true');
         setAuthUI(true);
       } catch (e) {
@@ -1297,9 +1351,97 @@
       if (confirmBtn) confirmBtn.disabled = !e.target.checked;
     });
 
-    /* -------- Form Submit (Buka Modal T&C) -------- */
+    /* -------- Phone Modal Logic -------- */
+    function openPhoneModal(onSuccess) {
+      const modal = document.getElementById('phone-modal');
+      const card  = document.getElementById('phone-modal-card');
+      const input = document.getElementById('modal-no-telepon');
+      const btn   = document.getElementById('phone-modal-save-btn');
+
+      input.value = '';
+      input.className = input.className.replace('border-error', '').replace('border-tertiary', '') + ' border-outline-variant';
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(() => {
+        modal.classList.remove('opacity-0');
+        card.classList.remove('scale-95');
+      });
+      input.focus();
+
+      // Realtime border
+      const handleInput = (e) => {
+        const v = e.target.value.replace(/[\s\-]/g, '');
+        if (v && /^(\+62|0)[0-9]{9,13}$/.test(v)) {
+          e.target.classList.remove('border-error', 'border-outline-variant');
+          e.target.classList.add('border-tertiary');
+        } else if (v) {
+          e.target.classList.remove('border-tertiary', 'border-outline-variant');
+          e.target.classList.add('border-error');
+        } else {
+          e.target.classList.remove('border-error', 'border-tertiary');
+          e.target.classList.add('border-outline-variant');
+        }
+      };
+      input.removeEventListener('input', handleInput);
+      input.addEventListener('input', handleInput);
+
+      // Save button
+      const handleSave = async () => {
+        const phone = input.value.replace(/[\s\-]/g, '');
+        if (!phone || !/^(\+62|0)[0-9]{9,13}$/.test(phone)) {
+          showToast('Masukkan nomor telepon yang valid (08xxx atau +62xxx).', 'error');
+          input.classList.add('border-error');
+          input.classList.remove('border-tertiary', 'border-outline-variant');
+          return;
+        }
+        btn.disabled = true;
+        const origHTML = btn.innerHTML;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">refresh</span> Menyimpan...';
+        try {
+          const res  = await fetch(`${API}/update_phone.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ no_telepon: phone })
+          });
+          const data = await res.json();
+          if (data.success) {
+            // Update currentUser
+            if (currentUser) currentUser.no_telepon = phone;
+            // Tutup modal
+            modal.classList.add('opacity-0');
+            card.classList.add('scale-95');
+            setTimeout(() => {
+              modal.classList.add('hidden');
+              modal.classList.remove('flex');
+            }, 300);
+            showToast('Nomor telepon tersimpan!', 'success');
+            // Lanjut proses bayar
+            setTimeout(() => onSuccess(), 600);
+          } else {
+            showToast(data.message || 'Gagal menyimpan nomor telepon.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = origHTML;
+          }
+        } catch (err) {
+          showToast('Tidak dapat terhubung ke server.', 'error');
+          btn.disabled = false;
+          btn.innerHTML = origHTML;
+        }
+      };
+
+      btn.replaceWith(btn.cloneNode(true)); // hapus event listener lama
+      document.getElementById('phone-modal-save-btn').addEventListener('click', handleSave);
+    }
+
+    /* -------- Form Submit (Buka Modal T&C dengan verifikasi phone) -------- */
     document.getElementById('checkout-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      // Verifikasi nomor telepon dulu sebelum TnC
+      if (!currentUser || !currentUser.no_telepon) {
+        openPhoneModal(() => openTncModal());
+        return;
+      }
       openTncModal();
     });
 

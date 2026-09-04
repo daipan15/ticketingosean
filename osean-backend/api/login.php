@@ -12,7 +12,7 @@ $password = isset($data['password']) ? $data['password']        : '';
 
 if (empty($email) || empty($password)) send_error('Email dan password wajib diisi.');
 
-$stmt = $conn->prepare("SELECT id, nama, email, password_hash, role, is_verified FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, nama, email, no_telepon, password_hash, role, is_verified FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -30,16 +30,22 @@ if ($user['role'] !== 'admin' && isset($user['is_verified']) && (int)$user['is_v
 }
 
 // Set session
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['nama']    = $user['nama'];
-$_SESSION['email']   = $user['email'];
-$_SESSION['role']    = $user['role'];
+$_SESSION['user_id']    = $user['id'];
+$_SESSION['nama']       = $user['nama'];
+$_SESSION['email']      = $user['email'];
+$_SESSION['role']       = $user['role'];
+$_SESSION['no_telepon'] = $user['no_telepon'] ?? null;
+
+$noTelepon  = $user['no_telepon'] ?? null;
+$needsPhone = empty($noTelepon);
 
 send_success([
     'user' => [
-        'id'    => $user['id'],
-        'nama'  => $user['nama'],
-        'email' => $user['email'],
-        'role'  => $user['role']
-    ]
+        'id'         => $user['id'],
+        'nama'       => $user['nama'],
+        'email'      => $user['email'],
+        'role'       => $user['role'],
+        'no_telepon' => $noTelepon
+    ],
+    'needs_phone' => $needsPhone
 ], 'Login berhasil! Selamat datang, ' . $user['nama'] . '.');

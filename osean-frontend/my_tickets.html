@@ -719,12 +719,16 @@
                 <div class="flex items-center gap-2 flex-nowrap">
                   ${isPending ? `
                     <button onclick="cancelPayment(${t.payment_id})" class="border border-error text-error hover:bg-error/10 font-label-caps text-label-caps uppercase px-3 py-2
-                      shadow-[2px_2px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1 whitespace-nowrap">
+                      shadow-[2px_2px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1 whitespace-nowrap" title="Batalkan Pesanan">
                       <span class="material-symbols-outlined text-[16px]">cancel</span> Batalkan
+                    </button>
+                    <button onclick="checkPaymentStatus(${t.payment_id}, this)" class="border border-secondary text-secondary hover:bg-secondary/10 font-label-caps text-label-caps uppercase px-3 py-2
+                      shadow-[2px_2px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1 whitespace-nowrap" title="Periksa status pembayaran langsung ke Midtrans">
+                      <span class="material-symbols-outlined text-[16px]">sync</span> Cek Status
                     </button>
                   ` : ''}
                   ${isPending && t.snap_token ? `
-                    <button onclick="payNow('${t.snap_token}')" class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-4 py-2
+                    <button onclick="payNow('${t.snap_token}', ${t.payment_id})" class="bg-tertiary text-on-tertiary font-label-caps text-label-caps uppercase px-4 py-2
                       shadow-[3px_3px_0px_0px_#15140c] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_#15140c]
                       active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all flex items-center gap-1 whitespace-nowrap">
                       <span class="material-symbols-outlined text-[16px]">payments</span> Bayar Sekarang
@@ -786,22 +790,65 @@
     }
 
     /* -------- Pay Now (re-open Snap) -------- */
-    function payNow(snapToken) {
+    function payNow(snapToken, paymentId) {
       window.snap.pay(snapToken, {
-        onSuccess: function (result) {
-          showToast('Pembayaran berhasil!', 'success');
-          setTimeout(() => location.reload(), 1500);
+        onSuccess: async function (result) {
+          showToast('Pembayaran berhasil! Menyinkronkan status...', 'success');
+          if (paymentId) {
+            try {
+              await fetch(`${API}/payment_status.php?payment_id=${paymentId}`, { credentials: 'include' });
+            } catch (e) {}
+          }
+          setTimeout(() => loadTickets(), 1200);
         },
-        onPending: function (result) {
-          showToast('Pembayaran pending. Selesaikan pembayaranmu.', 'info');
+        onPending: async function (result) {
+          showToast('Menyinkronkan status pembayaran...', 'info');
+          if (paymentId) {
+            try {
+              await fetch(`${API}/payment_status.php?payment_id=${paymentId}`, { credentials: 'include' });
+            } catch (e) {}
+          }
+          setTimeout(() => loadTickets(), 1500);
         },
         onError: function (result) {
           showToast('Pembayaran gagal. Silakan coba lagi.', 'error');
         },
         onClose: function () {
-          showToast('Popup pembayaran ditutup.', 'info');
+          showToast('Popup ditutup. Meninjau status terkini...', 'info');
+          loadTickets();
         }
       });
+    }
+
+    /* -------- Cek Status Pembayaran Manual -------- */
+    async function checkPaymentStatus(paymentId, btnEl) {
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">sync</span> Memeriksa...';
+      }
+      try {
+        const res = await fetch(`${API}/payment_status.php?payment_id=${paymentId}`, { credentials: 'include' });
+        const data = await res.json();
+        if (data.success) {
+          if (['settlement', 'capture', 'verified'].includes(data.status)) {
+            showToast('Pembayaran berhasil diverifikasi lunas!', 'success');
+          } else if (data.status === 'pending') {
+            showToast('Status dari Midtrans masih menunggu pembayaran.', 'info');
+          } else {
+            showToast(`Status pembayaran: ${data.status}`, 'info');
+          }
+          loadTickets();
+        } else {
+          showToast(data.message || 'Gagal mengecek status pembayaran.', 'error');
+        }
+      } catch (err) {
+        showToast('Gagal terhubung ke server.', 'error');
+      } finally {
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerHTML = '<span class="material-symbols-outlined text-[16px]">sync</span> Cek Status';
+        }
+      }
     }
 
     /* -------- Cancel Payment -------- */

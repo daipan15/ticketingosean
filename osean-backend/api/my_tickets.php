@@ -28,9 +28,10 @@ if (defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')
     $pending_stmt->close();
 
     foreach ($pendings as $p) {
-        $order_id = $p['kode_unik']; // kode_unik = Midtrans order_id
-        $auth = base64_encode(MIDTRANS_SERVER_KEY . ':');
-        $ch = curl_init("https://api.sandbox.midtrans.com/v2/{$order_id}/status");
+        $order_id   = $p['kode_unik']; // kode_unik = Midtrans order_id
+        $auth       = base64_encode(MIDTRANS_SERVER_KEY . ':');
+        $status_url = MIDTRANS_API_URL . "/{$order_id}/status";
+        $ch         = curl_init($status_url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic ' . $auth]);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);

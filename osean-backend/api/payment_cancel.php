@@ -37,8 +37,8 @@ if ($payment['status'] !== 'pending') {
 // Coba batalkan ke Midtrans API menggunakan kode_unik sebagai order_id
 if (!empty($payment['kode_unik']) && defined('MIDTRANS_SERVER_KEY') && !str_contains(MIDTRANS_SERVER_KEY, 'XXXX')) {
     $order_id = $payment['kode_unik']; // kode_unik = Midtrans order_id
-    $auth = base64_encode(MIDTRANS_SERVER_KEY . ':');
-    $url = "https://api.sandbox.midtrans.com/v2/{$order_id}/cancel";
+    $auth     = base64_encode(MIDTRANS_SERVER_KEY . ':');
+    $url      = MIDTRANS_API_URL . "/{$order_id}/cancel";
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

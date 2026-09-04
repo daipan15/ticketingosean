@@ -1,19 +1,27 @@
 <?php
 // =============================================
-// OSEAN - register.php  (kolom: nama, email, password_hash, role)
+// OSEAN - register.php  (kolom: nama, email, no_telepon, password_hash, role)
 // =============================================
 require_once __DIR__ . '/../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') send_error('Method tidak diizinkan.', 405);
 
-$data     = json_decode(file_get_contents('php://input'), true);
-$nama     = isset($data['nama'])     ? sanitize($data['nama'])     : '';
-$email    = isset($data['email'])    ? sanitize($data['email'])    : '';
-$password = isset($data['password']) ? $data['password']           : '';
+$data       = json_decode(file_get_contents('php://input'), true);
+$nama       = isset($data['nama'])        ? sanitize($data['nama'])        : '';
+$email      = isset($data['email'])       ? sanitize($data['email'])       : '';
+$no_telepon = isset($data['no_telepon'])  ? sanitize($data['no_telepon'])  : '';
+$password   = isset($data['password'])    ? $data['password']              : '';
 
-if (empty($nama) || empty($email) || empty($password)) send_error('Nama, email, dan password wajib diisi.');
+if (empty($nama) || empty($email) || empty($no_telepon) || empty($password)) send_error('Nama, email, nomor telepon, dan password wajib diisi.');
 if (!filter_var($email, FILTER_VALIDATE_EMAIL))         send_error('Format email tidak valid.');
 if (strlen($password) < 6)                              send_error('Password minimal 6 karakter.');
+
+// Validasi format nomor telepon
+$cleaned = preg_replace('/[\s\-]/', '', $no_telepon);
+if (!preg_match('/^(\+62|0)[0-9]{9,13}$/', $cleaned)) {
+    send_error('Format nomor telepon tidak valid. Gunakan format 08xxx atau +62xxx.');
+}
+$no_telepon = $cleaned;
 
 // Cek email duplikat
 $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
@@ -28,8 +36,9 @@ $role          = 'user';
 $token         = bin2hex(random_bytes(32)); // 64 karakter token unik
 $is_verified   = 0;
 
-$stmt = $conn->prepare("INSERT INTO users (nama, email, password_hash, role, is_verified, verification_token) VALUES (?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("ssssis", $nama, $email, $password_hash, $role, $is_verified, $token);
+$stmt = $conn->prepare("INSERT INTO users (nama, email, no_telepon, password_hash, role, is_verified, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssssis", $nama, $email, $no_telepon, $password_hash, $role, $is_verified, $token);
+// note: no_telepon may be empty string — stored as '' (acceptable)
 
 if ($stmt->execute()) {
     $mailSent = send_verification_email($email, $nama, $token);

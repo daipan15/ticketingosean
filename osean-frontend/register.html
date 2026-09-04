@@ -190,6 +190,21 @@
                           focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
           </div>
 
+          <!-- Nomor Telepon (Wajib) -->
+          <div>
+            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="no_telepon">Nomor Telepon</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <span class="text-on-surface-variant font-mono text-sm select-none">🇮🇩</span>
+              </div>
+              <input id="no_telepon" name="no_telepon" type="tel" required autocomplete="tel"
+                     placeholder="08xxxxxxxxxx"
+                     class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-body-md pl-12 pr-4 py-3
+                            focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
+            </div>
+            <p class="font-label-caps text-[10px] text-on-surface-variant mt-1.5">Format: 08xxx atau +62xxx — digunakan untuk konfirmasi tiket.</p>
+          </div>
+
           <!-- Password -->
           <div>
             <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="password">Password <span class="text-on-surface-variant/50">(min 6 karakter)</span></label>
@@ -314,13 +329,14 @@
     // --- Form Register Manual Submit ---
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn   = document.getElementById('submit-btn');
-      const nama  = document.getElementById('nama').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const pass  = passInput.value;
+      const btn        = document.getElementById('submit-btn');
+      const nama       = document.getElementById('nama').value.trim();
+      const email      = document.getElementById('email').value.trim();
+      const no_telepon = document.getElementById('no_telepon').value.trim();
+      const pass       = passInput.value;
 
-      if (!nama || !email || !pass)    { showToast('Semua field wajib diisi.', 'error'); return; }
-      if (pass.length < 6)             { showToast('Password minimal 6 karakter.', 'error'); return; }
+      if (!nama || !email || !no_telepon || !pass) { showToast('Semua field wajib diisi.', 'error'); return; }
+      if (pass.length < 6)                          { showToast('Password minimal 6 karakter.', 'error'); return; }
 
       btn.disabled = true;
       btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">refresh</span> Mendaftar...';
@@ -329,7 +345,7 @@
         const res  = await fetch(`${API}/register.php`, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ nama, email, password: pass })
+          body:    JSON.stringify({ nama, email, no_telepon, password: pass })
         });
         const data = await res.json();
 

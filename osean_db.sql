@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2026 at 08:37 PM
+-- Generation Time: Sep 04, 2026 at 12:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -101,6 +101,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `no_telepon` varchar(20) DEFAULT NULL,
   `password_hash` varchar(255) NOT NULL,
   `role` enum('user','admin') NOT NULL DEFAULT 'user',
   `is_verified` tinyint(1) NOT NULL DEFAULT 0,
@@ -112,8 +113,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `nama`, `email`, `password_hash`, `role`, `is_verified`, `verification_token`, `created_at`) VALUES
-(1, 'Admin OSEAN', 'admin@osean.com', '$2y$12$CnRlbQYA5I5pI8suZGkNkuBdCzy93F0DzrvDQd438ay3GIzn90aJq', 'admin', 1, NULL, '2026-09-02 18:11:42');
+INSERT INTO `users` (`id`, `nama`, `email`, `no_telepon`, `password_hash`, `role`, `is_verified`, `verification_token`, `created_at`) VALUES
+(1, 'Admin OSEAN', 'admin@osean.com', NULL, '$2y$12$CnRlbQYA5I5pI8suZGkNkuBdCzy93F0DzrvDQd438ay3GIzn90aJq', 'admin', 1, NULL, '2026-09-02 18:11:42');
 -- Password default admin: admin123
 -- PENTING: Ganti password ini setelah pertama kali login!
 

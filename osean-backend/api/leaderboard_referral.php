@@ -16,8 +16,8 @@ $HIMPUNAN_DATA = [
     'HIMATIKA' => ['code' => 'HIMATIKA', 'name' => 'HIMATIKA', 'prodi' => 'Matematika',          'color' => '#38BDF8', 'badge' => ''],
     'HIMASTA'  => ['code' => 'HIMASTA',  'name' => 'HIMASTA',  'prodi' => 'Statistika',         'color' => '#F472B6', 'badge' => ''],
     'PEDRA'    => ['code' => 'PEDRA',    'name' => 'PEDRA',    'prodi' => 'Geofisika',          'color' => '#FB923C', 'badge' => ''],
-    'HIMATIF'  => ['code' => 'HIMATIF',  'name' => 'HIMATIF',  'prodi' => 'Teknik Informatika', 'color' => '#A78BFA', 'badge' => ''],
-    'HMTE'     => ['code' => 'HMTE',     'name' => 'HMTE',     'prodi' => 'Teknik Elektro',     'color' => '#FACC15', 'badge' => ''],
+    'HIMATIF'  => ['code' => 'HIMATIF',  'name' => 'HIMATIF',  'prodi' => 'T. Informatika', 'color' => '#A78BFA', 'badge' => ''],
+    'HMTE'     => ['code' => 'HMTE',     'name' => 'HMTE',     'prodi' => 'T. Elektro',     'color' => '#FACC15', 'badge' => ''],
     'HIMAKTU'  => ['code' => 'HIMAKTU',  'name' => 'HIMAKTU',  'prodi' => 'Aktuaria',           'color' => '#2DD4BF', 'badge' => ''],
 ];
 

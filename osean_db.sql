@@ -44,6 +44,7 @@ CREATE TABLE `users` (
   `id`                  int(11)       NOT NULL AUTO_INCREMENT,
   `nama`                varchar(100)  NOT NULL,
   `email`               varchar(100)  NOT NULL,
+  `nik`                 varchar(20)   DEFAULT NULL,
   `no_telepon`          varchar(20)   DEFAULT NULL,
   `password_hash`       varchar(255)  NOT NULL,
   `role`                enum('user','admin') NOT NULL DEFAULT 'user',
@@ -54,6 +55,7 @@ CREATE TABLE `users` (
   `created_at`          timestamp     NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
+  KEY `idx_users_nik` (`nik`),
   KEY `idx_users_verification_token` (`verification_token`(64)),
   KEY `idx_users_reset_token` (`reset_token`(64))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

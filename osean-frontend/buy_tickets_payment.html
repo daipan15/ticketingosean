@@ -862,6 +862,10 @@
           window.location.href = 'admin_panel.html';
           return;
         }
+        if (!data.user.nama || !data.user.nik || !data.user.no_telepon) {
+          window.location.href = 'complete_phone.html?redirect=buy_tickets_payment.html';
+          return;
+        }
         currentUser = data.user;
         localStorage.setItem('isLoggedIn', 'true');
         setAuthUI(true);

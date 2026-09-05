@@ -31,6 +31,8 @@ $stmt = $conn->prepare("
         p.created_at    AS tanggal_order,
         u.nama          AS nama_user,
         u.email         AS email_user,
+        u.nik           AS nik_user,
+        u.no_telepon    AS no_telepon_user,
         t.nama_tiket,
         t.kategori
     FROM payments p
@@ -99,12 +101,14 @@ if ((int)$payment['is_checked_in'] === 1) {
         'tiket'       => [
             'payment_id'    => (int)$payment['payment_id'],
             'kode_unik'     => $payment['kode_unik'],
-            'nama_user'     => $payment['nama_user'],
-            'email_user'    => $payment['email_user'],
-            'nama_tiket'    => $payment['nama_tiket'],
-            'kategori'      => $payment['kategori'],
-            'jumlah_tiket'  => (int)$payment['jumlah_tiket'],
-            'checked_in_at' => $checked_time,
+            'nama_user'       => $payment['nama_user'],
+            'email_user'      => $payment['email_user'],
+            'nik_user'        => $payment['nik_user'] ?? '-',
+            'no_telepon_user' => $payment['no_telepon_user'] ?? '-',
+            'nama_tiket'      => $payment['nama_tiket'],
+            'kategori'        => $payment['kategori'],
+            'jumlah_tiket'    => (int)$payment['jumlah_tiket'],
+            'checked_in_at'   => $checked_time,
         ]
     ]);
     exit;
@@ -131,14 +135,16 @@ echo json_encode([
     'scan_result' => 'valid',
     'message'     => 'Tiket valid! Selamat datang di OSEAN.',
     'tiket'       => [
-        'payment_id'    => (int)$payment['payment_id'],
-        'kode_unik'     => $payment['kode_unik'],
-        'nama_user'     => $payment['nama_user'],
-        'email_user'    => $payment['email_user'],
-        'nama_tiket'    => $payment['nama_tiket'],
-        'kategori'      => $payment['kategori'],
-        'jumlah_tiket'  => (int)$payment['jumlah_tiket'],
-        'total_format'  => format_rupiah($payment['total_bayar']),
-        'checked_in_at' => $checked_time_fmt,
+        'payment_id'      => (int)$payment['payment_id'],
+        'kode_unik'       => $payment['kode_unik'],
+        'nama_user'       => $payment['nama_user'],
+        'email_user'      => $payment['email_user'],
+        'nik_user'        => $payment['nik_user'] ?? '-',
+        'no_telepon_user' => $payment['no_telepon_user'] ?? '-',
+        'nama_tiket'      => $payment['nama_tiket'],
+        'kategori'        => $payment['kategori'],
+        'jumlah_tiket'    => (int)$payment['jumlah_tiket'],
+        'total_format'    => format_rupiah($payment['total_bayar']),
+        'checked_in_at'   => $checked_time_fmt,
     ]
 ]);

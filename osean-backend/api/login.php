@@ -12,7 +12,7 @@ $password = isset($data['password']) ? $data['password']        : '';
 
 if (empty($email) || empty($password)) send_error('Email dan password wajib diisi.');
 
-$stmt = $conn->prepare("SELECT id, nama, email, no_telepon, password_hash, role, is_verified FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, nama, email, nik, no_telepon, password_hash, role, is_verified FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -35,6 +35,7 @@ $_SESSION['user_id']    = $user['id'];
 $_SESSION['nama']       = $user['nama'];
 $_SESSION['email']      = $user['email'];
 $_SESSION['role']       = $user['role'];
+$_SESSION['nik']        = $user['nik'] ?? null;
 $_SESSION['no_telepon'] = $user['no_telepon'] ?? null;
 
 $noTelepon  = $user['no_telepon'] ?? null;
@@ -45,6 +46,7 @@ send_success([
         'id'         => $user['id'],
         'nama'       => $user['nama'],
         'email'      => $user['email'],
+        'nik'        => $user['nik'] ?? null,
         'role'       => $user['role'],
         'no_telepon' => $noTelepon
     ],

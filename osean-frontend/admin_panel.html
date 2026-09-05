@@ -399,7 +399,7 @@
         <!-- Search Box -->
         <div class="relative flex-1 max-w-xl">
           <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">search</span>
-          <input type="text" id="pay-search-input" placeholder="Cari Kode Unik (OSN-XXXX), Nama, Email, Referral, Tiket..."
+          <input type="text" id="pay-search-input" placeholder="Cari Kode Unik (OSN-XXXX), NIK, Nama, Email, Referral, Tiket..."
             class="w-full bg-surface-container border-2 border-outline-variant pl-10 pr-10 py-2 text-on-surface font-body-md text-xs sm:text-sm placeholder:text-on-surface-variant/50 focus:border-tertiary focus:outline-none transition-colors shadow-[2px_2px_0px_0px_#15140c]" />
           <button type="button" id="pay-search-clear" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-error transition-colors">
             <span class="material-symbols-outlined text-[18px]">close</span>
@@ -796,12 +796,13 @@
         if (currentSearchQuery) {
           const q = currentSearchQuery;
           const matchCode = (p.kode_unik || '').toLowerCase().includes(q);
+          const matchNik  = (p.nik || '').toLowerCase().includes(q);
           const matchName = (p.nama || '').toLowerCase().includes(q);
           const matchEmail = (p.email || '').toLowerCase().includes(q);
           const matchTicket = (p.nama_tiket || '').toLowerCase().includes(q);
           const matchMethod = (p.metode_pembayaran || p.payment_type || '').toLowerCase().includes(q);
           const matchReferral = (p.referral_code || '').toLowerCase().includes(q);
-          if (!matchCode && !matchName && !matchEmail && !matchTicket && !matchMethod && !matchReferral) return false;
+          if (!matchCode && !matchNik && !matchName && !matchEmail && !matchTicket && !matchMethod && !matchReferral) return false;
         }
 
         return true;
@@ -918,6 +919,7 @@
             <td class="px-3 py-2.5 min-w-[130px] max-w-[180px]">
               <p class="font-bold text-xs text-on-surface leading-tight truncate" title="${p.nama}">${p.nama}</p>
               <p class="text-[11px] text-on-surface-variant leading-tight truncate mt-0.5" title="${p.email}">${p.email}</p>
+              ${p.nik ? `<p class="font-mono text-[10px] text-tertiary/90 leading-tight truncate mt-0.5" title="NIK: ${p.nik}">NIK: ${p.nik}</p>` : ''}
             </td>
 
             <!-- 3. Tiket -->
@@ -1428,8 +1430,16 @@
                   <p class="font-body-md text-on-surface font-bold">${t.nama_user}</p>
                 </div>
                 <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">NIK (KTP)</p>
+                  <p class="font-mono text-tertiary font-bold text-sm">${t.nik_user || '—'}</p>
+                </div>
+                <div>
                   <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Email</p>
                   <p class="font-body-md text-on-surface text-sm">${t.email_user}</p>
+                </div>
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">No. Telepon</p>
+                  <p class="font-body-md text-on-surface text-sm">${t.no_telepon_user || '—'}</p>
                 </div>
                 <div>
                   <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Tiket</p>
@@ -1461,12 +1471,14 @@
           // Tiket sudah diambil
           const t = data.tiket;
           resultEl.innerHTML = `
-            <div class="bg-error-container border-2 border-error shadow-[6px_6px_0px_0px_#15140c] p-6">
-              <div class="flex items-center gap-3 mb-5">
-                <span class="material-symbols-outlined text-[40px] text-error" style="font-variation-settings:'FILL' 1">cancel</span>
+            <div class="p-4 bg-surface-container-high border-2 border-error shadow-[4px_4px_0px_0px_#15140c]">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-error/20 border border-error flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-error text-[24px]">cancel</span>
+                </div>
                 <div>
-                  <p class="font-headline-lg text-xl text-error font-bold">Tiket Sudah Diambil</p>
-                  <p class="font-label-caps text-[10px] text-on-error-container uppercase">Diverifikasi pada ${t.checked_in_at}</p>
+                  <p class="font-headline-lg text-xl text-error font-bold">Tiket Sudah Digunakan!</p>
+                  <p class="font-label-caps text-[10px] text-on-error-container uppercase">Check-in pada: ${t.checked_in_at}</p>
                 </div>
               </div>
               <div class="border-t border-error/30 pt-4 grid grid-cols-2 gap-3">
@@ -1475,8 +1487,16 @@
                   <p class="font-body-md text-on-surface font-bold">${t.nama_user}</p>
                 </div>
                 <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">NIK (KTP)</p>
+                  <p class="font-mono text-tertiary font-bold text-sm">${t.nik_user || '—'}</p>
+                </div>
+                <div>
                   <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Tiket</p>
                   <p class="font-body-md text-on-surface font-bold">${t.nama_tiket}</p>
+                </div>
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Jumlah</p>
+                  <p class="font-body-md text-on-surface font-bold">${t.jumlah_tiket} orang</p>
                 </div>
                 <div class="col-span-2">
                   <p class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-0.5">Kode Unik</p>

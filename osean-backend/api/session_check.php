@@ -5,23 +5,28 @@
 require_once __DIR__ . '/../config.php';
 
 if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT id, nama, email, no_telepon, role FROM users WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, nama, email, nik, no_telepon, role FROM users WHERE id = ?");
     $stmt->bind_param("i", $_SESSION['user_id']);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
     if ($user) {
-        $hasPhone = !empty($user['no_telepon']);
+        $hasPhone   = !empty($user['no_telepon']);
+        $hasName    = !empty(trim($user['nama'] ?? ''));
+        $hasNik     = !empty(trim($user['nik'] ?? ''));
+        $hasProfile = $hasName && $hasNik && $hasPhone;
         send_success([
             'logged_in' => true,
             'user' => [
-                'id'         => $user['id'],
-                'nama'       => $user['nama'],
-                'email'      => $user['email'],
-                'role'       => $user['role'],
-                'no_telepon' => $user['no_telepon'] ?? null,
-                'has_phone'  => $hasPhone
+                'id'          => $user['id'],
+                'nama'        => $user['nama'],
+                'email'       => $user['email'],
+                'nik'         => $user['nik'] ?? null,
+                'role'        => $user['role'],
+                'no_telepon'  => $user['no_telepon'] ?? null,
+                'has_phone'   => $hasPhone,
+                'has_profile' => $hasProfile
             ]
         ], 'Session aktif.');
     } else {

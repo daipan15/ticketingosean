@@ -83,7 +83,7 @@ if (empty($name)) {
 }
 
 // Cek apakah user sudah terdaftar di DB
-$stmt = $conn->prepare("SELECT id, nama, email, no_telepon, role, is_verified FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT id, nama, email, nik, no_telepon, role, is_verified FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -103,12 +103,13 @@ if ($result->num_rows > 0) {
     }
     $isNew = false;
 } else {
-    // User BELUM ada -> REGISTER OTOMATIS
+    // User BELUM ada -> REGISTER OTOMATIS (hanya email dari Google, nama & NIK diisi sendiri oleh user)
     $stmt->close();
     $role         = 'user';
     $is_verified  = 1; // Langsung aktif karena akun Google sudah terverifikasi
     $randomSecret = bin2hex(random_bytes(16));
     $passwordHash = password_hash($randomSecret, PASSWORD_BCRYPT);
+    $name         = ''; // Nama dari Google sengaja tidak ditarik, user wajib mengisi nama lengkap & NIK di form
 
     $ins = $conn->prepare("INSERT INTO users (nama, email, password_hash, role, is_verified, verification_token) VALUES (?, ?, ?, ?, ?, NULL)");
     $ins->bind_param("ssssi", $name, $email, $passwordHash, $role, $is_verified);
@@ -122,8 +123,10 @@ if ($result->num_rows > 0) {
 
     $user = [
         'id'          => $userId,
-        'nama'        => $name,
+        'nama'        => '',
         'email'       => $email,
+        'nik'         => null,
+        'no_telepon'  => null,
         'role'        => $role,
         'is_verified' => 1
     ];
@@ -136,19 +139,22 @@ $_SESSION['user_id']    = $user['id'];
 $_SESSION['nama']       = $user['nama'];
 $_SESSION['email']      = $user['email'];
 $_SESSION['role']       = $user['role'];
+$_SESSION['nik']        = $user['nik'] ?? null;
 $_SESSION['no_telepon'] = $user['no_telepon'] ?? null;
 
-$noTelepon   = $user['no_telepon'] ?? null;
-$needsPhone  = empty($noTelepon);
+// User butuh melengkapi profil jika nama, NIK, atau nomor telepon belum terisi
+$needsProfile = empty($user['nama']) || empty($user['nik']) || empty($user['no_telepon']);
 
 send_success([
     'user' => [
         'id'         => $user['id'],
         'nama'       => $user['nama'],
         'email'      => $user['email'],
+        'nik'        => $user['nik'] ?? null,
         'role'       => $user['role'],
-        'no_telepon' => $noTelepon
+        'no_telepon' => $user['no_telepon'] ?? null
     ],
-    'is_new_user'  => $isNew,
-    'needs_phone'  => $needsPhone
-], $isNew ? 'Pendaftaran via Google berhasil! Selamat datang, ' . $user['nama'] : 'Login via Google berhasil! Selamat datang, ' . $user['nama']);
+    'is_new_user'    => $isNew,
+    'needs_profile'  => $needsProfile,
+    'needs_phone'    => $needsProfile
+], $isNew ? 'Pendaftaran via Google berhasil! Silakan lengkapi data profil Anda.' : 'Login via Google berhasil!' . (!empty($user['nama']) ? ' Selamat datang, ' . $user['nama'] : ''));

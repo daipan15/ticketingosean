@@ -50,7 +50,7 @@ $sql = "
            p.referral_code, p.bukti_transfer, p.status, p.created_at AS tanggal_order, p.verified_at,
            p.payment_type, p.is_checked_in, p.checked_in_at,
            t.id AS ticket_id, t.nama_tiket, t.harga,
-           u.id AS user_id, u.nama, u.email
+           u.id AS user_id, u.nama, u.email, u.nik, u.no_telepon
     FROM payments p
     JOIN tickets t ON p.ticket_id = t.id
     JOIN users u ON p.user_id = u.id

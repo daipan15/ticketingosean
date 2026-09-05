@@ -43,7 +43,7 @@ if ($sisa_kuota < $jumlah_tiket) {
 }
 
 // Ambil data user untuk dikirim ke Midtrans
-$stmt = $conn->prepare("SELECT nama, email, no_telepon FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT nama, email, nik, no_telepon FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
@@ -55,9 +55,9 @@ if (!$user) {
     send_error('Akun pengguna tidak ditemukan atau sesi telah berakhir. Silakan login kembali.', 401);
 }
 
-// Validasi nomor telepon wajib diisi sebelum bisa memesan tiket
-if (empty($user['no_telepon'])) {
-    send_error('Nomor telepon wajib diisi sebelum melakukan pemesanan tiket. Silakan lengkapi profil Anda terlebih dahulu.', 400);
+// Validasi data profil (nama, NIK, nomor telepon) wajib diisi sebelum bisa memesan tiket
+if (empty(trim($user['nama'] ?? '')) || empty(trim($user['nik'] ?? '')) || empty(trim($user['no_telepon'] ?? ''))) {
+    send_error('Data diri (nama lengkap, NIK, dan nomor telepon) wajib dilengkapi sebelum melakukan pemesanan tiket. Silakan lengkapi profil Anda terlebih dahulu.', 400);
 }
 
 // Generator kode unik tiket (booking code) ber-entropi tinggi & terjamin unik

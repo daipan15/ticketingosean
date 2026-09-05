@@ -181,6 +181,26 @@
                           focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
           </div>
 
+          <!-- NIK (Nomor Induk Kependudukan) -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block" for="nik">
+                NIK (Nomor Induk Kependudukan)
+              </label>
+              <span id="nik-counter" class="font-mono text-[11px] text-on-surface-variant/60">0/16 digit</span>
+            </div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-on-surface-variant">
+                <span class="material-symbols-outlined text-[18px]">badge</span>
+              </div>
+              <input id="nik" name="nik" type="text" inputmode="numeric" maxlength="16" required
+                     placeholder="Contoh: 3204xxxxxxxxxxxx"
+                     class="w-full bg-surface-container-high border-2 border-outline-variant text-on-surface font-body-md text-body-md pl-12 pr-4 py-3
+                            focus:border-tertiary focus:outline-none transition-colors placeholder:text-on-surface-variant/40" />
+            </div>
+            <p class="font-label-caps text-[10px] text-on-surface-variant mt-1.5">Wajib 16 digit angka sesuai KTP/identitas resmi — digunakan untuk verifikasi & penukaran tiket.</p>
+          </div>
+
           <!-- Email -->
           <div>
             <label class="font-label-caps text-label-caps text-on-surface-variant uppercase block mb-2" for="email">Email</label>
@@ -326,17 +346,45 @@
       if (v.length < 6) t.textContent = '';
     });
 
+    // --- Input NIK (hanya angka & digit counter) ---
+    const nikInput   = document.getElementById('nik');
+    const nikCounter = document.getElementById('nik-counter');
+    nikInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 16);
+      const len = e.target.value.length;
+      nikCounter.textContent = `${len}/16 digit`;
+      if (len === 16) {
+        nikCounter.classList.add('text-secondary', 'font-bold');
+        nikCounter.classList.remove('text-on-surface-variant/60');
+      } else {
+        nikCounter.classList.remove('text-secondary', 'font-bold');
+        nikCounter.classList.add('text-on-surface-variant/60');
+      }
+    });
+
     // --- Form Register Manual Submit ---
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn        = document.getElementById('submit-btn');
       const nama       = document.getElementById('nama').value.trim();
+      const nik        = document.getElementById('nik').value.trim();
       const email      = document.getElementById('email').value.trim();
       const no_telepon = document.getElementById('no_telepon').value.trim();
       const pass       = passInput.value;
 
-      if (!nama || !email || !no_telepon || !pass) { showToast('Semua field wajib diisi.', 'error'); return; }
-      if (pass.length < 6)                          { showToast('Password minimal 6 karakter.', 'error'); return; }
+      if (!nama || !nik || !email || !no_telepon || !pass) {
+        showToast('Semua field wajib diisi.', 'error');
+        return;
+      }
+      if (!/^\d{16}$/.test(nik)) {
+        showToast('NIK harus terdiri dari 16 digit angka.', 'error');
+        nikInput.focus();
+        return;
+      }
+      if (pass.length < 6) {
+        showToast('Password minimal 6 karakter.', 'error');
+        return;
+      }
 
       btn.disabled = true;
       btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">refresh</span> Mendaftar...';
@@ -345,7 +393,7 @@
         const res  = await fetch(`${API}/register.php`, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ nama, email, no_telepon, password: pass })
+          body:    JSON.stringify({ nama, nik, email, no_telepon, password: pass })
         });
         const data = await res.json();
 
